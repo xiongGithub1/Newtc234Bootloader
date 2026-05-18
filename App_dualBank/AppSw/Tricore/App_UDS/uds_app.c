@@ -6,6 +6,7 @@
  * \author  Administrator
  *********************************************************************************************************************/
 #include "uds_app.h"
+#include "did_dflash.h"
 #include "App_bootloader_cfg.h"
 #include "Can_session.h"
 #include "fls_app.h"
@@ -26,24 +27,40 @@ const  uint8 gs_aCheckSumRoutineControlId[4u] = { 0x31u, 0x01u, 0x02u, 0x02u };
 
 const  uint8 gs_aCheckProgrammingDependencyId[4u] = { 0x31u, 0x01u, 0xFFu, 0x01u };
 
+/* DID Data stored in DFlash - use direct pointers for read access
+ * Sector 1: 0xAF002000 ~ 0xAF003FFF (Static DID data F186~F197)
+ * All text data encoded in UTF-8
+ */
 
-
-
-
-uint8 data_vin_f190[] = VIN_F190;
 uint8 data_bsidid_f180[] = BSID_F180;
 
 tUDSCommCtrlMode g_CanMsgCommCtrlMode = UDS_CC_MODE_RX_TX;
 
 uint32 p_rw_finger_data = 0;
 
-
-
-
+/* g_rwDataTable: DID configuration for 0x22 service
+ * DID 1-14 (F186~F197): Read-only from DFlash
+ * DID 17 (F15B): Read from DFlash
+ */
 tUDSRwDataTable g_rwDataTable[] =
 {
-		{F15A,UDS_RWDATA_RDWR,UDS_RWDATA_RAM,UDS_RWDATA_HEX,(uint32) &p_rw_finger_data,4,4},
-		{F190,UDS_RWDATA_RDWR,UDS_RWDATA_RAM,UDS_RWDATA_ASCII,(uint32) &data_vin_f190[0],16,16}
+	/* DID 1-14: Read-only DID from DFlash */
+	{F186, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F186, DID_SIZE_F186, DID_SIZE_F186},
+	{F187, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F187, DID_SIZE_F187, DID_SIZE_F187},
+	{F188, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F188, DID_SIZE_F188, DID_SIZE_F188},
+	{F189, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F189, DID_SIZE_F189, DID_SIZE_F189},
+	{F18A, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18A, DID_SIZE_F18A, DID_SIZE_F18A},
+	{F18B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18B, DID_SIZE_F18B, DID_SIZE_F18B},
+	{F18C, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18C, DID_SIZE_F18C, DID_SIZE_F18C},
+	{F190, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F190, DID_SIZE_F190, DID_SIZE_F190},
+	{F191, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F191, DID_SIZE_F191, DID_SIZE_F191},
+	{F192, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F192, DID_SIZE_F192, DID_SIZE_F192},
+	{F193, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F193, DID_SIZE_F193, DID_SIZE_F193},
+	{F194, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F194, DID_SIZE_F194, DID_SIZE_F194},
+	{F195, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F195, DID_SIZE_F195, DID_SIZE_F195},
+	{F197, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
+	/* DID 17: F15B - Read fingerprint from DFlash */
+	{F15B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_HEX, (uint32)DFLASH_PTR_F15B, FINGERPRINT_RECORD_SIZE, FINGERPRINT_RECORD_SIZE * FINGERPRINT_RECORD_MAX},
 };
 
 #define IsWriteFingerprintRight(x) ((x == gs_aWriteFingerprintId)?TRUE:FALSE)
@@ -1256,6 +1273,20 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	if (m_pstPDUMsg->xDataLen < 3)
 	{
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+		return;
+	}
+
+	/* Special handling for F15B - Read fingerprint records from DFlash
+	 * Returns all stored fingerprint records (up to 3)
+	 */
+	if (did == F15B)
+	{
+		uint16 totalLen;
+		m_pstPDUMsg->aDataBuf[1u] = 0xF1;
+		m_pstPDUMsg->aDataBuf[2u] = 0x5B;
+
+		totalLen = DID_DFlash_ReadF15B(&m_pstPDUMsg->aDataBuf[3], UDS_DATA_BUF_SIZE - 3);
+		m_pstPDUMsg->xDataLen = 3u + totalLen;
 		return;
 	}
 

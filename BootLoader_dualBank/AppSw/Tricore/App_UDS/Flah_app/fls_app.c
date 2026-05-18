@@ -1,4 +1,5 @@
 #include "fls_app.h"
+#include "Boot_DualBank.h"
 
 
 
@@ -36,11 +37,28 @@ uint8 IsDownloadDataLenValid(const uint32 i_DataLen)
 /*Is download data address valid?*/
 uint8 IsDownloadDataAddrValid(const uint32 i_DataAddr)
 {
-	//��Ϊ��ַ��800��ͷ��������a00��ͷ�����жϻ�һֱfalse
-//	i_DataAddr��PFLASH��ַ��Χ��-����
-	if((i_DataAddr >= FL_PFLASH_PF_ADDR_Start) && (i_DataAddr < FL_PFLASH_PF_ADDR_End ))//��PFLASH��ַ��Χ��
+	uint32 cachedAddr;
+
+	/* Convert uncached address to cached for comparison */
+	if ((i_DataAddr & 0xF0000000u) == 0xA0000000u)
 	{
-		 return TRUE;
+		cachedAddr = i_DataAddr - 0x20000000u;
+	}
+	else
+	{
+		cachedAddr = i_DataAddr;
+	}
+
+	/* Unified HEX support:
+	 * Accept addresses in the full valid application area:
+	 * - Bank A: 0x80020000 ~ 0x800FFFFF
+	 * - Bank B: 0x80100000 ~ 0x801FFFFF
+	 * This covers both unified HEX (Bank A address range)
+	 * and direct Bank B addressing.
+	 */
+	if ((cachedAddr >= BANK_A_START_ADDR) && (cachedAddr < BANK_B_END_ADDR))
+	{
+		return TRUE;
 	}
 	else
 	{

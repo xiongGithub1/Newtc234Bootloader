@@ -1,24 +1,24 @@
 /*
  * @Author: qinXiong
  * @Date: 2026-04-29 09:02:27
- * @LastEditors: xiong&&2307975018@qq.com
- * @LastEditTime: 2026-04-29 16:15:28
+ * @LastEditors: xiongGithub1&&qx20001119@163.com
+ * @LastEditTime: 2026-05-19 00:43:01
  * @Description: 
  */
 /**********************************************************************************************************************
  * \file    uds_cfg.h
  * \brief
  * \version V1.0.0
- * \date    2022ƒÍ2‘¬10»’
+ * \date    2022??2??10??
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_CFG_H_
 #define UDSDIAGNOSTIC_UDS_CFG_H_
 #include "uds_common.h"
 
-//“‘œ¬¡Ω∏ˆƒ£ Ω÷ªƒ‹¥Úø™“ª∏ˆ
-////#define DIAGNOSTIC_MODE_FOR_APP				//APPÊ®°Âºè
-#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADERÊ®°Âºè
+//?????????????????
+////#define DIAGNOSTIC_MODE_FOR_APP				//APP??
+#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADER??
 
 /*****************************************************************************/
 
@@ -64,21 +64,94 @@ typedef enum
 	SNAP_DID_HW_VERSION    = 0xF193u
 } snap_did_name;
 
-/* 22∑˛ŒÒµƒ∂¡–¥DID */
+/* 22/2E ???? DID ???? */
 typedef enum
 {
-	F15A = 0xF15Au,	//¥˙±Ì∂¡–¥÷∏Œ∆–≈œ¢
-	F14A = 0xF14Au,	//¥˙±Ìbootloader∞Ê±æ∫≈
-	F187 = 0xF187u,	//¥˙±Ì¡„≤øº˛∫≈
-	F18A = 0xF18Au,	//¥˙±Ìπ©”¶…Ã¥˙∫≈
-	F197 = 0xF197u,	//¥˙±Ìøÿ÷∆∆˜–Õ∫≈
-	F193 = 0xF193u,	//¥˙±ÌECU”≤º˛∞Ê±æ∫≈
-	F195 = 0xF195u,	//¥˙±ÌECU»Ìº˛∞Ê±æ∫≈
-	F18C = 0xF18Cu,	//¥˙±Ìøÿ÷∆∆˜≥ˆ≥ß±‡∫≈
-	F190 = 0xF190u, //≥µ…ÌVIN
+	/* ?????? */
+	F15A = 0xF15Au,	/* ??????–¥??????–¥?? (Write) */
+	F15B = 0xF15Bu,	/* ??????–¥????????? (Read) */
+
+	/* Bootloader / System Info */
+	F14A = 0xF14Au,	/* Bootloader ?Ê±æ?? */
+	F186 = 0xF186u,	/* Bootloader?Œø??? */
+
+	/* OEM ??? */
+	F187 = 0xF187u,	/* OEM?????? */
+	F188 = 0xF188u,	/* OEM?????? */
+	F189 = 0xF189u,	/* OEM?????Ê±æ?? */
+	F18A = 0xF18Au,	/* ???????? */
+	F18B = 0xF18Bu,	/* ??????????????? */
+	F18C = 0xF18Cu,	/* ????????????????/???Œ∫? */
+
+	/* Hardware / Software Info */
+	F191 = 0xF191u,	/* OEM????? */
+	F192 = 0xF192u,	/* ?????????? */
+	F193 = 0xF193u,	/* ?????????Ê±æ?? */
+	F194 = 0xF194u,	/* ??????????? */
+	F195 = 0xF195u,	/* ??????????Ê±æ?? */
+	F197 = 0xF197u,	/* ??????????/?????? */
+
+	/* Vehicle Info */
+	F190 = 0xF190u, /* ????VIN??? */
 }rw_data_did;
 
 #define VIN_F190                          "W0L00043MB541326"
 #define BSID_F180                         "1.2.3.4"
 
+/*=============================================================================
+ * DFlash DID Â≠òÂÇ®Âå∫ÂüüÂÆö‰πâ
+ * TC234 DFlash Sector Â§ßÂ∞è = 8KB
+ * Sector 0: 0xAF000000 ~ 0xAF001FFF (Bootloader Flags + F15A fingerprint)
+ * Sector 1: 0xAF002000 ~ 0xAF003FFF (F186~F197 static DID data)
+ *===========================================================================*/
+
+/* Sector 0: Flags + Fingerprint */
+#define DFLASH_FLAG_ADDR                0xAF000000u
+#define DFLASH_F15A_FINGERPRINT_ADDR    0xAF000200u  /* 256 bytes offset from flag */
+#define DFLASH_F15B_RECORD_ADDR         0xAF000300u  /* F15B read records */
+
+/* Sector 1: Static DID data (F186~F197) */
+#define DFLASH_DID_BASE_ADDR            0xAF002000u
+
+/* DID offset within Sector 1 (each aligned to 16 bytes) */
+#define DFLASH_DID_F186_OFFSET          0x0000u  /* BootloaderÂèÇËÄÉÂè∑ (16B) */
+#define DFLASH_DID_F187_OFFSET          0x0010u  /* OEMÈõ∂ÈÉ®‰ª∂Âè∑ (16B) */
+#define DFLASH_DID_F188_OFFSET          0x0020u  /* OEMËΩØ‰ª∂Âè∑ (16B) */
+#define DFLASH_DID_F189_OFFSET          0x0030u  /* OEMËΩØ‰ª∂ÁâàÊú¨Âè∑ (16B) */
+#define DFLASH_DID_F18A_OFFSET          0x0040u  /* ‰æõÂ∫îÂïÜ‰ª£Á†Å (16B) */
+#define DFLASH_DID_F18B_OFFSET          0x0050u  /* Âà∂ÈÄ†Êó•Êúü (16B) */
+#define DFLASH_DID_F18C_OFFSET          0x0060u  /* ÊâπÊ¨°Âè∑ (16B) */
+#define DFLASH_DID_F190_OFFSET          0x0070u  /* VIN (32B) */
+#define DFLASH_DID_F191_OFFSET          0x0090u  /* OEMÁ°¨‰ª∂Âè∑ (16B) */
+#define DFLASH_DID_F192_OFFSET          0x00A0u  /* ‰æõÂ∫îÂïÜÁ°¨‰ª∂Âè∑ (16B) */
+#define DFLASH_DID_F193_OFFSET          0x00B0u  /* Á°¨‰ª∂ÁâàÊú¨Âè∑ (16B) */
+#define DFLASH_DID_F194_OFFSET          0x00C0u  /* ‰æõÂ∫îÂïÜËΩØ‰ª∂Âè∑ (16B) */
+#define DFLASH_DID_F195_OFFSET          0x00D0u  /* ËΩØ‰ª∂ÁâàÊú¨Âè∑ (16B) */
+#define DFLASH_DID_F197_OFFSET          0x00E0u  /* ÊéßÂà∂Âô®ÂêçÁß∞ (16B) */
+#define DFLASH_DID_RESERVED_OFFSET      0x00F0u  /* Reserved (16B) */
+
+#define DFLASH_DID_F15B_OFFSET          0x0100u  /* F15B fingerprint records */
+
+/* DID size definitions */
+#define DID_SIZE_F186                   10u
+#define DID_SIZE_F187                   16u
+#define DID_SIZE_F188                   16u
+#define DID_SIZE_F189                   10u
+#define DID_SIZE_F18A                   10u
+#define DID_SIZE_F18B                   8u
+#define DID_SIZE_F18C                   10u
+#define DID_SIZE_F190                   17u
+#define DID_SIZE_F191                   15u
+#define DID_SIZE_F192                   14u
+#define DID_SIZE_F193                   8u
+#define DID_SIZE_F194                   14u
+#define DID_SIZE_F195                   8u
+#define DID_SIZE_F197                   8u
+
+/* F15A/F15B fingerprint */
+#define FINGERPRINT_SIZE                66u
+#define FINGERPRINT_RECORD_SIZE         67u
+#define FINGERPRINT_RECORD_MAX          3u
+
 #endif /* UDSDIAGNOSTIC_UDS_CFG_H_ */
+

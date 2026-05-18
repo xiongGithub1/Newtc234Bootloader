@@ -37,6 +37,7 @@
 #include "custom_delay.h"
 #include <Tc234_Modules/Flash/Flash.h>
 #include "Boot_DualBank.h"
+#include "did_dflash.h"
 
 
 
@@ -86,13 +87,13 @@ void core0_main(void)
      * Explicitly set reload=0x7FFF (~5.3s @ 100MHz/16384) to safely cover
      * DFlash/PFlash operations. Default UCB reload may be too short.
      * Safety WDT is disabled to simplify bootloader handling.
-     *单次递减时间 = 16384 / 100MHz
+     *???ε????? = 16384 / 100MHz
              = 16384 / 100,000,000
-             = 163.84 μs
+             = 163.84 ??s
 
-      总超时时间   = 18310 × 163.84 μs
-             = 5,368,000 μs
-             ≈ 2.99 s
+      ???????   = 18310 ?? 163.84 ??s
+             = 5,368,000 ??s
+             ?? 2.99 s
      * */
     {
         IfxScuWdt_Config wdtConfig;
@@ -118,6 +119,9 @@ void core0_main(void)
 
     /* Dual Bank: initialize flag system and attempt to jump to active bank */
     Boot_DualBank_Init();
+
+    /* Initialize DID DFlash storage - check magic, write defaults if first boot */
+    DID_DFlash_Init();
 
     /* === OEM Phase: Check if APP requested bootloader mode via RAM flag === */
     {

@@ -31,28 +31,34 @@ TESTER_ADDR = 0x75C        # Tester 响应地址 (TX)
 FUNC_ADDR = 0x7DF          # 功能地址（会话保持用）
 CHANNEL = 1                # CAN 通道号
 
-# 刷写文件路径（.hex 或 .bin，需与 LSL 中的 Bank 地址匹配）
+# 刷写文件路径（统一 HEX，使用 Bank A 地址范围 0x80020000~0x800FFFFF）
+# 无论刷写 Bank A 还是 Bank B，都使用同一个 HEX 文件
+HEX_FILE = r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\Debug\App_dualBank.hex"
 
-HEX_FILE =r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\Debug\App_dualBank.hex"
-HEX_FILE_B=r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\debug_b\App_dualBank.hex"
 # 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
-# 刷写目标 Bank: "A" 或 "B"
-# Bank A: 0x80020000 ~ 0x800FFFFF (S8~S22, 896KB)
-# Bank B: 0x80100000 ~ 0x801FFFFF (S23~S26, 1MB)
-TARGET_BANK = "B"
+# 统一 HEX 对齐后的输出文件路径（自动由脚本处理）
+ALIGNED_HEX_FILE = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_Unified.hex"
 
 # ========== Bank 地址与大小（与 Bootloader LSL 保持一致） ==========
+# 统一 HEX 使用 Bank A 的地址范围
+UNIFIED_HEX_BASE_ADDR = 0x80020000
+UNIFIED_HEX_END_ADDR  = 0x80100000
+UNIFIED_HEX_SIZE      = 896 * 1024   # 0x000E0000
+
+# 实际 Bank 物理地址（Bootloader 内部重映射用）
 BANK_A_START_ADDR = 0x80020000
 BANK_B_START_ADDR = 0x80100000
-BANK_APP_A_SIZE   = 896 * 1024   # 0x000E0000
-BANK_APP_B_SIZE   = 1024 * 1024  # 0x00100000
+BANK_APP_A_SIZE   = 896 * 1024
+BANK_APP_B_SIZE   = 1024 * 1024
 
 # Bank 对应的 sector 列表（对应 IfxFlash_pFlashTableLog 索引）
+# 统一 HEX 中使用 Bank A 的 sector 布局 (S8~S22)
+# Bootloader 会根据目标 Bank 自动重映射到实际 sector
 BANK_SECTORS = {
     "A": list(range(8, 23)),    # S8 ~ S22
-    "B": list(range(23, 27)),   # S23 ~ S26
+    "B": list(range(8, 23)),    # S8 ~ S22 (统一 HEX 使用相同的 sector 编号)
 }
 
 # 全局变量：记录手动擦除成功的 sector 列表，供 file_download 前置检查使用
@@ -299,7 +305,7 @@ def write_hex_record(f, byte_count, offset, rec_type, data_bytes):
 
 def align_hex_file(input_path, output_path, align=32, fill_byte=0x00):
     """
-    对齐 Intel HEX 文件。
+    对齐 Intel HEX 文件（统一 HEX 专用）。
 
     Args:
         input_path:  输入 HEX 文件路径
@@ -312,6 +318,13 @@ def align_hex_file(input_path, output_path, align=32, fill_byte=0x00):
     if not data:
         print(f"[align_hex] Error: No data found in {input_path}")
         return False
+
+    # Unified HEX validation: ensure all data is within Bank A address range
+    for addr in data.keys():
+        if not (UNIFIED_HEX_BASE_ADDR <= addr < UNIFIED_HEX_END_ADDR):
+            print(f"[align_hex] Error: Address 0x{addr:08X} is outside unified HEX range")
+            print(f"[align_hex]        Unified HEX range: 0x{UNIFIED_HEX_BASE_ADDR:08X} ~ 0x{UNIFIED_HEX_END_ADDR:08X}")
+            return False
 
     segments = group_segments(data, max_gap=align)
 
@@ -432,41 +445,28 @@ def do_flash_process():
             if can_flash != 1:
                 app.log_e(f"[Check] ❌ Programming conditions NOT OK (canFlash={can_flash}), abort flash!")
                 return
-            if target_bank_char ==0x0A:
+            if target_bank_char == 0x0A:
                 TARGET_BANK = 'A'
-                input_file = HEX_FILE
-                Bank_A_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_A.hex"
-                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
-
-                if not os.path.exists(input_file):
-                    app.log_e(f"[Check] ❌ Input file for Bank A not found: {input_file}")
-                    sys.exit(1)
-
-                success = align_hex_file(input_file, Bank_A_file, align=alignment, fill_byte=0x00)
-                if not success:
-                    app.log_e("[Check] ❌ Failed to align HEX file for Bank A")
-                    sys.exit(1)
-                else:
-                    HEX_FILE = Bank_A_file
-                app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}")
-            elif target_bank_char==0x0B:
-                TARGET_BANK ='B'
-                input_file = HEX_FILE_B
-                Bank_B_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_B.hex"
-                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
-
-                if not os.path.exists(input_file):
-                    app.log_e(f"[Check] ❌ Input file for Bank B not found: {input_file}")
-                    sys.exit(1)
-
-                success = align_hex_file(input_file, Bank_B_file, align=alignment, fill_byte=0x00)
-                if not success:
-                    app.log_e("[Check] ❌ Failed to align HEX file for Bank B")
-                    sys.exit(1)
-                else:
-                    HEX_FILE = Bank_B_file
+            elif target_bank_char == 0x0B:
+                TARGET_BANK = 'B'
             else:
                 app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[4]:02X}, keep default={TARGET_BANK}")
+
+            # 统一 HEX 处理：无论目标 Bank 是 A 还是 B，都使用同一个 HEX 文件
+            input_file = HEX_FILE
+            alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
+
+            if not os.path.exists(input_file):
+                app.log_e(f"[Check] ❌ Input file not found: {input_file}")
+                sys.exit(1)
+
+            success = align_hex_file(input_file, ALIGNED_HEX_FILE, align=alignment, fill_byte=0x00)
+            if not success:
+                app.log_e("[Check] ❌ Failed to align HEX file")
+                sys.exit(1)
+
+            HEX_FILE = ALIGNED_HEX_FILE
+            app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}, using unified HEX")
         else:
             app.log_w(f"[Check] ⚠️ Short response, keep default target bank={TARGET_BANK}")
 

@@ -11,6 +11,7 @@
 #include "Boot_DualBank.h"
 #include "Flash.h"
 #include <string.h>
+#include "uds_cfg.h"
 #include "IfxCpu_reg.h"
 #include "IfxCpu.h"
 #include "Bsp.h"              /* for now(), TimeConst_1ms */
@@ -199,7 +200,8 @@ static void Boot_CopyShadowToMain(const BootFlagShadow_t* shadow, BootFlagMain_t
     main->bankB_codeSize = shadow->shadow_bankB_codeSize;
 }
 /* Write flags to DFlash with dual-backup strategy:
- * 1. Erase main sector  2. Write main  3. Erase shadow sector  4. Write shadow
+ * 1. Backup F15A fingerprint (at offset 0x200 within Sector 0)
+ * 2. Erase sector  3. Write main flag  4. Write shadow flag  5. Restore F15A
  */
 static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t* flags)
 {
@@ -208,6 +210,24 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t* flags)
     uint32 flagSize;
     uint32 pageCnt;
     uint16 wdtPwd = IfxScuWdt_getCpuWatchdogPassword();
+
+    /* Backup F15A fingerprint before erase (if it exists beyond flag area) */
+    uint8 f15aBackup[FINGERPRINT_RECORD_SIZE];
+    uint8 f15aValid = FALSE;
+    {
+        const uint8* pF15A = (const uint8*)DFLASH_F15A_FINGERPRINT_ADDR;
+        uint32 zeroCheck = 0;
+        for (i = 0; i < FINGERPRINT_RECORD_SIZE; i++)
+        {
+            zeroCheck |= pF15A[i];
+        }
+        if (zeroCheck != 0xFF && zeroCheck != 0)
+        {
+            /* F15A has valid data (not all 0xFF and not all 0x00) */
+            memcpy(f15aBackup, pF15A, FINGERPRINT_RECORD_SIZE);
+            f15aValid = TRUE;
+        }
+    }
 
     memcpy(&writeBuf, flags, sizeof(DualBankFlags_t));
 
@@ -234,11 +254,26 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t* flags)
         (uint32*) &writeBuf.shadow,
         sizeof(BootFlagShadow_t));
 
+    /* Step 4: Restore F15A fingerprint if it was valid */
+    if (f15aValid)
+    {
+        uint32 pageData[2];
+        for (i = 0; i < FINGERPRINT_RECORD_SIZE; i += DFLASH_PAGE_LENGTH)
+        {
+            uint32 addr = DFLASH_F15A_FINGERPRINT_ADDR + i;
+            pageData[0] = ((uint32)f15aBackup[i]) | ((uint32)f15aBackup[i + 1] << 8) |
+                          ((uint32)f15aBackup[i + 2] << 16) | ((uint32)f15aBackup[i + 3] << 24);
+            pageData[1] = ((uint32)f15aBackup[i + 4]) | ((uint32)f15aBackup[i + 5] << 8) |
+                          ((uint32)f15aBackup[i + 6] << 16) | ((uint32)f15aBackup[i + 7] << 24);
+            Flash_writeDFlash_port(addr, pageData, DFLASH_PAGE_LENGTH);
+        }
+    }
+
     /* Wait for all DFlash writes to complete before reset */
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
     IfxScuWdt_serviceCpuWatchdog(wdtPwd);
 
-    /* Step 4: Verify by reading back */
+    /* Step 5: Verify by reading back */
     {
         DualBankFlags_t verify;
         if (Boot_DualBank_ReadFlags(&verify) == TRUE)
@@ -897,4 +932,91 @@ void Boot_DualBank_SetTargetWriteBank(uint32 bank)
             Boot_DualBank_WriteFlags(&flags);
         }
     }
+}
+
+/**
+ * @brief 将统一 HEX 地址重映射到目标 Bank 的实际物理地址。
+ * @param unifiedAddr 统一 HEX 中的地址 (支持 cached 0x80xxxxxx 和 uncached 0xA0xxxxxx)
+ * @return 目标 Bank 的实际物理地址
+ * @note  统一 HEX 使用 Bank A 的地址范围。
+ *        如果目标 Bank 是 Bank B，则将地址偏移到 Bank B 范围。
+ *        如果目标 Bank 是 Bank A，地址保持不变。
+ */
+uint32 Boot_DualBank_RemapUnifiedAddr(uint32 unifiedAddr)
+{
+    uint32 offset;
+    uint32 cachedAddr;
+    uint32 isUncached = FALSE;
+
+    /* 判断是 cached 还是 uncached 地址 */
+    if ((unifiedAddr & 0xF0000000u) == 0xA0000000u)
+    {
+        isUncached = TRUE;
+        cachedAddr = unifiedAddr - 0x20000000u;
+    }
+    else
+    {
+        cachedAddr = unifiedAddr;
+    }
+
+    /* 计算相对于统一 HEX 基地址的偏移 */
+    offset = cachedAddr - UNIFIED_HEX_BASE_ADDR;
+
+    /* 根据目标 Bank 计算实际地址 */
+    if (Boot_DualBank_GetTargetWriteBank() == BANK_B)
+    {
+        cachedAddr = BANK_B_START_ADDR + offset;
+    }
+    else
+    {
+        cachedAddr = BANK_A_START_ADDR + offset;
+    }
+
+    /* 如果原始地址是 uncached，返回 uncached 地址 */
+    if (isUncached)
+    {
+        return cachedAddr + 0x20000000u;
+    }
+    return cachedAddr;
+}
+
+/**
+ * @brief 判断地址是否属于统一 HEX 的地址范围。
+ * @param addr 待判断的地址 (支持 cached 0x80xxxxxx 和 uncached 0xA0xxxxxx)
+ * @return TRUE 如果地址在统一 HEX 范围内
+ */
+boolean Boot_DualBank_IsUnifiedHexAddr(uint32 addr)
+{
+    uint32 cachedAddr;
+
+    /* 统一转换为 cached 地址进行比较 */
+    if ((addr & 0xF0000000u) == 0xA0000000u)
+    {
+        cachedAddr = addr - 0x20000000u;
+    }
+    else
+    {
+        cachedAddr = addr;
+    }
+
+    return (cachedAddr >= UNIFIED_HEX_BASE_ADDR) && (cachedAddr < UNIFIED_HEX_END_ADDR);
+}
+
+/**
+ * @brief 将统一 HEX 的 sector 编号重映射到目标 Bank 的 sector 编号。
+ * @param unifiedSector 统一 HEX 中的 sector 编号 (基于 Bank A: S8~S22)
+ * @return 目标 Bank 的实际 sector 编号
+ * @note  统一 HEX 使用 Bank A 的 sector 布局 (S8~S22)。
+ *        目标 Bank 是 Bank A: sector 不变。
+ *        目标 Bank 是 Bank B: sector 映射到 S23~S26。
+ */
+uint16 Boot_DualBank_RemapUnifiedSector(uint16 unifiedSector)
+{
+    if (Boot_DualBank_GetTargetWriteBank() == BANK_B)
+    {
+        /* Bank B 的 sector 从 S23 开始，对应 Bank A 的 S8 */
+        return unifiedSector + (BANK_B_SECTOR_START - BANK_A_SECTOR_START);
+    }
+    /* Bank A: sector 编号不变 */
+    return unifiedSector;
 }
