@@ -543,6 +543,11 @@ def do_flash_process():
             app.log_i("[Post] ✅ Programming dependencies OK")
         else:
             app.log_w("[Post] ⚠️ Programming dependencies may have issues, continue...")
+        
+                # ------------------------------------------------------------
+        # 14. ECU 复位 11 03 (SoftReset)
+        # ------------------------------------------------------------
+        uds_request(uds, 0x11, [0x01], "ECU Reset")
 
         # ------------------------------------------------------------
         # 13. 后编程阶段 - 恢复系统正常工作状态
@@ -569,10 +574,6 @@ def do_flash_process():
         if not session_control(uds, 0x01, "Default Session (Post)"):
             app.log_w("[Post] ⚠️ Failed to enter Default Session, continue...")
 
-        # ------------------------------------------------------------
-        # 14. ECU 复位 11 03 (SoftReset)
-        # ------------------------------------------------------------
-        uds_request(uds, 0x11, [0x03], "ECU Reset")
 
     finally:
         uds.stop_session_keep()

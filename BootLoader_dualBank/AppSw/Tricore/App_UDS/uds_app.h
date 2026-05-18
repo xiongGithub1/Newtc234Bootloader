@@ -143,6 +143,8 @@ typedef struct
     uint8 SecurityRequestCnt;
     tUdsTime xLockTime;         /* Lock time */
     tUdsTime xS3Server;         /* S3 Server time */
+    tUdsTime xP2Server;         /* P2 Server time (ms) */
+    tUdsTime xP2Star;           /* P2* Server time (ms) */
 } tUdsTimeInfo;
 
 typedef struct
@@ -152,6 +154,8 @@ typedef struct
 	uint8 SecurityLevel; /* Current security level */
 	tUdsTime xUdsS3ServerTime; /* UDS s3 server time */
 	tUdsTime xSecurityReqLockTime; /* Security request lock time */
+	tUdsTime xUdsP2ServerTime;   /* UDS P2 server time */
+	tUdsTime xUdsP2StarTime;     /* UDS P2* server time */
 } tUdsInfo;
 /* uds Communication control type */
 typedef enum
@@ -255,6 +259,15 @@ void readFlagS6(void);
 void rwDataInit(void);
 void RestartS3Server(void);
 void SetCurrentSession(const uint8 i_SerSessionMode);
+uint16 GetUdsP2ServerTime(void);
+void SubUdsP2ServerTime(uint16 i_SubTime);
+uint16 GetUdsP2StarTime(void);
+void SubUdsP2StarTime(uint16 i_SubTime);
+uint8 IsP2ServerTimeout(void);
+uint8 IsP2StarTimeout(void);
+void RestartP2Server(void);
+void RestartP2StarServer(void);
+void UDS_StartP2StarTimer(void);
 static uint16 StartErasePFlash(uint8 blockHigh, uint8 blockLow);
 static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow);
 

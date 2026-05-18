@@ -61,29 +61,29 @@ App_Stm  g_Stm;   /**< \brief Stm global data */
 // 输出变量：
 // 函数注释：系统定时器初始化，该函数只在初始化阶段从main调用
 //***************************************************************/
-//void IfxStm_init(void)
-//{
-//    /* disable interrupts */
-//    boolean interruptState = IfxCpu_disableInterrupts();
-//
-//    initTime();
-//
-//    g_Stm.stmSfr = &MODULE_STM0;
-//    IfxStm_initCompareConfig(&g_Stm.stmConfig);
-//
-//#ifdef SIMULATION
-//    g_SrcSwInt.stmConfig.ticks      = 1000;
-//#else
-//    g_Stm.stmConfig.ticks           = (uint32)TimeConst_1ms;        // 计算结果为 100 000 ，曾军20210126
-//#endif
-//
-//    g_Stm.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT0;
-//    g_Stm.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
-//    IfxStm_initCompare(g_Stm.stmSfr, &g_Stm.stmConfig);
-//
-//    /* enable interrupts again */
-//    IfxCpu_restoreInterrupts(interruptState);
-//}
+void IfxStm_init(void)
+{
+   /* disable interrupts */
+   boolean interruptState = IfxCpu_disableInterrupts();
+
+   initTime();
+
+   g_Stm.stmSfr = &MODULE_STM0;
+   IfxStm_initCompareConfig(&g_Stm.stmConfig);
+
+#ifdef SIMULATION
+   g_SrcSwInt.stmConfig.ticks      = 1000;
+#else
+   g_Stm.stmConfig.ticks           = (uint32)TimeConst_1ms;        // 计算结果为 100 000 ，曾军20210126
+#endif
+
+   g_Stm.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT0;
+   g_Stm.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
+   IfxStm_initCompare(g_Stm.stmSfr, &g_Stm.stmConfig);
+
+   /* enable interrupts again */
+   IfxCpu_restoreInterrupts(interruptState);
+}
 
 
 

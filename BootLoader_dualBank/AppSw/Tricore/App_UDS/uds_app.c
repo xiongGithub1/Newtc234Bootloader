@@ -49,7 +49,9 @@ static const tUdsTimeInfo gs_stUdsAppCfg =
 	1u,
 	3u,
 	10000u,
-	5000u
+	5000u,
+	50u,    /* P2 Server time (ms): 50ms */
+	5000u   /* P2* Server time (ms): 5000ms */
 };
 
 static tUdsInfo gs_stUdsInfo =
@@ -59,77 +61,54 @@ static tUdsInfo gs_stUdsInfo =
 	NONE_SECURITY,
 	0u,
 	0u,
+	0u,
+	0u
 };
 
 static const tUDSService gs_astUDSService[] =
 {
 	{
 			0x10u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			DEFALUT_SESSION | PROGRAM_SESSION| EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DigSession0x10
 	},
 	{
 			0x11u,
-	#ifdef DIAGNOSTIC_MODE_FOR_APP
-			DEFALUT_SESSION | EXTEND_SESSION,
-	#endif
-	#ifdef DIAGNOSTIC_MODE_FOR_BOOTLOADER
 			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-	#endif
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DoResetMCU0x11
 	},
 	{
 			0x27u,
-	#ifdef DIAGNOSTIC_MODE_FOR_APP
-			EXTEND_SESSION | EXTEND_SESSION,
-	#endif
-	#ifdef DIAGNOSTIC_MODE_FOR_BOOTLOADER
 			PROGRAM_SESSION | EXTEND_SESSION,
-	#endif
 			SUPPORT_PHYSICAL_ADDR,
 			NONE_SECURITY,
 			SecurityAccess0x27
 	},
 	{
-			0x28u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			SECURITY_LEVEL_1,
-			CommunicationControl0x28
-	},
-	{
 			0x22u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			DEFALUT_SESSION | PROGRAM_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			ReadDataByIdentifier0x22
 	},
 	{
-			0x23u,
-			DEFALUT_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			NONE_SECURITY,
-			ReadDataByAddress0x23
-	},
-	{
 			0x2Eu,
-			EXTEND_SESSION | PROGRAM_SESSION,
+			PROGRAM_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			WriteDataByIdentifier0x2E
 	},
 	{
 			0x31u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			DEFALUT_SESSION|PROGRAM_SESSION ,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			RoutineControl0x31
 	},
-
 	{
 			0x34u,
 			PROGRAM_SESSION ,
@@ -137,7 +116,6 @@ static const tUDSService gs_astUDSService[] =
 			SECURITY_LEVEL_2,
 			RequestDownload0x34
 	},
-
 	{
 			0x36u,
 			PROGRAM_SESSION,
@@ -152,31 +130,11 @@ static const tUDSService gs_astUDSService[] =
 			SECURITY_LEVEL_2,
 			RequestTransferExit0x37
 	},
-	{
-			0x85u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			SECURITY_LEVEL_1,
-			ControlDTCSetting0x85
-	},
-	{
-			0x14u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			NONE_SECURITY,
-			ClearDTCInformation0x14
-	},
-	{
-			0x19u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			NONE_SECURITY,
-			ReadDTCInformation0x19
-	},
+	
 	/* Tester present service */
 	{
 			0x3Eu,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			TesterPresent0x3E
@@ -369,6 +327,65 @@ void RestartS3Server(void)
 
 }
 
+uint16 GetUdsP2ServerTime(void)
+{
+	return (gs_stUdsInfo.xUdsP2ServerTime);
+}
+
+void SubUdsP2ServerTime(uint16 i_SubTime)
+{
+	gs_stUdsInfo.xUdsP2ServerTime -= i_SubTime;
+}
+
+uint16 GetUdsP2StarTime(void)
+{
+	return (gs_stUdsInfo.xUdsP2StarTime);
+}
+
+void SubUdsP2StarTime(uint16 i_SubTime)
+{
+	gs_stUdsInfo.xUdsP2StarTime -= i_SubTime;
+}
+
+uint8 IsP2ServerTimeout(void)
+{
+	if (0u == gs_stUdsInfo.xUdsP2ServerTime)
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+uint8 IsP2StarTimeout(void)
+{
+	if (0u == gs_stUdsInfo.xUdsP2StarTime)
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+void RestartP2Server(void)
+{
+	gs_stUdsInfo.xUdsP2ServerTime = UdsAppTimeToCount(gs_stUdsAppCfg.xP2Server);
+}
+
+void RestartP2StarServer(void)
+{
+	gs_stUdsInfo.xUdsP2StarTime = UdsAppTimeToCount(gs_stUdsAppCfg.xP2Star);
+}
+
+void UDS_StartP2StarTimer(void)
+{
+	RestartP2StarServer();
+}
+
 
 void SaveRequestIdType(const uint32 i_SerRequestID)
 {
@@ -397,6 +414,23 @@ void UDS_SystemTickCtl(void)
 	if (GetUdsSecurityReqLockTime())
 	{
 		SubUdsSecurityReqLockTime(1u);
+	}
+
+	if (GetUdsP2ServerTime())
+	{
+		SubUdsP2ServerTime(1u);
+	}
+
+	if (GetUdsP2StarTime())
+	{
+		SubUdsP2StarTime(1u);
+	}
+
+	/* P2 timeout: send 0x7F service response pending */
+	if ((TRUE == IsP2ServerTimeout()) && (FALSE == IsP2StarTimeout()))
+	{
+		RestartP2Server();
+		/* Note: actual NRC 0x78 response is handled by service functions if needed */
 	}
 
 	/* S3 timeout: automatically return to default session and reset security level */
@@ -532,11 +566,11 @@ void UDS_MainFun(void)
 	{
 
 		if (TRUE != IsCurDefaultSession())
-		{
+				{
 
 
-			RestartS3Server();
-		}
+					RestartS3Server();
+				}
 
 
 		SaveRequestIdType(stUdsAppMsg.xUdsId);
@@ -545,6 +579,9 @@ void UDS_MainFun(void)
 	{
 		return;
 	}
+
+	/* Start P2 server timer on receiving a new request */
+	RestartP2Server();
 
 	pstUDSService = GetUDSServiceInfo(&SupSerItem);
 
@@ -830,6 +867,10 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 			break;
 		case 0x02u:
+			if(gs_stUdsInfo.CurSessionMode==DEFALUT_SESSION){
+				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION, m_pstPDUMsg);
+				break;
+			}
 			if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_1))
 			{
 				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);
@@ -843,16 +884,12 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				SetCurrentSession(PROGRAM_SESSION);
 				/* OEM: mark programming session phase */
 				g_bootPhase = BOOT_PHASE_PROG_SESSION;
-#ifdef DIAGNOSTIC_MODE_FOR_APP
-				/* APP mode: set bootloader flag and reset after positive response is sent */
-				* (uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_APP;
-				m_pstPDUMsg->pfUDSTxMsgServiceCallBack = &DoResetToBootloader;
-#endif
+				RestartS3Server();
 			}
 			break;
 		case 0x82u:
 			SetCurrentSession(PROGRAM_SESSION);
-
+			RestartS3Server();
 			if (0x82u == RequestSubfunction)
 			{
 				m_pstPDUMsg->xDataLen = 0u;
@@ -865,6 +902,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
 			m_pstPDUMsg->xDataLen = 2u;
 			SetCurrentSession(EXTEND_SESSION);
+			RestartS3Server();
 			break;
 		case 0x83u:
 			SetCurrentSession(EXTEND_SESSION);
@@ -874,8 +912,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->xDataLen = 0u;
 			}
 
-
-
+			RestartS3Server();
 
 			break;
 
@@ -996,8 +1033,6 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		return;
 	}
 
-
-
 	switch (RequestSubfunction)
 	{
 		case 1:
@@ -1092,110 +1127,6 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	}
 }
 
-static void CommunicationControl0x28(struct UDSServiceInfo* i_pstUDSServiceInfo,
-	tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	uint8 RequestSubfunction = 0u;
-	uint8 communicationType = 0u;
-	RequestSubfunction = m_pstPDUMsg->aDataBuf[1u];
-	communicationType = m_pstPDUMsg->aDataBuf[2u];
-
-	if (communicationType != 0x03u)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-		return;
-	}
-
-	m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-	m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-	m_pstPDUMsg->xDataLen = 2u;
-
-
-
-
-
-
-
-
-	switch (RequestSubfunction)
-	{
-		case UDS_CC_MODE_RX_TX:
-			g_CanMsgCommCtrlMode = UDS_CC_MODE_RX_TX;
-			break;
-		case UDS_CC_MODE_RX_NO:
-			g_CanMsgCommCtrlMode = UDS_CC_MODE_RX_NO;
-			break;
-		case UDS_CC_MODE_NO_TX:
-			g_CanMsgCommCtrlMode = UDS_CC_MODE_NO_TX;
-			break;
-		case UDS_CC_MODE_NO_NO:
-			g_CanMsgCommCtrlMode = UDS_CC_MODE_NO_NO;
-			break;
-		default:
-			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
-			break;
-	}
-	DrvCanRxTxModeSet(g_CanMsgCommCtrlMode);
-
-}
-static void ReadDataByAddress0x23(struct UDSServiceInfo* i_pstUDSServiceInfo,
-	tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	uint32 u32Addr = 0;
-	uint32 u32DataLength = 0;
-	uint8 u8AddrBytes, u8DataBytes;
-	uint8 Index = 0u;
-
-	if (m_pstPDUMsg->xDataLen < 2)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
-
-	u8AddrBytes = m_pstPDUMsg->aDataBuf[1u] & 0x0Fu;
-	u8DataBytes = (m_pstPDUMsg->aDataBuf[1u] & 0xF0u) >> 4u;
-
-	if ((u8AddrBytes == 0u) || (u8AddrBytes > 4u) || (u8DataBytes == 0u) || (u8DataBytes > 4u))
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-		return;
-	}
-
-	if (m_pstPDUMsg->xDataLen < (2u + u8AddrBytes + u8DataBytes))
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
-
-	for (Index = 0u; Index < u8AddrBytes; Index++)
-	{
-		u32Addr <<= 8u;
-		u32Addr |= m_pstPDUMsg->aDataBuf[Index + 2u];
-	}
-
-	for (Index = 0u; Index < u8DataBytes; Index++)
-	{
-		u32DataLength <<= 8u;
-		u32DataLength |= m_pstPDUMsg->aDataBuf[Index + 2u + u8AddrBytes];
-	}
-
-	if (CAN_SSN_checkMemoryAddrAndSize(u32Addr, u32DataLength) != 0)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-		return;
-	}
-
-	m_pstPDUMsg->aDataBuf[0] = i_pstUDSServiceInfo->SerNum + 0x40;
-	uint8* pu8DataPtr = (uint8*) u32Addr;
-
-	for (uint32 i = 0; i < u32DataLength; i++)
-	{
-		m_pstPDUMsg->aDataBuf[1 + i] = *pu8DataPtr;
-		pu8DataPtr++;
-	}
-
-	m_pstPDUMsg->xDataLen = (uint16) u32DataLength + 1;
-}
 
 
 
@@ -1339,210 +1270,9 @@ static void WriteDataByIdentifier0x2E(struct UDSServiceInfo* i_pstUDSServiceInfo
 }
 
 
-static void ClearDTCInformation0x14(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	/* ISO 14229-1: 14 groupOfDTC(3) */
-	if (m_pstPDUMsg->xDataLen < 4)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
-	/* Only support clearing all DTCs (FF FF FF) */
-	if ((m_pstPDUMsg->aDataBuf[1] != 0xFF) ||
-	    (m_pstPDUMsg->aDataBuf[2] != 0xFF) ||
-	    (m_pstPDUMsg->aDataBuf[3] != 0xFF))
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-		return;
-	}
-	/* Call actual DTC manager to clear all DTC records */
-	clearDTCByGroup(0xFFFFFFu);
-	m_pstPDUMsg->aDataBuf[0] = 0x54; /* Positive response SID */
-	m_pstPDUMsg->xDataLen = 1;
-}
 
-static void ReadDTCInformation0x19(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	uint8 subFunc;
-	uint8 statusMask;
-	uint16 dtcCount;
-	uint8 dtcBuf[64];
-	uint16 i;
-	uint8 respLen;
 
-	if (m_pstPDUMsg->xDataLen < 2)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
 
-	subFunc = m_pstPDUMsg->aDataBuf[1];
-
-	switch (subFunc)
-	{
-		case REPORT_DTCNUMBER_BY_MASK: /* 0x01 */
-			if (m_pstPDUMsg->xDataLen < 3)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			statusMask = m_pstPDUMsg->aDataBuf[2];
-			dtcCount = getDTCCountByStatusMask(statusMask);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x01;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			m_pstPDUMsg->aDataBuf[3] = ISO_14229_1; /* DTCFormatIdentifier */
-			m_pstPDUMsg->aDataBuf[4] = (uint8)(dtcCount >> 8);
-			m_pstPDUMsg->aDataBuf[5] = (uint8)(dtcCount & 0xFF);
-			m_pstPDUMsg->xDataLen = 6;
-			break;
-
-		case REPORT_DTCCODE_BY_MASK: /* 0x02 */
-			if (m_pstPDUMsg->xDataLen < 3)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			statusMask = m_pstPDUMsg->aDataBuf[2];
-			dtcCount = getDTCByStatusMask(dtcBuf, statusMask);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x02;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			respLen = 3;
-			for (i = 0; i < dtcCount && respLen < (UDS_DATA_BUF_SIZE - 4); i++)
-			{
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 0];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 1];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 2];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 3];
-			}
-			m_pstPDUMsg->xDataLen = respLen;
-			break;
-
-		case REPORT_DTCSNAPSHOT_BY_DTCNUMBER: /* 0x04 */
-			if (m_pstPDUMsg->xDataLen < 6)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			{
-				uint32 dtcCode = ((uint32)m_pstPDUMsg->aDataBuf[2] << 16) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[3] << 8) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[4]);
-				uint8 recordNum = m_pstPDUMsg->aDataBuf[5];
-				uint8 snapData[128];
-				uint8 snapLen = 0;
-
-				if (getDTCSanpData(dtcCode, recordNum, snapData, &snapLen) == FALSE)
-				{
-					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-					return;
-				}
-
-				m_pstPDUMsg->aDataBuf[0] = 0x59;
-				m_pstPDUMsg->aDataBuf[1] = 0x04;
-				m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-				m_pstPDUMsg->aDataBuf[3] = GET_DTC_HIGH_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[4] = GET_DTC_MID_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[5] = GET_DTC_LOW_BYTE(dtcCode);
-				respLen = 6;
-				for (i = 0; i < snapLen && respLen < UDS_DATA_BUF_SIZE; i++)
-				{
-					m_pstPDUMsg->aDataBuf[respLen++] = snapData[i];
-				}
-				m_pstPDUMsg->xDataLen = respLen;
-			}
-			break;
-
-		case REPORT_DTCEXTEND_DATA_BY_DTCNUMBER: /* 0x06 */
-			if (m_pstPDUMsg->xDataLen < 6)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			{
-				uint32 dtcCode = ((uint32)m_pstPDUMsg->aDataBuf[2] << 16) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[3] << 8) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[4]);
-				uint8 recordNum = m_pstPDUMsg->aDataBuf[5];
-				uint8 extData[16];
-				uint8 extLen = 0;
-
-				if (getDTCExtData(dtcCode, recordNum, extData, &extLen) == FALSE)
-				{
-					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-					return;
-				}
-
-				m_pstPDUMsg->aDataBuf[0] = 0x59;
-				m_pstPDUMsg->aDataBuf[1] = 0x06;
-				m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-				m_pstPDUMsg->aDataBuf[3] = GET_DTC_HIGH_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[4] = GET_DTC_MID_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[5] = GET_DTC_LOW_BYTE(dtcCode);
-				respLen = 6;
-				for (i = 0; i < extLen && respLen < UDS_DATA_BUF_SIZE; i++)
-				{
-					m_pstPDUMsg->aDataBuf[respLen++] = extData[i];
-				}
-				m_pstPDUMsg->xDataLen = respLen;
-			}
-			break;
-
-		case REPORT_SUPPORTED_DTC: /* 0x0A */
-			dtcCount = getDTCSupportedDtc(dtcBuf);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x0A;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			respLen = 3;
-			for (i = 0; i < dtcCount && respLen < (UDS_DATA_BUF_SIZE - 4); i++)
-			{
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 0];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 1];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 2];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 3];
-			}
-			m_pstPDUMsg->xDataLen = respLen;
-			break;
-
-		default:
-			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
-			break;
-	}
-}
-
-static void ControlDTCSetting0x85(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	uint8 flag = 0;
-	m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-	flag = m_pstPDUMsg->aDataBuf[1u];
-	if (m_pstPDUMsg->xDataLen < 2)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
-	if (flag == 0x01)
-	{
-
-		m_pstPDUMsg->aDataBuf[1u] = 0x01;
-		m_pstPDUMsg->xDataLen = 2;
-		isDtcStatuCanUpdate = ON;
-	}
-	else if (flag == 0x02)
-	{
-
-		m_pstPDUMsg->aDataBuf[1u] = 0x02;
-		m_pstPDUMsg->xDataLen = 2;
-		isDtcStatuCanUpdate = OFF;
-	}
-	else
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-	}
-}
 
 
 /*

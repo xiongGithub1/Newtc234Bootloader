@@ -366,7 +366,7 @@ void AppBL_init(void)
 
     /* bsp  tmr */
     TMR_init();
-
+	IfxStm_init();
     return;
 }
 

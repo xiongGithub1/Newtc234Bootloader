@@ -55,7 +55,9 @@ static const tUdsTimeInfo gs_stUdsAppCfg =
 	1u,
 	3u,
 	10000u,
-	5000u
+	5000u,
+	50u,    /* P2 Server time (ms): 50ms */
+	5000u   /* P2* Server time (ms): 5000ms */
 };
 
 static tUdsInfo gs_stUdsInfo =
@@ -65,6 +67,8 @@ static tUdsInfo gs_stUdsInfo =
 	NONE_SECURITY,
 	0u,
 	0u,
+	0u,
+	0u
 };
 
 static const tUDSService gs_astUDSService[] =
@@ -134,29 +138,6 @@ static const tUDSService gs_astUDSService[] =
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			RoutineControl0x31
-	},
-
-	{
-			0x34u,
-			PROGRAM_SESSION ,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			SECURITY_LEVEL_2,
-			RequestDownload0x34
-	},
-
-	{
-			0x36u,
-			PROGRAM_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			SECURITY_LEVEL_2,
-			TransferData0x36
-	},
-	{
-			0x37u,
-			PROGRAM_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			SECURITY_LEVEL_2,
-			RequestTransferExit0x37
 	},
 	{
 			0x85u,
@@ -375,6 +356,65 @@ void RestartS3Server(void)
 
 }
 
+uint16 GetUdsP2ServerTime(void)
+{
+	return (gs_stUdsInfo.xUdsP2ServerTime);
+}
+
+void SubUdsP2ServerTime(uint16 i_SubTime)
+{
+	gs_stUdsInfo.xUdsP2ServerTime -= i_SubTime;
+}
+
+uint16 GetUdsP2StarTime(void)
+{
+	return (gs_stUdsInfo.xUdsP2StarTime);
+}
+
+void SubUdsP2StarTime(uint16 i_SubTime)
+{
+	gs_stUdsInfo.xUdsP2StarTime -= i_SubTime;
+}
+
+uint8 IsP2ServerTimeout(void)
+{
+	if (0u == gs_stUdsInfo.xUdsP2ServerTime)
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+uint8 IsP2StarTimeout(void)
+{
+	if (0u == gs_stUdsInfo.xUdsP2StarTime)
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+void RestartP2Server(void)
+{
+	gs_stUdsInfo.xUdsP2ServerTime = UdsAppTimeToCount(gs_stUdsAppCfg.xP2Server);
+}
+
+void RestartP2StarServer(void)
+{
+	gs_stUdsInfo.xUdsP2StarTime = UdsAppTimeToCount(gs_stUdsAppCfg.xP2Star);
+}
+
+void UDS_StartP2StarTimer(void)
+{
+	RestartP2StarServer();
+}
+
 
 void SaveRequestIdType(const uint32 i_SerRequestID)
 {
@@ -403,6 +443,22 @@ void UDS_SystemTickCtl(void)
 	if (GetUdsSecurityReqLockTime())
 	{
 		SubUdsSecurityReqLockTime(1u);
+	}
+
+	if (GetUdsP2ServerTime())
+	{
+		SubUdsP2ServerTime(1u);
+	}
+
+	if (GetUdsP2StarTime())
+	{
+		SubUdsP2StarTime(1u);
+	}
+
+	/* P2 timeout: send 0x7F service response pending */
+	if ((TRUE == IsP2ServerTimeout()) && (FALSE == IsP2StarTimeout()))
+	{
+		RestartP2Server();
 	}
 
 	/* S3 timeout: automatically return to default session and reset security level */
@@ -549,6 +605,9 @@ void UDS_MainFun(void)
 	{
 		return;
 	}
+
+	/* Start P2 server timer on receiving a new request */
+	RestartP2Server();
 
 	pstUDSService = GetUDSServiceInfo(&SupSerItem);
 
@@ -1551,243 +1610,8 @@ static void ControlDTCSetting0x85(struct UDSServiceInfo* i_pstUDSServiceInfo, tU
 
 
 /*
- * ?????app???????-250512
- * */
-#define APP1_START  0xA0020000
-#define APP1_END    0xA00FFFFF
-#define APP2_START  0xa0100000
-#define APP2_END    0xa01fffff
-
-
-
-
-static tDowloadDataInfo gs_stDowloadDataInfo = { 0u, 0u };
-
-
-static uint32 gs_RxBlockNum = 0u;
-
-
-static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
-	tUdsAppMsgInfo* m_pstPDUMsg)
-{
-
-	uint8 Index = 0u;
-	uint8 Ret = TRUE;
-	uint32  addrBytesLength, dataBytesLength;
-	uint32 addrAndDataBytesLength;
-	addrAndDataBytesLength = m_pstPDUMsg->aDataBuf[2u];
-	addrBytesLength = addrAndDataBytesLength & 0x0f;
-	dataBytesLength = (addrAndDataBytesLength & 0xf0) >> 4;
-
-
-	if (m_pstPDUMsg->xDataLen < (1u + 2u + addrBytesLength + dataBytesLength))
-	{
-		Ret = FALSE;
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-	}
-
-	if (TRUE == Ret)
-	{
-
-
-
-		gs_stDowloadDataInfo.StartAddr = 0u;
-		for (Index = 0u; Index < addrBytesLength; Index++)
-
-		{
-			gs_stDowloadDataInfo.StartAddr <<= 8u;
-
-
-			gs_stDowloadDataInfo.StartAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
-
-		}
-		gs_stDowloadDataInfo.StartAddr = (gs_stDowloadDataInfo.StartAddr & 0x00FFFFFF) | 0xA0000000;
-
-		/* Dual Bank: determine target bank from download address
-		 * StartAddr is uncached (0xA0...), convert back to cached for comparison */
-		{
-			uint32 cachedAddr = gs_stDowloadDataInfo.StartAddr - 0x20000000u;
-			if ((cachedAddr >= BANK_B_START_ADDR) &&
-				(cachedAddr < BANK_B_END_ADDR))
-			{
-				Boot_DualBank_SetTargetWriteBank(BANK_B);
-			}
-			else
-			{
-				Boot_DualBank_SetTargetWriteBank(BANK_A);
-			}
-		}
-
-
-		if (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank())
-		{
-			/* Never allow flashing the active bank, even if it appears invalid.
-			 * The dual-bank design always writes to the INACTIVE bank first,
-			 * then switches. This prevents overwriting the firmware we are
-			 * currently running from. */
-			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-			Ret = FALSE;
-		}
-
-
-		gs_stDowloadDataInfo.DataLen = 0u;
-		for (Index = 0u; Index < dataBytesLength; Index++)
-		{
-			gs_stDowloadDataInfo.DataLen <<= 8u;
-			gs_stDowloadDataInfo.DataLen |= m_pstPDUMsg->aDataBuf[Index + 3 + addrBytesLength];
-		}
-	}
-
-
-	if (((TRUE != IsDownloadDataAddrValid(gs_stDowloadDataInfo.StartAddr)) ||
-
-		(TRUE != IsDownloadDataLenValid(gs_stDowloadDataInfo.DataLen))) && (TRUE == Ret))
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-
-		Ret = FALSE;
-	}
-
-	if (TRUE == Ret)
-	{
-
-		Flash_SetNextDownloadStep(FL_TRANSFER_STEP);
-
-
-		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
-
-
-
-		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-		m_pstPDUMsg->aDataBuf[1u] = 0x10u;
-		m_pstPDUMsg->aDataBuf[2u] = 0x80u;
-		m_pstPDUMsg->xDataLen = 3u;
-
-
-		gs_RxBlockNum = 1;
-	}
-	else
-	{
-		Flash_InitDowloadInfo();
-
-
-		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
-	}
-}
-
-static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
-{
-
-	uint8 Ret = TRUE;
-
-
-	if ((FL_TRANSFER_STEP != Flash_GetCurDownloadStep()) && (TRUE == Ret))
-	{
-		Ret = FALSE;
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-	}
-
-	/* Verify sequence number (SN) per UDS specification */
-	{
-		uint8 rxSN = m_pstPDUMsg->aDataBuf[1u];
-		if (rxSN != gs_RxBlockNum)
-		{
-			Ret = FALSE;
-			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-			Flash_InitDowloadInfo();
-			Flash_SetNextDownloadStep(FL_REQUEST_STEP);
-			gs_RxBlockNum = 0u;
-		}
-		else
-		{
-			gs_RxBlockNum++;
-			if (gs_RxBlockNum > 0xFFu)
-			{
-				gs_RxBlockNum = 0u;
-			}
-		}
-	}
-
-	uint8 actualDataLen = m_pstPDUMsg->xDataLen - 2;
-
-
-
-
-	if (TRUE != Flash_ProgramRegion(gs_stDowloadDataInfo.StartAddr,
-		&m_pstPDUMsg->aDataBuf[2],
-		actualDataLen)
-		&& (TRUE == Ret))
-	{
-		Ret = FALSE;
-
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-	}
-	else
-	{
-
-
-
-
-
-
-		gs_stDowloadDataInfo.StartAddr += actualDataLen;
-		gs_stDowloadDataInfo.DataLen -= actualDataLen;
-	}
-
-	if ((0u == gs_stDowloadDataInfo.DataLen) && (TRUE == Ret))
-	{
-
-		gs_RxBlockNum = 0u;
-
-		Flash_SetNextDownloadStep(FL_EXIT_TRANSFER_STEP);
-	}
-
-	if (TRUE == Ret)
-	{
-
-
-		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-		m_pstPDUMsg->xDataLen = 4u;
-
-	}
-	else
-	{
-		Flash_InitDowloadInfo();
-
-
-		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
-		gs_RxBlockNum = 0u;
-	}
-}
-
-
-static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
-	tUdsAppMsgInfo* m_pstPDUMsg)
-{
-
-	uint8 Ret = TRUE;
-
-	if (FL_EXIT_TRANSFER_STEP != Flash_GetCurDownloadStep())
-	{
-		Ret = FALSE;
-
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-	}
-
-	if (TRUE == Ret)
-	{
-		Flash_SetNextDownloadStep(FL_CHECKSUM_STEP);
-
-
-
-		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-		m_pstPDUMsg->xDataLen = 1u;
-	}
-	else
-	{
-		Flash_InitDowloadInfo();
-	}
-}
+ * App_dualBank: 34/36/37 services removed — programming is handled by bootloader only.
+ */
 
 
 // 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷木锟斤拷锟绞碉拷锟�?
