@@ -28,6 +28,7 @@
 #include "Cpu0_Main.h"
 #include "MultiCAN.h"
 #include "Boot_DualBank.h"
+#include "did_dflash.h"
 
 
 
@@ -168,6 +169,10 @@ void core0_main(void)
      * Clear boot attempts and mark stage 1 pass. */
     Boot_DualBank_ClearBootAttempts();
     Boot_DualBank_MarkStage1Pass();
+
+    /* Initialize DID DFlash storage (safe to call multiple times, checks magic) */
+    DID_DFlash_Init();
+
     /* === APP Phase: Peripheral Initialization === */
     g_appPhase = APP_PHASE_PERIPH;
 

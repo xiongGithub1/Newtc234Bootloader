@@ -6,6 +6,7 @@
  * \author  Administrator
  *********************************************************************************************************************/
 #include "uds_app.h"
+#include "did_dflash.h"
 
 
 uint32 pageData1[128];
@@ -24,20 +25,39 @@ const  uint8 gs_aCheckProgrammingDependencyId[4u] = { 0x31u, 0x01u, 0xFFu, 0x01u
 
 
 
-uint8 data_vin_f190[] = VIN_F190;
-uint8 data_bsidid_f180[] = BSID_F180;
+/* DID Data stored in DFlash - use direct pointers for read access
+ * Sector 1: 0xAF002000 ~ 0xAF003FFF (Static DID data F186~F197)
+ * All text data encoded in UTF-8
+ */
 
 tUDSCommCtrlMode g_CanMsgCommCtrlMode = UDS_CC_MODE_RX_TX;
 
 uint32 p_rw_finger_data = 0;
 
-
-
-
+/* g_rwDataTable: DID configuration for 0x22/0x2E services
+ * DID 1-14 (F186~F197): Read-only from DFlash
+ * DID 17 (F15B): Read from DFlash
+ * DID 16 (F15A): Write to DFlash - handled separately in WriteDataByIdentifier0x2E
+ */
 tUDSRwDataTable g_rwDataTable[] =
 {
-		{F15A,UDS_RWDATA_RDWR,UDS_RWDATA_RAM,UDS_RWDATA_HEX,(uint32) &p_rw_finger_data,4,4},
-		{F190,UDS_RWDATA_RDWR,UDS_RWDATA_RAM,UDS_RWDATA_ASCII,(uint32) &data_vin_f190[0],16,16}
+	/* DID 1-14: Read-only DID from DFlash */
+	{F186, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F186, DID_SIZE_F186, DID_SIZE_F186},
+	{F187, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F187, DID_SIZE_F187, DID_SIZE_F187},
+	{F188, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F188, DID_SIZE_F188, DID_SIZE_F188},
+	{F189, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F189, DID_SIZE_F189, DID_SIZE_F189},
+	{F18A, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18A, DID_SIZE_F18A, DID_SIZE_F18A},
+	{F18B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18B, DID_SIZE_F18B, DID_SIZE_F18B},
+	{F18C, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18C, DID_SIZE_F18C, DID_SIZE_F18C},
+	{F190, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F190, DID_SIZE_F190, DID_SIZE_F190},
+	{F191, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F191, DID_SIZE_F191, DID_SIZE_F191},
+	{F192, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F192, DID_SIZE_F192, DID_SIZE_F192},
+	{F193, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F193, DID_SIZE_F193, DID_SIZE_F193},
+	{F194, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F194, DID_SIZE_F194, DID_SIZE_F194},
+	{F195, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F195, DID_SIZE_F195, DID_SIZE_F195},
+	{F197, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
+	/* DID 17: F15B - Read fingerprint from DFlash */
+	{F15B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_HEX, (uint32)DFLASH_PTR_F15B, FINGERPRINT_RECORD_SIZE, FINGERPRINT_RECORD_SIZE * FINGERPRINT_RECORD_MAX},
 };
 
 #define IsWriteFingerprintRight(x) ((x == gs_aWriteFingerprintId)?TRUE:FALSE)
@@ -1124,6 +1144,18 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		return;
 	}
 
+	/* Special handling for F15B - Read fingerprint records from DFlash
+	 * Returns all stored fingerprint records (up to 3)
+	 */
+	if (did == F15B)
+	{
+		uint16 totalLen = DID_DFlash_ReadF15B(&m_pstPDUMsg->aDataBuf[3], sizeof(m_pstPDUMsg->aDataBuf) - 3);
+		m_pstPDUMsg->aDataBuf[1u] = 0xF1;
+		m_pstPDUMsg->aDataBuf[2u] = 0x5B;
+		m_pstPDUMsg->xDataLen = 3u + totalLen;
+		return;
+	}
+
 	for (int i = 0; i < sizeof(g_rwDataTable) / sizeof(g_rwDataTable[0]); i++)
 	{
 		if (g_rwDataTable[i].did == did)
@@ -1171,6 +1203,36 @@ static void WriteDataByIdentifier0x2E(struct UDSServiceInfo* i_pstUDSServiceInfo
 		return;
 	}
 
+	/* DID F15A - 诊断仪刷写指纹信息写入 (66 bytes)
+	 * Layout: 0~15: 刷写诊断仪设备号
+	 *         16~25: 刷写前软件号
+	 *         26~35: 刷写前软件版本号
+	 *         36~45: 刷写日期(年月日)
+	 *         46~55: 刷写后软件号
+	 *         56~65: 刷写后软件版本号
+	 * Data stored in DFlash Sector 0, UTF-8 encoded
+	 */
+	if (did == F15A)
+	{
+		uint16 writeLen = m_pstPDUMsg->xDataLen - 3;
+		if (writeLen > FINGERPRINT_SIZE)
+		{
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+			return;
+		}
+
+		/* Write fingerprint to DFlash (updates F15A + F15B records) */
+		if (DID_DFlash_WriteF15A(&m_pstPDUMsg->aDataBuf[3]) != TRUE)
+		{
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_GENERAL_PROGRAMMING_FAILURE, m_pstPDUMsg);
+			return;
+		}
+
+		m_pstPDUMsg->aDataBuf[1u] = 0xF1;
+		m_pstPDUMsg->aDataBuf[2u] = 0x5A;
+		m_pstPDUMsg->xDataLen = 3u;
+		return;
+	}
 
 	for (int i = 0;i < sizeof(g_rwDataTable) / sizeof(g_rwDataTable[0]);i++)
 	{
@@ -1299,36 +1361,42 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 	if (TRUE == Ret)
 	{
-
-
-
 		gs_stDowloadDataInfo.StartAddr = 0u;
 		for (Index = 0u; Index < addrBytesLength; Index++)
-
 		{
 			gs_stDowloadDataInfo.StartAddr <<= 8u;
-
-
 			gs_stDowloadDataInfo.StartAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
-
 		}
 		gs_stDowloadDataInfo.StartAddr = (gs_stDowloadDataInfo.StartAddr & 0x00FFFFFF) | 0xA0000000;
 
-		/* Dual Bank: determine target bank from download address
-		 * StartAddr is uncached (0xA0...), convert back to cached for comparison */
+		/*=====================================================================
+		 * 统一 HEX 地址处理
+		 * 统一 HEX 使用 Bank A 的地址范围 (0x80020000~0x800FFFFF)。
+		 * 无论地址在统一 HEX 范围内还是直接指定 Bank B 地址，
+		 * 都由 Bootloader 根据当前 targetWriteBank 决定实际写入位置。
+		 *====================================================================*/
 		{
 			uint32 cachedAddr = gs_stDowloadDataInfo.StartAddr - 0x20000000u;
-			if ((cachedAddr >= BANK_B_START_ADDR) &&
-				(cachedAddr < BANK_B_END_ADDR))
+
+			/* Unified HEX: use targetWriteBank set by CheckProgrammingConditions */
+			if (Boot_DualBank_IsUnifiedHexAddr(cachedAddr))
+			{
+				/* Unified HEX address: targetWriteBank already set by 0x31 01 FFFD */
+			}
+			/* Direct Bank B address specified */
+			else if ((cachedAddr >= BANK_B_START_ADDR) && (cachedAddr < BANK_B_END_ADDR))
 			{
 				Boot_DualBank_SetTargetWriteBank(BANK_B);
 			}
+			/* Default to Bank A */
 			else
 			{
 				Boot_DualBank_SetTargetWriteBank(BANK_A);
 			}
 		}
 
+		/* 将统一 HEX 地址重映射到目标 Bank 的实际地址 */
+		gs_stDowloadDataInfo.StartAddr = Boot_DualBank_RemapUnifiedAddr(gs_stDowloadDataInfo.StartAddr);
 
 		if (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank())
 		{
@@ -1340,7 +1408,6 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			Ret = FALSE;
 		}
 
-
 		gs_stDowloadDataInfo.DataLen = 0u;
 		for (Index = 0u; Index < dataBytesLength; Index++)
 		{
@@ -1349,13 +1416,10 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		}
 	}
 
-
 	if (((TRUE != IsDownloadDataAddrValid(gs_stDowloadDataInfo.StartAddr)) ||
-
 		(TRUE != IsDownloadDataLenValid(gs_stDowloadDataInfo.DataLen))) && (TRUE == Ret))
 	{
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-
 		Ret = FALSE;
 	}
 
@@ -1373,20 +1437,16 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
 
-
-
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->aDataBuf[1u] = 0x10u;
 		m_pstPDUMsg->aDataBuf[2u] = 0x80u;
 		m_pstPDUMsg->xDataLen = 3u;
-
 
 		gs_RxBlockNum = 1;
 	}
 	else
 	{
 		Flash_InitDowloadInfo();
-
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_DownloadCRC = 0xFFFFFFFFu;
 		gs_bCrcActive  = FALSE;
@@ -1887,15 +1947,30 @@ static boolean IsSectorInTargetBank(uint16 sector)
 static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow)
 {
 	uint16 blockNum = (blockHigh << 8) | blockLow;
+	uint16 actualBlockNum;
+
+	/* 0. Unified HEX sector remap:
+	 *    If the sector number is in the unified HEX range (S8~S22),
+	 *    remap it to the target bank's actual sector number.
+	 *    This allows the unified HEX to use Bank A's sector layout
+	 *    regardless of which bank is the actual target. */
+	if ((blockNum >= BANK_A_SECTOR_START) && (blockNum <= BANK_A_SECTOR_END))
+	{
+		actualBlockNum = Boot_DualBank_RemapUnifiedSector(blockNum);
+	}
+	else
+	{
+		actualBlockNum = blockNum;
+	}
 
 	/* 1. Check valid sector range */
-	if (blockNum >= IFXFLASH_PFLASH_NUM_LOG_SECTORS)
+	if (actualBlockNum >= IFXFLASH_PFLASH_NUM_LOG_SECTORS)
 	{
 		return 0xFE;
 	}
 
 	/* 2. Protect bootloader / reserved sectors (S0 ~ S7) */
-	if (blockNum <= BOOTLOADER_SECTOR_MAX)
+	if (actualBlockNum <= BOOTLOADER_SECTOR_MAX)
 	{
 		return 0xFC;
 	}
@@ -1903,13 +1978,13 @@ static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow)
 	/* 3. Ensure the sector belongs to the currently selected target bank.
 	 *    g_udsTargetBank is set during RequestDownload (0x34) based on
 	 *    the start address provided by the tester. */
-	if (!IsSectorInTargetBank(blockNum))
+	if (!IsSectorInTargetBank(actualBlockNum))
 	{
 		return 0xFD;
 	}
 
-	/* 4. Execute erase */
-	if ((uint8) Flash_erasePFlash_port(IfxFlash_pFlashTableLog[blockNum].start) != 0)
+	/* 4. Execute erase on the actual (remapped) sector */
+	if ((uint8) Flash_erasePFlash_port(IfxFlash_pFlashTableLog[actualBlockNum].start) != 0)
 	{
 		return 0x00;
 	}

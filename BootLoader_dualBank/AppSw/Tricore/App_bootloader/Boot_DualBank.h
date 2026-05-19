@@ -28,12 +28,24 @@
 #define BOOT_FLAG_STAGE1_PASS           (1u << 0u)  /* App completed peripheral init */
 #define BOOT_FLAG_STAGE2_PASS           (1u << 1u)  /* App main loop stable for N seconds */
 
-/* Bank physical address */
+/*=============================================================================
+ * 统一 HEX 文件地址重映射配置
+ * 统一 HEX 使用 Bank A 的地址范围 (0x80020000 ~ 0x800FFFFF)。
+ * Bootloader 根据目标写入 Bank，在运行时动态将统一地址重映射到实际 Bank 地址。
+ *===========================================================================*/
+
+/* 统一 HEX 基准地址（即链接时使用的地址，与 Bank A 相同） */
+#define UNIFIED_HEX_BASE_ADDR           0x80020000u
+#define UNIFIED_HEX_END_ADDR            0x80100000u
+#define UNIFIED_HEX_SIZE                (896u * 1024u)  /* 0x000E0000 */
+
+/* 实际 Bank 物理地址 */
 #define BANK_A_START_ADDR               0x80020000u
 #define BANK_A_END_ADDR                 0x80100000u
 #define BANK_B_START_ADDR               0x80100000u
 #define BANK_B_END_ADDR                 0x80200000u
-#define BANK_APP_SIZE                   (896u * 1024u)  /* S8~S22 = 896KB */
+#define BANK_APP_A_SIZE                 (896u * 1024u)
+#define BANK_APP_B_SIZE                 (1024u * 1024u)
 
 /* APP vector table offsets relative to bank base (must match APP LSL/linker config)
  * Verified against App_dualBank_a.lsl / App_dualbank_b.lsl:
@@ -176,5 +188,31 @@ void MeasureEraseBankA_Time(void);
 
 /* OEM helper: set BIV/BTV/SP to APP vector table before jump */
 void Boot_DualBank_SetAppVectors(uint32 bankStartAddr);
+
+/*=============================================================================
+ * 统一 HEX 地址重映射 API
+ *===========================================================================*/
+
+/**
+ * @brief 将统一 HEX 地址重映射到目标 Bank 的实际物理地址
+ * @param unifiedAddr 统一 HEX 中的地址 (cached: 0x80020000~0x800FFFFF)
+ * @return 目标 Bank 的实际物理地址
+ * @note  使用当前 targetWriteBank 决定映射到 Bank A 还是 Bank B
+ */
+uint32 Boot_DualBank_RemapUnifiedAddr(uint32 unifiedAddr);
+
+/**
+ * @brief 判断地址是否属于统一 HEX 的地址范围
+ * @param addr 待判断的地址 (支持 cached 0x80xxxxxx 和 uncached 0xA0xxxxxx)
+ * @return TRUE 如果地址在统一 HEX 范围内
+ */
+boolean Boot_DualBank_IsUnifiedHexAddr(uint32 addr);
+
+/**
+ * @brief 将统一 HEX 的 sector 编号重映射到目标 Bank 的 sector 编号
+ * @param unifiedSector 统一 HEX 中的 sector 编号 (基于 Bank A: S8~S22)
+ * @return 目标 Bank 的实际 sector 编号
+ */
+uint16 Boot_DualBank_RemapUnifiedSector(uint16 unifiedSector);
 
 #endif

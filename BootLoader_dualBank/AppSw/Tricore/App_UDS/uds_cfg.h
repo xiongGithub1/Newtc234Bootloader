@@ -1,24 +1,24 @@
 /*
  * @Author: qinXiong
  * @Date: 2026-04-29 09:02:27
- * @LastEditors: xiong&&2307975018@qq.com
- * @LastEditTime: 2026-04-29 16:15:28
+ * @LastEditors: xiongGithub1&&qx20001119@163.com
+ * @LastEditTime: 2026-05-19 00:43:01
  * @Description: 
  */
 /**********************************************************************************************************************
  * \file    uds_cfg.h
  * \brief
  * \version V1.0.0
- * \date    2022年2月10日
+ * \date    2022??2??10??
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_CFG_H_
 #define UDSDIAGNOSTIC_UDS_CFG_H_
 #include "uds_common.h"
 
-//以下两个模式只能打开一个
-////#define DIAGNOSTIC_MODE_FOR_APP				//APP妯″紡
-#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADER妯″紡
+//?????????????????
+////#define DIAGNOSTIC_MODE_FOR_APP				//APP??
+#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADER??
 
 /*****************************************************************************/
 
@@ -64,21 +64,94 @@ typedef enum
 	SNAP_DID_HW_VERSION    = 0xF193u
 } snap_did_name;
 
-/* 22服务的读写DID */
+/* 22/2E ???? DID ???? */
 typedef enum
 {
-	F15A = 0xF15Au,	//代表读写指纹信息
-	F14A = 0xF14Au,	//代表bootloader版本号
-	F187 = 0xF187u,	//代表零部件号
-	F18A = 0xF18Au,	//代表供应商代号
-	F197 = 0xF197u,	//代表控制器型号
-	F193 = 0xF193u,	//代表ECU硬件版本号
-	F195 = 0xF195u,	//代表ECU软件版本号
-	F18C = 0xF18Cu,	//代表控制器出厂编号
-	F190 = 0xF190u, //车身VIN
+	/* ?????? */
+	F15A = 0xF15Au,	/* ???????????????? (Write) */
+	F15B = 0xF15Bu,	/* ???????????????? (Read) */
+
+	/* Bootloader / System Info */
+	F14A = 0xF14Au,	/* Bootloader ???? */
+	F186 = 0xF186u,	/* Bootloader????? */
+
+	/* OEM ??? */
+	F187 = 0xF187u,	/* OEM?????? */
+	F188 = 0xF188u,	/* OEM?????? */
+	F189 = 0xF189u,	/* OEM???????? */
+	F18A = 0xF18Au,	/* ???????? */
+	F18B = 0xF18Bu,	/* ??????????????? */
+	F18C = 0xF18Cu,	/* ????????????????/????? */
+
+	/* Hardware / Software Info */
+	F191 = 0xF191u,	/* OEM????? */
+	F192 = 0xF192u,	/* ?????????? */
+	F193 = 0xF193u,	/* ???????????? */
+	F194 = 0xF194u,	/* ??????????? */
+	F195 = 0xF195u,	/* ????????????? */
+	F197 = 0xF197u,	/* ??????????/?????? */
+
+	/* Vehicle Info */
+	F190 = 0xF190u, /* ????VIN??? */
 }rw_data_did;
 
 #define VIN_F190                          "W0L00043MB541326"
 #define BSID_F180                         "1.2.3.4"
 
+/*=============================================================================
+ * DFlash DID ??????
+ * TC234 DFlash Sector ?? = 8KB
+ * Sector 0: 0xAF000000 ~ 0xAF001FFF (Bootloader Flags + F15A fingerprint)
+ * Sector 1: 0xAF002000 ~ 0xAF003FFF (F186~F197 static DID data)
+ *===========================================================================*/
+
+/* Sector 0: Flags + Fingerprint */
+#define DFLASH_FLAG_ADDR                0xAF000000u
+#define DFLASH_F15A_FINGERPRINT_ADDR    0xAF000200u  /* 256 bytes offset from flag */
+#define DFLASH_F15B_RECORD_ADDR         0xAF000300u  /* F15B read records */
+
+/* Sector 1: Static DID data (F186~F197) */
+#define DFLASH_DID_BASE_ADDR            0xAF002000u
+
+/* DID offset within Sector 1 (each aligned to 16 bytes) */
+#define DFLASH_DID_F186_OFFSET          0x0000u  /* Bootloader??? (16B) */
+#define DFLASH_DID_F187_OFFSET          0x0010u  /* OEM???? (16B) */
+#define DFLASH_DID_F188_OFFSET          0x0020u  /* OEM??? (16B) */
+#define DFLASH_DID_F189_OFFSET          0x0030u  /* OEM????? (16B) */
+#define DFLASH_DID_F18A_OFFSET          0x0040u  /* ????? (16B) */
+#define DFLASH_DID_F18B_OFFSET          0x0050u  /* ???? (16B) */
+#define DFLASH_DID_F18C_OFFSET          0x0060u  /* ??? (16B) */
+#define DFLASH_DID_F190_OFFSET          0x0070u  /* VIN (32B) */
+#define DFLASH_DID_F191_OFFSET          0x0090u  /* OEM??? (16B) */
+#define DFLASH_DID_F192_OFFSET          0x00A0u  /* ?????? (16B) */
+#define DFLASH_DID_F193_OFFSET          0x00B0u  /* ????? (16B) */
+#define DFLASH_DID_F194_OFFSET          0x00C0u  /* ?????? (16B) */
+#define DFLASH_DID_F195_OFFSET          0x00D0u  /* ????? (16B) */
+#define DFLASH_DID_F197_OFFSET          0x00E0u  /* ????? (16B) */
+#define DFLASH_DID_RESERVED_OFFSET      0x00F0u  /* Reserved (16B) */
+
+#define DFLASH_DID_F15B_OFFSET          0x0100u  /* F15B fingerprint records */
+
+/* DID size definitions */
+#define DID_SIZE_F186                   10u
+#define DID_SIZE_F187                   16u
+#define DID_SIZE_F188                   16u
+#define DID_SIZE_F189                   10u
+#define DID_SIZE_F18A                   10u
+#define DID_SIZE_F18B                   8u
+#define DID_SIZE_F18C                   10u
+#define DID_SIZE_F190                   17u
+#define DID_SIZE_F191                   15u
+#define DID_SIZE_F192                   14u
+#define DID_SIZE_F193                   8u
+#define DID_SIZE_F194                   14u
+#define DID_SIZE_F195                   8u
+#define DID_SIZE_F197                   8u
+
+/* F15A/F15B fingerprint */
+#define FINGERPRINT_SIZE                66u
+#define FINGERPRINT_RECORD_SIZE         67u
+#define FINGERPRINT_RECORD_MAX          3u
+
 #endif /* UDSDIAGNOSTIC_UDS_CFG_H_ */
+
