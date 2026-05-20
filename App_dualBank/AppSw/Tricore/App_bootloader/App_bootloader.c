@@ -11,6 +11,7 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "App_bootloader.h"
+#include "can_nm.h"
 
 
 
@@ -336,10 +337,14 @@ void AppBL_init(void)
     }
 
     /* init can module */
-	Multican_init();
-	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
+ Multican_init();
+ UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
 
-	dtcInit();
+    /* init AUTOSAR CAN Network Management */
+    CanNm_Init();
+    CanNm_NetworkRequest();
+
+ dtcInit();
     initTime();
 
     /* flash */
@@ -378,6 +383,8 @@ void    AppUds_main(void)
 
 	UdsMainProcess();
 	CanMainProcess();
+	   CanNm_SystemTickCtl();
+	   CanNm_MainFunction();
 	dtcTestMainProc();
 
 	/* CAN bus error handling */

@@ -1,53 +1,54 @@
 /******************************************************************************
 
-                  版权所有 (C), 2020-2030, 重庆和天电子科技有限公司
+                  ??????? (C), 2020-2030, ??????????????????
 
  ******************************************************************************
-  文 件 名  : CANRxTxInterface.c
-  版 本 号  : 初稿
-  作    者    :
-  生成日期 : 2021年10月15日
-  最近修改 :
-  功能描述 : CAN通讯初始化相关设置
-  函数列表 :
-  修改历史 :
-  1.日    期  :
-  2.作    者  :
-    修改内容   :20221210 增加了CANFD节点初始化的函数，CANFD接收中断的函数，CANFD数据发送初始
-    化函数，在模块初始化函数里增加了CAN和CANFD的选择项，增加了CANFD发送和接收的ID定义。曾军
-  20221212如果要在CANFD中只发送8个字节的数据，那么就需要在CANFD初始化函数void
-  CAN_TLE9252_config_node0_CANFD(void)中，把发送字节长度canMsgObjConfig.control.messageLen
-  = IfxMultican_DataLengthCode_32;改为IfxMultican_DataLengthCode_8;然后再改其它的。
+  ?? ?? ??  : CANRxTxInterface.c
+  ?? ?? ??  : ????
+  ??    ??    :
+  ???????? : 2021??10??15??
+  ?????? :
+  ???????? : CAN??????????????
+  ???????? :
+  ?????? :
+  1.??    ??  :
+  2.??    ??  :
+    ???????   :20221210 ??????CANFD??????????????CANFD??????????????CANFD?????????
+    ?????????????????????????????CAN??CANFD?????????????CANFD?????????ID????^????
+  20221212??????CANFD???????8?????????????????????CANFD?????????void
+  CAN_TLE9252_config_node0_CANFD(void)???????????????canMsgObjConfig.control.messageLen
+  = IfxMultican_DataLengthCode_32;???IfxMultican_DataLengthCode_8;?????????????
 ******************************************************************************/
 
 
 /*****************************************************************************/
-/*----------------------------------包含头文件--------------------------------*/
+/*----------------------------------????????--------------------------------*/
 /*****************************************************************************/
 #include "MultiCAN.h"
 #include "CANRxTxInterface.h"
 #include "tool_class.h"
 #include "uds_app.h"
 #include "ConfigurationIsr.h"
+#include "can_nm.h"
 
 
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
 /******************************************************************************/
 /*
-// 用于地址分配，但应该没有用上，参考20221121赵工发的CANFD驱动程序
+// ???????????????????????????20221121???????CANFD????????
 #pragma align 32
 Ifx_CAN_MO   g_MoBuff;   //ram ,dma to mo
 #pragma align 32
 */
-// 报文解析函数入口
+// ??????????????
 static tpfDataParser gl_appRxCanMsgMainFuction = ((void *) 0);
 static tpfDataParser gl_udsRxCanMsgMainFuction = ((void *) 0);
 
 
-// 收发缓冲区
-DataQueue gl_rxDataQueue;// 接收缓冲区
-DataQueue gl_txDataQueue;// 发送缓冲区
+// ?????????
+DataQueue gl_rxDataQueue;// ?????????
+DataQueue gl_txDataQueue;// ?????????
 
 
 /******************************************************************************/
@@ -64,14 +65,15 @@ DataQueue gl_txDataQueue;// 发送缓冲区
 /*------------------------------Global variables------------------------------*/
 /******************************************************************************/
 CanRX_MsgObjInit CanRxFrm_9252_InitTab[]=
-{//消息对象ID  CAN消息ID
+{//???????ID  CAN???ID
 	{ 20,     UDS_FUN_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
 	{ 21,     UDS_PHY_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
+	{ 22,     0x500u,				 Enable_Rx_Enable_Tx, ((void*)0)}, /* NM message receive */
 };
 
 
 CanTX_MsgObjInit CanTxFrm_9252_InitTab[]=
-{//           CAN消息ID
+{//           CAN???ID
     { 10,     UDS_RESP_ADDR_ID,   	Enable_Rx_Enable_Tx,   ((void*)0)},// UDS_RESP_ADDR_ID
 	{ 11,     0x122,   	Enable_Rx_Enable_Tx,   ((void*)0)},
 };
@@ -109,7 +111,7 @@ void isrCAN0_RX(void)
 			status = IfxMultican_Can_MsgObj_readMessage(&g_MulticanBasic.drivers.canNode0MsgRx2[j],&Node0Readmsg);
 			if(status != IfxMultican_Status_receiveEmpty)
 			{
-				if((Node0Readmsg.id==UDS_FUN_ADDR_ID)||(Node0Readmsg.id==UDS_PHY_ADDR_ID))
+				if((Node0Readmsg.id==UDS_FUN_ADDR_ID)||(Node0Readmsg.id==UDS_PHY_ADDR_ID)||(Node0Readmsg.id==0x500u))
 				{
 					qmsg.id = (uint16)Node0Readmsg.id;
 					tl_memcpy(qmsg.data,Node0Readmsg.data,8);
@@ -137,7 +139,7 @@ void CANtle9252Send(uint16 messageId, uint32 dataLow, uint32 dataHigh )
 }
 
 
-// 设置CAN的工作模式
+// ????CAN???????
 void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 {
 	switch(TLE9252mode)
@@ -145,7 +147,7 @@ void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 	case Normal:
 	    Tle9252EnterNormalMode();
 		break;
-	case ReceiveOnly:	// 配置CAN1进入只收模式
+	case ReceiveOnly:	// ????CAN1?????????
 		Tle9252EnterReceiveOnlyMode();
 		break;
 	case GoToSleep:
@@ -160,7 +162,7 @@ void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 }
 
 
-// 设置CAN的工作模式
+// ????CAN???????
 void drv_can9251_set_mode(TLE925x_CAN_MODE TLE9251mode)
 {
 	switch(TLE9251mode)
@@ -199,17 +201,17 @@ uint8 drv_can1_send(tRxTxCanMsg *txMsg)
 		if(CanTxFrm_9252_InitTab[idx].RxTxStatus == Disbale_Rx_Disbale_Tx ||
 				CanTxFrm_9252_InitTab[idx].RxTxStatus == Enable_Rx_Disable_Tx)
 		{
-			//表示UDS已禁止该报文的发送，直接返回
+			//???UDS????????????????????
 			return TRUE;
 		}
 		else
 		{
-			//使用while检测状态，当bus错误或者发送失败时会进入死循环？
+			//???while?????????bus??????????????????????????
 			//while (IfxMultican_Can_MsgObj_sendMessage(msgObj, &msg) == IfxMultican_Status_notSentBusy);
 
 			if(IfxMultican_Can_MsgObj_isTransmitRequested(&g_MulticanBasic.drivers.canNode0MsgTx2[0]))
 			{
-				//前一个报文被挂起，表示发送失败
+				//??????????????????????
 				return FALSE;
 			}
 			else
@@ -263,7 +265,7 @@ void DrvCanRxTxModeSet(uint8 mode)
 		{
 			continue;
 		}
-		else if(mode == UDS_CC_MODE_RX_TX)	// 使能接收
+		else if(mode == UDS_CC_MODE_RX_TX)	// ??????
 		{
 			CanTxFrm_9252_InitTab[j].RxTxStatus = Enable_Rx_Enable_Tx;
 		}
@@ -282,20 +284,24 @@ void DrvCanRxTxModeSet(uint8 mode)
 	}
 }
 
-// CAN收发报文处理函数
+// CAN??????????????
 void CanMainProcess(void)
 {
-	// 处理接收报文
+	// ???????????
 	QueueMsgObject rxMsgObj;
 	if(tl_queue_take_item(&gl_rxDataQueue,&rxMsgObj))
 	{
-		// 执行报文解析
+		// ??????????
 		if(rxMsgObj.id == UDS_FUN_ADDR_ID || rxMsgObj.id == UDS_PHY_ADDR_ID)
 		{
 			if(gl_udsRxCanMsgMainFuction != ((void *) 0))
 			{
 				(gl_udsRxCanMsgMainFuction)((tRxTxCanMsg *)&rxMsgObj);
 			}
+		}
+		else if(rxMsgObj.id == 0x500u)
+		{
+			CanNm_RxIndication(rxMsgObj.id, rxMsgObj.data);
 		}
 		else
 		{
@@ -306,7 +312,7 @@ void CanMainProcess(void)
 		}
 	}
 
-	// 处理发送报文
+	// ???????????
 	QueueMsgObject txMsgObj;
 	if(tl_queue_take_item(&gl_txDataQueue,&txMsgObj))
 	{

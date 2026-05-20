@@ -1,8 +1,8 @@
 /*
  * @Author: qinXiong
  * @Date: 2026-04-29 09:02:27
- * @LastEditors: xiongGithub1&&qx20001119@163.com
- * @LastEditTime: 2026-05-19 00:31:54
+ * @LastEditors: Qxiong&&2307975018@qq.com
+ * @LastEditTime: 2026-05-20 18:11:14
  * @Description: 
  */
 /**********************************************************************************************************************
@@ -102,6 +102,9 @@ typedef enum
 
 	/* Vehicle Info */
 	F190 = 0xF190u, /* 鏁磋溅VIN缂栧彿 */
+
+	/* Network Management Status */
+	F520 = 0xF520u, /* AUTOSAR CanNm 鐘舵€佷俊鎭� */
 }rw_data_did;
 
 /*=============================================================================
@@ -161,3 +164,4 @@ typedef enum
 #define FINGERPRINT_RECORD_MAX          3u
 
 #endif /* UDSDIAGNOSTIC_UDS_CFG_H_ */
+

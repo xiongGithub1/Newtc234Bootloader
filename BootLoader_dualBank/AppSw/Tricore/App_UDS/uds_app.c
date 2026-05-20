@@ -42,23 +42,23 @@ uint32 p_rw_finger_data = 0;
 tUDSRwDataTable g_rwDataTable[] =
 {
 	/* DID 1-14: Read-only DID from DFlash */
-	{F186, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F186, DID_SIZE_F186, DID_SIZE_F186},
-	{F187, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F187, DID_SIZE_F187, DID_SIZE_F187},
-	{F188, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F188, DID_SIZE_F188, DID_SIZE_F188},
-	{F189, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F189, DID_SIZE_F189, DID_SIZE_F189},
-	{F18A, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18A, DID_SIZE_F18A, DID_SIZE_F18A},
-	{F18B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18B, DID_SIZE_F18B, DID_SIZE_F18B},
-	{F18C, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F18C, DID_SIZE_F18C, DID_SIZE_F18C},
-	{F190, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F190, DID_SIZE_F190, DID_SIZE_F190},
-	{F191, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F191, DID_SIZE_F191, DID_SIZE_F191},
-	{F192, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F192, DID_SIZE_F192, DID_SIZE_F192},
-	{F193, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F193, DID_SIZE_F193, DID_SIZE_F193},
-	{F194, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F194, DID_SIZE_F194, DID_SIZE_F194},
-	{F195, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F195, DID_SIZE_F195, DID_SIZE_F195},
-	{F197, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
+	{F186, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F186, DID_SIZE_F186, DID_SIZE_F186},
+	{F187, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F187, DID_SIZE_F187, DID_SIZE_F187},
+	{F188, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F188, DID_SIZE_F188, DID_SIZE_F188},
+	{F189, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F189, DID_SIZE_F189, DID_SIZE_F189},
+	{F18A, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F18A, DID_SIZE_F18A, DID_SIZE_F18A},
+	{F18B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F18B, DID_SIZE_F18B, DID_SIZE_F18B},
+	{F18C, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F18C, DID_SIZE_F18C, DID_SIZE_F18C},
+	{F190, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F190, DID_SIZE_F190, DID_SIZE_F190},
+	{F191, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F191, DID_SIZE_F191, DID_SIZE_F191},
+	{F192, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F192, DID_SIZE_F192, DID_SIZE_F192},
+	{F193, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F193, DID_SIZE_F193, DID_SIZE_F193},
+	{F194, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F194, DID_SIZE_F194, DID_SIZE_F194},
+	{F195, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F195, DID_SIZE_F195, DID_SIZE_F195},
+	{F197, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32) DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
 	/* DID 17: F15B - Read fingerprint from DFlash */
-	{F15B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_HEX, (uint32)DFLASH_PTR_F15B, FINGERPRINT_RECORD_SIZE, FINGERPRINT_RECORD_SIZE * FINGERPRINT_RECORD_MAX},
-//	{AFFF, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
+	{F15B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_HEX, (uint32) DFLASH_PTR_F15B, FINGERPRINT_RECORD_SIZE, FINGERPRINT_RECORD_SIZE * FINGERPRINT_RECORD_MAX},
+	//	{AFFF, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
 };
 
 #define IsWriteFingerprintRight(x) ((x == gs_aWriteFingerprintId)?TRUE:FALSE)
@@ -90,21 +90,21 @@ static const tUDSService gs_astUDSService[] =
 {
 	{
 			0x10u,
-			DEFALUT_SESSION |  PROGRAM_SESSION| EXTEND_SESSION ,
+			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION ,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DigSession0x10
 	},
 	{
 			0x11u,
-			DEFALUT_SESSION | PROGRAM_SESSION| EXTEND_SESSION,
+			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DoResetMCU0x11
 	},
 	{
 			0x27u,
-			DEFALUT_SESSION |PROGRAM_SESSION| EXTEND_SESSION,
+			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			NONE_SECURITY,
 			SecurityAccess0x27
@@ -125,7 +125,7 @@ static const tUDSService gs_astUDSService[] =
 	},
 	{
 			0x31u,
-			PROGRAM_SESSION |EXTEND_SESSION,
+			PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			RoutineControl0x31
@@ -152,7 +152,7 @@ static const tUDSService gs_astUDSService[] =
 			SECURITY_LEVEL_2,
 			RequestTransferExit0x37
 	},
-	
+
 	/* Tester present service */
 	{
 			0x3Eu,
@@ -452,7 +452,7 @@ void UDS_SystemTickCtl(void)
 		 * UDS_MainFun), send NRC 0x78 automatically from the tick handler. */
 		if (0u != gs_u8CurrentUdsServiceId)
 		{
-			tUdsAppMsgInfo stPendingMsg = {0u, 0u, {0u}, NULL_PTR};
+			tUdsAppMsgInfo stPendingMsg = { 0u, 0u, {0u}, NULL_PTR };
 			stPendingMsg.xUdsId = TP_GetConfigTxMsgID();
 			SetNegativeErroCode(gs_u8CurrentUdsServiceId, NRC_RESPONSE_PENDING, &stPendingMsg);
 			(void) TP_WriteAFrameDataInTP(stPendingMsg.xUdsId, NULL_PTR, stPendingMsg.xDataLen, stPendingMsg.aDataBuf);
@@ -467,7 +467,7 @@ void UDS_SystemTickCtl(void)
 		Flash_InitDowloadInfo();
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_DownloadCRC = 0xFFFFFFFFu;
-		gs_bCrcActive  = FALSE;
+		gs_bCrcActive = FALSE;
 	}
 }
 
@@ -592,11 +592,11 @@ void UDS_MainFun(void)
 	{
 
 		if (TRUE != IsCurDefaultSession())
-				{
+		{
 
 
-					RestartS3Server();
-				}
+			RestartS3Server();
+		}
 
 
 		SaveRequestIdType(stUdsAppMsg.xUdsId);
@@ -780,10 +780,10 @@ static void BuildSessionPositiveResponse(tUdsAppMsgInfo* m_pstPDUMsg, uint8 Requ
 {
 	m_pstPDUMsg->aDataBuf[0u] = 0x50u;
 	m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-	m_pstPDUMsg->aDataBuf[2u] = (uint8)(gs_stUdsAppCfg.xP2Server >> 8);
-	m_pstPDUMsg->aDataBuf[3u] = (uint8)(gs_stUdsAppCfg.xP2Server);
-	m_pstPDUMsg->aDataBuf[4u] = (uint8)((gs_stUdsAppCfg.xP2Star / 10u) >> 8);
-	m_pstPDUMsg->aDataBuf[5u] = (uint8)(gs_stUdsAppCfg.xP2Star / 10u);
+	m_pstPDUMsg->aDataBuf[2u] = (uint8) (gs_stUdsAppCfg.xP2Server >> 8);
+	m_pstPDUMsg->aDataBuf[3u] = (uint8) (gs_stUdsAppCfg.xP2Server);
+	m_pstPDUMsg->aDataBuf[4u] = (uint8) ((gs_stUdsAppCfg.xP2Star / 10u) >> 8);
+	m_pstPDUMsg->aDataBuf[5u] = (uint8) (gs_stUdsAppCfg.xP2Star / 10u);
 	m_pstPDUMsg->xDataLen = 6u;
 }
 
@@ -814,7 +814,8 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 			break;
 		case 0x02u:
-			if(gs_stUdsInfo.CurSessionMode==DEFALUT_SESSION){
+			if (gs_stUdsInfo.CurSessionMode == DEFALUT_SESSION)
+			{
 				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION, m_pstPDUMsg);
 				break;
 			}
@@ -897,25 +898,30 @@ static void DoResetToBootloader(uint8 status)
  */
 static void DoHardReset(uint8 status)
 {
-    /* 确保所有 Flash 操作完成 */
-    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
-    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
-    
-    /* 禁用中断 */
-    IfxCpu_disableInterrupts();
-    
-    /* 数据同步 */
-    __dsync();
-    
-    /* 清除 Safety Endinit 以访问 SCU 复位寄存器 */
-    uint16 pwd = IfxScuWdt_getSafetyWatchdogPassword();
-    IfxScuWdt_clearSafetyEndinit(pwd);
-    
-    /* 触发系统软件复位 */
-    SCU_SWRSTCON.U = 0x00000002;  /* SWRSTREQ = 1 */
-    
-    /* 如果以上没有成功，进入死循环等待看门狗复位 */
-    while(1);
+	if (TX_MSG_SUCCESSFUL == status)
+	{
+
+
+		/* 确保所有 Flash 操作完成 */
+		IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
+		IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
+
+		/* 禁用中断 */
+		IfxCpu_disableInterrupts();
+
+		/* 数据同步 */
+		__dsync();
+
+		/* 清除 Safety Endinit 以访问 SCU 复位寄存器 */
+		uint16 pwd = IfxScuWdt_getSafetyWatchdogPassword();
+		IfxScuWdt_clearSafetyEndinit(pwd);
+
+		/* 触发系统软件复位 */
+		SCU_SWRSTCON.U = 0x00000002;  /* SWRSTREQ = 1 */
+
+		/* 如果以上没有成功，进入死循环等待看门狗复位 */
+		while (1);
+	}
 }
 
 /**
@@ -1099,7 +1105,7 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		return;
 	}
 
-	if(did==AFFF)
+	if (did == AFFF)
 	{
 		m_pstPDUMsg->aDataBuf[1u] = 0xAF;
 		m_pstPDUMsg->aDataBuf[2u] = 0xFF;
@@ -1131,7 +1137,7 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			m_pstPDUMsg->aDataBuf[2u] = did & 0xFF;
 			for (uint8 j = 0; j < dataLen; j++)
 			{
-				m_pstPDUMsg->aDataBuf[3u + j] = *((uint8*)g_rwDataTable[i].p_entry + j);
+				m_pstPDUMsg->aDataBuf[3u + j] = *((uint8*) g_rwDataTable[i].p_entry + j);
 			}
 			m_pstPDUMsg->xDataLen = 3u + dataLen;
 			return;
@@ -1389,7 +1395,7 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		if (FALSE == gs_bCrcActive)
 		{
 			gs_DownloadCRC = 0xFFFFFFFFu;
-			gs_bCrcActive  = TRUE;
+			gs_bCrcActive = TRUE;
 		}
 
 		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
@@ -1406,7 +1412,7 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		Flash_InitDowloadInfo();
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_DownloadCRC = 0xFFFFFFFFu;
-		gs_bCrcActive  = FALSE;
+		gs_bCrcActive = FALSE;
 	}
 }
 
@@ -1494,7 +1500,7 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_RxBlockNum = 0u;
 		gs_DownloadCRC = 0xFFFFFFFFu;
-		gs_bCrcActive  = FALSE;
+		gs_bCrcActive = FALSE;
 	}
 }
 
@@ -1545,7 +1551,7 @@ uint16 CheckProgrammingConditions(void) {
 		targetBankChar = 0x0B;
 		Boot_DualBank_SetTargetWriteBank(BANK_B);
 	}
-	
+
 	return ((uint16) canFlash << 8) | (uint16) targetBankChar;
 }
 
@@ -1567,11 +1573,11 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 	{
 		case 0x01:
 			{
-//				if (Flash_ForceWriteRemaining() == 0)
-//					{
-//						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-//						break;
-//					}
+				//				if (Flash_ForceWriteRemaining() == 0)
+				//					{
+				//						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+				//						break;
+				//					}
 
 				if (m_pstPDUMsg->xDataLen < 4)
 				{
@@ -1665,55 +1671,55 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 						m_pstPDUMsg->xDataLen = 6;
 						break;
 
-						case 0x0203:
-							/* CheckProgrammingPreconditions (ISO 14229-1 standard RID)
-							 * Returns: canFlash(1=ok, 0=denied) + targetBank('A' or 'B')
+					case 0x0203:
+						/* CheckProgrammingPreconditions (ISO 14229-1 standard RID)
+						 * Returns: canFlash(1=ok, 0=denied) + targetBank('A' or 'B')
+						 */
+						if (m_pstPDUMsg->xDataLen < 4)
+						{
+							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+							break;
+						}
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+						routineResult = CheckProgrammingConditions();
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+						m_pstPDUMsg->aDataBuf[0] = 0x71;
+						m_pstPDUMsg->aDataBuf[1] = 0x01;
+						m_pstPDUMsg->aDataBuf[2] = 0x02;
+						m_pstPDUMsg->aDataBuf[3] = 0x03;
+						m_pstPDUMsg->aDataBuf[4] = (uint8) (routineResult >> 8);
+						m_pstPDUMsg->aDataBuf[5] = (uint8) (routineResult & 0xFF);
+						m_pstPDUMsg->xDataLen = 6;
+						break;
+
+					case 0xFF01:
+						{
+							/* CheckProgrammingDependencies
+							 * Verifies that the target bank has valid application code.
 							 */
+							uint32 targetBank = Boot_DualBank_GetTargetWriteBank();
+							BankStatus_t status;
+
 							if (m_pstPDUMsg->xDataLen < 4)
 							{
 								SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
 								break;
 							}
 							IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-							routineResult = CheckProgrammingConditions();
+							status = Boot_DualBank_VerifyBank(targetBank);
 							IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+
 							m_pstPDUMsg->aDataBuf[0] = 0x71;
 							m_pstPDUMsg->aDataBuf[1] = 0x01;
-							m_pstPDUMsg->aDataBuf[2] = 0x02;
-							m_pstPDUMsg->aDataBuf[3] = 0x03;
-							m_pstPDUMsg->aDataBuf[4] = (uint8)(routineResult >> 8);
-							m_pstPDUMsg->aDataBuf[5] = (uint8)(routineResult & 0xFF);
-							m_pstPDUMsg->xDataLen = 6;
-							break;
-
-						case 0xFF01:
-							{
-								/* CheckProgrammingDependencies
-								 * Verifies that the target bank has valid application code.
-								 */
-								uint32 targetBank = Boot_DualBank_GetTargetWriteBank();
-								BankStatus_t status;
-
-								if (m_pstPDUMsg->xDataLen < 4)
-								{
-									SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-									break;
-								}
-								IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-								status = Boot_DualBank_VerifyBank(targetBank);
-								IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-
-								m_pstPDUMsg->aDataBuf[0] = 0x71;
-								m_pstPDUMsg->aDataBuf[1] = 0x01;
-								m_pstPDUMsg->aDataBuf[2] = 0xFF;
-								m_pstPDUMsg->aDataBuf[3] = 0x01;
-								m_pstPDUMsg->aDataBuf[4] = (status == BANK_STATUS_VALID) ? 0x01 : 0x00;
-								m_pstPDUMsg->xDataLen = 5;
-							}
-							break;
+							m_pstPDUMsg->aDataBuf[2] = 0xFF;
+							m_pstPDUMsg->aDataBuf[3] = 0x01;
+							m_pstPDUMsg->aDataBuf[4] = (status == BANK_STATUS_VALID) ? 0x01 : 0x00;
+							m_pstPDUMsg->xDataLen = 5;
+						}
+						break;
 
 
-						case 0xDFFF:
+					case 0xDFFF:
 						{
 							if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
 							{
@@ -1763,7 +1769,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									m_pstPDUMsg->aDataBuf[4] = (uint8) routineResult;
 									m_pstPDUMsg->xDataLen = 5;
 									gs_DownloadCRC = 0xFFFFFFFFu;
-									gs_bCrcActive  = FALSE;
+									gs_bCrcActive = FALSE;
 									break;
 								}
 
@@ -1773,7 +1779,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								Boot_DualBank_SetActiveBank(targetBank);
 								routineResult = 0x01;
 								gs_DownloadCRC = 0xFFFFFFFFu;
-								gs_bCrcActive  = FALSE;
+								gs_bCrcActive = FALSE;
 							}
 
 							m_pstPDUMsg->aDataBuf[0] = 0x71;

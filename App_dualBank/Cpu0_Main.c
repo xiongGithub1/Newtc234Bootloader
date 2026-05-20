@@ -29,6 +29,7 @@
 #include "MultiCAN.h"
 #include "Boot_DualBank.h"
 #include "did_dflash.h"
+#include "can_nm.h"
 
 
 
@@ -63,10 +64,11 @@ uint32 ResetStatus_Previous(void)
 }
 
 uint8 num=10;
-void MainProgram(void) 
+void MainProgram(void)
 {
 	static uint32 m_DetaTime = 0;
 	static boolean stage2Done = FALSE;
+	static boolean nmReleased = FALSE;
 	//  测量多长时间执行一次while主循环标志20210129
     DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
     DetaTime.MainWhileTime.detatime = DetaTime.MainWhileTime.time1 - DetaTime.MainWhileTime.time2;
@@ -88,6 +90,14 @@ void MainProgram(void)
         {
             Boot_DualBank_MarkStage2Pass();
             stage2Done = TRUE;
+        }
+
+        /* After power-on, NM is active for ~2s to synchronize with the network,
+         * then release the network request to allow Bus-Sleep transition. */
+        if (!nmReleased && (g_LoopFlag >= 4000u))
+        {
+            CanNm_NetworkRelease();
+            nmReleased = TRUE;
         }
 
         /* brd */

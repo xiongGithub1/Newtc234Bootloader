@@ -101,7 +101,7 @@
         "rules": [
         ]
     },
-    "currentPage": "{fbe69733-160f-4e99-81b2-808f0c40d247}",
+    "currentPage": "{108f67d1-54da-4970-bbbb-534f981dfddf}",
     "database": {
         "expressionVariables": {
             "extra": {
@@ -9266,24 +9266,24 @@
                         "index": 1,
                         "uuid": "{567031a6-7260-496a-9798-b8e3c69aa392}",
                         "width": 800,
-                        "x": 717,
-                        "y": 73
+                        "x": 781,
+                        "y": 43
+                    },
+                    {
+                        "height": 594,
+                        "index": 2,
+                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
+                        "width": 858,
+                        "x": 738,
+                        "y": -12
                     },
                     {
                         "height": 610,
-                        "index": 2,
+                        "index": 3,
                         "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
                         "width": 739,
                         "x": 0,
                         "y": -21
-                    },
-                    {
-                        "height": 594,
-                        "index": 3,
-                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
-                        "width": 858,
-                        "x": 736,
-                        "y": -26
                     }
                 ]
             },
@@ -9330,20 +9330,28 @@
             "details": {
                 "subWindows": [
                     {
-                        "height": 596,
-                        "index": 1,
-                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
-                        "width": 828,
-                        "x": 0,
-                        "y": -24
-                    },
-                    {
                         "height": 600,
-                        "index": 2,
+                        "index": 1,
                         "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
                         "width": 786,
                         "x": 823,
-                        "y": -33
+                        "y": 0
+                    },
+                    {
+                        "height": 400,
+                        "index": 2,
+                        "uuid": "{9e0288ee-e16f-4934-ae99-3c7fcc14e521}",
+                        "width": 800,
+                        "x": 774,
+                        "y": 219
+                    },
+                    {
+                        "height": 596,
+                        "index": 3,
+                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
+                        "width": 828,
+                        "x": 0,
+                        "y": 9
                     }
                 ]
             },
@@ -11864,132 +11872,6 @@
                             "sub_services": [
                             ]
                         }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "addresssize": 4,
-                        "crc_block_custom_cmd": "31 01 F1 A0",
-                        "crc_block_custom_enable": false,
-                        "crc_block_enable": false,
-                        "crc_cmd": "31 01 02 02",
-                        "crc_enable": true,
-                        "crc_in_reverse": true,
-                        "crc_init_value": "0xffffffff",
-                        "crc_out_reverse": true,
-                        "crc_poly": "0x4c11db7",
-                        "crc_type": 0,
-                        "crc_xor_value": "0xffffffff",
-                        "customBlockSize": 0,
-                        "customParamForS37": "",
-                        "customParamForS37Enable": false,
-                        "custom_addressing": false,
-                        "dataFormatIdentifier": 0,
-                        "delay": 0,
-                        "desc": "文件下载",
-                        "erase_ecu_memory_mode": 3,
-                        "ever_file_block_delay": 0,
-                        "file": "E:/workFiles/IEBS/IEBSBootloader/App_dualBank/debug_b/App_dualBank.hex",
-                        "file_blocks": [
-                            {
-                                "address": "0x80020000",
-                                "crc": "0x3359EAFD",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80020000",
-                                "mappedSize": "18",
-                                "size": "18"
-                            },
-                            {
-                                "address": "0x80020020",
-                                "crc": "0x818679D2",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80020020",
-                                "mappedSize": "12",
-                                "size": "12"
-                            },
-                            {
-                                "address": "0x80020030",
-                                "crc": "0xCB151FAB",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80020030",
-                                "mappedSize": "43546",
-                                "size": "43546"
-                            },
-                            {
-                                "address": "0x8002AA4C",
-                                "crc": "0xEFC0F50B",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002AA4C",
-                                "mappedSize": "4451",
-                                "size": "4451"
-                            },
-                            {
-                                "address": "0x8002BBB0",
-                                "crc": "0x1EA07A3E",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002BBB0",
-                                "mappedSize": "2337",
-                                "size": "2337"
-                            },
-                            {
-                                "address": "0x8002C4D4",
-                                "crc": "0x3058DB51",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002C4D4",
-                                "mappedSize": "640",
-                                "size": "640"
-                            },
-                            {
-                                "address": "0x80090500",
-                                "crc": "0x49B5ADA1",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090500",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80090540",
-                                "crc": "0x8D013F02",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090540",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80090C80",
-                                "crc": "0x74F0A6AD",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090C80",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80098000",
-                                "crc": "0x985118EB",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80098000",
-                                "mappedSize": "242",
-                                "size": "242"
-                            }
-                        ],
-                        "functionaddr": false,
-                        "isCustomBlockSize": false,
-                        "lengthsize": 4,
-                        "type": "download"
                     }
                 ],
                 "sessionKeepEnagled": false
@@ -13216,6 +13098,31 @@
                                         "type": "Basic"
                                     },
                                     {
+                                        "id": "11 01",
+                                        "name": "HardReset",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "11 01",
+                                            "delayMs": 0,
+                                            "desc": "硬重置",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "HardReset",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
                                         "id": "27 01",
                                         "name": "RequestSeed1",
                                         "taskItem": {
@@ -13469,7 +13376,7 @@
                     {
                         "ID": 1868,
                         "channel": 1,
-                        "data": "10 10 f1 5a 55 55 00 00",
+                        "data": "03 22 f5 20 00 00 00 00",
                         "dataLength": 8,
                         "enabled": true,
                         "frameType": 0,

@@ -14,6 +14,7 @@
 #include "Flash.h"
 #include "App_bootloader.h"
 #include "Boot_DualBank.h"
+#include "can_nm.h"
 
 uint32 pageData1[128];
 
@@ -1312,6 +1313,32 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		totalLen = DID_DFlash_ReadF15B(&m_pstPDUMsg->aDataBuf[3], UDS_DATA_BUF_SIZE - 3);
 		m_pstPDUMsg->xDataLen = 3u + totalLen;
+		return;
+	}
+
+	/* Special handling for F520 - Read AUTOSAR CanNm status
+		* Byte 0: NM State (0=Uninit, 1=BusSleep, 2=PrepareBusSleep, 3=RepeatMessage,
+		*                   4=NormalOperation, 5=ReadySleep)
+		* Byte 1: NM Mode  (0=BusSleep, 1=PrepareBusSleep, 2=Synchronize, 3=Network)
+		* Byte 2: Network Requested (0=No, 1=Yes)
+		* Byte 3: Reserved
+		*/
+	if (did == F520)
+	{
+		CanNm_StateType nmState;
+		CanNm_ModeType  nmMode;
+
+		m_pstPDUMsg->aDataBuf[1u] = 0xF5;
+		m_pstPDUMsg->aDataBuf[2u] = 0x20;
+
+		(void)CanNm_GetState(&nmState, &nmMode);
+
+		m_pstPDUMsg->aDataBuf[3u] = (uint8)nmState;
+		m_pstPDUMsg->aDataBuf[4u] = (uint8)nmMode;
+		m_pstPDUMsg->aDataBuf[5u] = CanNm_IsNetworkRequested();
+		m_pstPDUMsg->aDataBuf[6u] = 0x00u;
+
+		m_pstPDUMsg->xDataLen = 7u;
 		return;
 	}
 
