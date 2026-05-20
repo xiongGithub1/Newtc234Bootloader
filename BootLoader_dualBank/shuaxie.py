@@ -31,35 +31,34 @@ TESTER_ADDR = 0x75C        # Tester 响应地址 (TX)
 FUNC_ADDR = 0x7DF          # 功能地址（会话保持用）
 CHANNEL = 1                # CAN 通道号
 
-# 刷写文件路径（统一 HEX，使用 Bank A 地址范围 0x80020000~0x800FFFFF）
-# 无论刷写 Bank A 还是 Bank B，都使用同一个 HEX 文件
-HEX_FILE = r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\Debug\App_dualBank.hex"
+# Bank A HEX 文件路径（地址范围 0x80020000~0x800FFFFF）
+HEX_FILE_A = r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\Debug\App_dualBank.hex"
+# Bank B HEX 文件路径（地址范围 0x80100000~0x801FFFFF）
+HEX_FILE_B = r"E:\workFiles\IEBS\IEBSBootloader\App_dualBank\debug_b\App_dualBank.hex"
+
+# 当前使用的 HEX 文件（由脚本根据目标 Bank 动态选择）
+HEX_FILE = HEX_FILE_A
 
 # 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
-# 统一 HEX 对齐后的输出文件路径（自动由脚本处理）
-ALIGNED_HEX_FILE = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_Unified.hex"
+# HEX 对齐后的输出文件路径（自动由脚本处理）
+ALIGNED_HEX_FILE = r"E:\workFiles\IEBS\IEBSBootloader\tc234bootloader\App_dualBank_aligned.hex"
 
 # ========== Bank 地址与大小（与 Bootloader LSL 保持一致） ==========
-# 统一 HEX 使用 Bank A 的地址范围
-UNIFIED_HEX_BASE_ADDR = 0x80020000
-UNIFIED_HEX_END_ADDR  = 0x80100000
-UNIFIED_HEX_SIZE      = 896 * 1024   # 0x000E0000
-
-# 实际 Bank 物理地址（Bootloader 内部重映射用）
 BANK_A_START_ADDR = 0x80020000
+BANK_A_END_ADDR   = 0x80100000
 BANK_B_START_ADDR = 0x80100000
+BANK_B_END_ADDR   = 0x80200000
 BANK_APP_A_SIZE   = 896 * 1024
 BANK_APP_B_SIZE   = 1024 * 1024
 
 # Bank 对应的 sector 列表（对应 IfxFlash_pFlashTableLog 索引）
-# 统一 HEX 中使用 Bank A 的 sector 布局 (S8~S22)
-# Bootloader 会根据目标 Bank 自动重映射到实际 sector
 BANK_SECTORS = {
     "A": list(range(8, 23)),    # S8 ~ S22
-    "B": list(range(8, 23)),    # S8 ~ S22 (统一 HEX 使用相同的 sector 编号)
+    "B": list(range(23, 27)),   # S23 ~ S26
 }
+alignment = 32
 
 # 全局变量：记录手动擦除成功的 sector 列表，供 file_download 前置检查使用
 _g_erased_sectors = []
@@ -319,11 +318,13 @@ def align_hex_file(input_path, output_path, align=32, fill_byte=0x00):
         print(f"[align_hex] Error: No data found in {input_path}")
         return False
 
-    # Unified HEX validation: ensure all data is within Bank A address range
+    # Validate: ensure all data is within valid Bank address range
     for addr in data.keys():
-        if not (UNIFIED_HEX_BASE_ADDR <= addr < UNIFIED_HEX_END_ADDR):
-            print(f"[align_hex] Error: Address 0x{addr:08X} is outside unified HEX range")
-            print(f"[align_hex]        Unified HEX range: 0x{UNIFIED_HEX_BASE_ADDR:08X} ~ 0x{UNIFIED_HEX_END_ADDR:08X}")
+        if not ((BANK_A_START_ADDR <= addr < BANK_A_END_ADDR) or
+                (BANK_B_START_ADDR <= addr < BANK_B_END_ADDR)):
+            print(f"[align_hex] Error: Address 0x{addr:08X} is outside valid Bank range")
+            print(f"[align_hex]        Valid ranges: 0x{BANK_A_START_ADDR:08X}~0x{BANK_A_END_ADDR:08X} "
+                  f"or 0x{BANK_B_START_ADDR:08X}~0x{BANK_B_END_ADDR:08X}")
             return False
 
     segments = group_segments(data, max_gap=align)
@@ -434,54 +435,72 @@ def do_flash_process():
         # ------------------------------------------------------------
         global TARGET_BANK
         global HEX_FILE
+
+        # ------------------------------------------------------------
+        # 4a. Check programming conditions (legacy RID 0xFFFD)
+        # ------------------------------------------------------------
         rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0xFD], "Check Programming")
         if not rsp:
             return
-        # ZXDoc rsp.data 不含 SID，格式: [01 subFunc, FF RID_H, FD RID_L, canFlash, targetBank]
-        if len(rsp.data) >= 5:
+        if len(rsp.data) >= 4:
             can_flash = rsp.data[3]
-            target_bank_char = rsp.data[4]
-            app.log_i(f"[Check] Bootloader reports: canFlash={can_flash}, targetBank={target_bank_char}")
+            app.log_i(f"[Check] Bootloader reports: canFlash={can_flash}")
             if can_flash != 1:
                 app.log_e(f"[Check] ❌ Programming conditions NOT OK (canFlash={can_flash}), abort flash!")
                 return
+
+        # ------------------------------------------------------------
+        # 4b. Read target bank via DID AFFF
+        #      Response: [AF, FF, targetBankChar]
+        #      targetBankChar: 0x0A = Bank A, 0x0B = Bank B
+        # ------------------------------------------------------------
+        rsp = uds_request(uds, 0x22, [0xAF, 0xFF], "Read Target Bank (AFFF)")
+        if not rsp:
+            return
+        if len(rsp.data) >= 3:
+            target_bank_char = rsp.data[2]
             if target_bank_char == 0x0A:
                 TARGET_BANK = 'A'
+                HEX_FILE = HEX_FILE_A
             elif target_bank_char == 0x0B:
                 TARGET_BANK = 'B'
+                HEX_FILE = HEX_FILE_B
             else:
-                app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[4]:02X}, keep default={TARGET_BANK}")
-
-            # 统一 HEX 处理：无论目标 Bank 是 A 还是 B，都使用同一个 HEX 文件
-            input_file = HEX_FILE
-            alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
-
-            if not os.path.exists(input_file):
-                app.log_e(f"[Check] ❌ Input file not found: {input_file}")
-                sys.exit(1)
-
-            success = align_hex_file(input_file, ALIGNED_HEX_FILE, align=alignment, fill_byte=0x00)
-            if not success:
-                app.log_e("[Check] ❌ Failed to align HEX file")
-                sys.exit(1)
-
-            HEX_FILE = ALIGNED_HEX_FILE
-            app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}, using unified HEX")
+                app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[2]:02X}, keep default={TARGET_BANK}")
+                return
         else:
-            app.log_w(f"[Check] ⚠️ Short response, keep default target bank={TARGET_BANK}")
+            app.log_e("[Check] ❌ Invalid response length for AFFF")
+            return
 
+        app.log_i(f"[Check] ✅ Target Bank = {TARGET_BANK}, HEX file = {HEX_FILE}")
+
+        # ------------------------------------------------------------
+        # 4c. Align HEX file for the selected bank
+        # ------------------------------------------------------------
+        input_file = HEX_FILE
+        global alignment
+        if not os.path.exists(input_file):
+            app.log_e(f"[Check] ❌ Input file not found: {input_file}")
+            sys.exit(1)
+
+        success = align_hex_file(input_file, ALIGNED_HEX_FILE, align=alignment, fill_byte=0x00)
+        if not success:
+            app.log_e("[Check] ❌ Failed to align HEX file")
+            sys.exit(1)
+
+        HEX_FILE = ALIGNED_HEX_FILE
         # ------------------------------------------------------------
         # 5. 关闭通信 28 03 03 (Disable Rx/Tx)
         #    减少刷写过程中总线负载，防止应用报文干扰
         # ------------------------------------------------------------
-        if not uds_request(uds, 0x28, [0x03, 0x03], "Disable Communication"):
-            return
+        # if not uds_request(uds, 0x28, [0x03, 0x03], "Disable Communication"):
+        #     return
 
         # ------------------------------------------------------------
         # 6. 关闭 DTC 85 02
         # ------------------------------------------------------------
-        if not uds_request(uds, 0x85, [0x02], "Disable DTC"):
-            return
+        # if not uds_request(uds, 0x85, [0x02], "Disable DTC"):
+        #     return
 
         # ------------------------------------------------------------
         # 7. 编程会话 10 02
@@ -500,22 +519,22 @@ def do_flash_process():
         # 8. 预编程条件检查 31 01 02 03 (ISO 14229-1 标准 RID)
         #    正响应: 71 01 02 03 <canFlash> <targetBank>
         # ------------------------------------------------------------
-        rsp = uds_request(uds, 0x31, [0x01, 0x02, 0x03], "Check Preconditions")
-        if not rsp:
-            return
-        if len(rsp.data) >= 5:
-            can_flash = rsp.data[3]
-            if can_flash != 1:
-                app.log_e(f"[Precond] ❌ Preconditions NOT OK (canFlash={can_flash}), abort!")
-                return
-            app.log_i("[Precond] ✅ Preconditions OK")
+        # rsp = uds_request(uds, 0x31, [0x01, 0x02, 0x03], "Check Preconditions")
+        # if not rsp:
+        #     return
+        # if len(rsp.data) >= 5:
+        #     can_flash = rsp.data[3]
+        #     if can_flash != 1:
+        #         app.log_e(f"[Precond] ❌ Preconditions NOT OK (canFlash={can_flash}), abort!")
+        #         return
+        #     app.log_i("[Precond] ✅ Preconditions OK")
 
         # ------------------------------------------------------------
         # 9. 写指纹信息 2E F1 5A 55 55
         #    如需修改指纹内容，请调整 data 字段
         # ------------------------------------------------------------
-        if not uds_request(uds, 0x2E, [0xF1, 0x5A, 0x55, 0x55], "Write Fingerprint"):
-            return
+        # if not uds_request(uds, 0x2E, [0xF1, 0x5A], "Write Fingerprint"):
+        #     return
 
         # ------------------------------------------------------------
         # 10. 擦除目标 Bank (31 01 FF 00)
@@ -536,16 +555,19 @@ def do_flash_process():
         # 12. 检查编程依赖性 31 01 FF 01
         #     验证目标 Bank 是否已标记有效
         # ------------------------------------------------------------
-        rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0x01], "Check Dependencies")
-        if not rsp:
-            app.log_w("[Post] ⚠️ CheckProgrammingDependencies no response, continue...")
-        elif len(rsp.data) >= 4 and rsp.data[3] == 0x01:
-            app.log_i("[Post] ✅ Programming dependencies OK")
-        else:
-            app.log_w("[Post] ⚠️ Programming dependencies may have issues, continue...")
+        # rsp = uds_request(uds, 0x31, [0x01, 0xDF, 0xFF], "Check crc")
+        # if not rsp:
+        #     return
+        # rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0x01], "Check Dependencies")
+        # if not rsp:
+        #     app.log_w("[Post] ⚠️ CheckProgrammingDependencies no response, continue...")
+        # elif len(rsp.data) >= 4 and rsp.data[3] == 0x01:
+        #     app.log_i("[Post] ✅ Programming dependencies OK")
+        # else:
+        #     app.log_w("[Post] ⚠️ Programming dependencies may have issues, continue...")
         
                 # ------------------------------------------------------------
-        # 14. ECU 复位 11 03 (SoftReset)
+        # 14. ECU 复位 11 01 (SoftReset)
         # ------------------------------------------------------------
         uds_request(uds, 0x11, [0x01], "ECU Reset")
 

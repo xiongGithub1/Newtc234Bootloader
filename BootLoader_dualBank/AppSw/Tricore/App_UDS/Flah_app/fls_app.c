@@ -49,14 +49,12 @@ uint8 IsDownloadDataAddrValid(const uint32 i_DataAddr)
 		cachedAddr = i_DataAddr;
 	}
 
-	/* Unified HEX support:
-	 * Accept addresses in the full valid application area:
-	 * - Bank A: 0x80020000 ~ 0x800FFFFF
-	 * - Bank B: 0x80100000 ~ 0x801FFFFF
-	 * This covers both unified HEX (Bank A address range)
-	 * and direct Bank B addressing.
+	/* Two-bank HEX support:
+	 * Accept addresses in either Bank A or Bank B actual address range.
+	 * The HEX file must use the target bank's real physical addresses.
 	 */
-	if ((cachedAddr >= BANK_A_START_ADDR) && (cachedAddr < BANK_B_END_ADDR))
+	if (((cachedAddr >= BANK_A_START_ADDR) && (cachedAddr < BANK_A_END_ADDR)) ||
+	    ((cachedAddr >= BANK_B_START_ADDR) && (cachedAddr < BANK_B_END_ADDR)))
 	{
 		return TRUE;
 	}

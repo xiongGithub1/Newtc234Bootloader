@@ -58,6 +58,7 @@ tUDSRwDataTable g_rwDataTable[] =
 	{F197, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
 	/* DID 17: F15B - Read fingerprint from DFlash */
 	{F15B, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_HEX, (uint32)DFLASH_PTR_F15B, FINGERPRINT_RECORD_SIZE, FINGERPRINT_RECORD_SIZE * FINGERPRINT_RECORD_MAX},
+//	{AFFF, UDS_RWDATA_RDONLY, UDS_RWDATA_DFLASH, UDS_RWDATA_ASCII, (uint32)DFLASH_PTR_F197, DID_SIZE_F197, DID_SIZE_F197},
 };
 
 #define IsWriteFingerprintRight(x) ((x == gs_aWriteFingerprintId)?TRUE:FALSE)
@@ -70,7 +71,7 @@ static const tUdsTimeInfo gs_stUdsAppCfg =
 	3u,
 	10000u,
 	5000u,
-	50u,    /* P2 Server time (ms): 50ms */
+	2000u,    /* P2 Server time (ms): 2000ms */
 	5000u   /* P2* Server time (ms): 5000ms */
 };
 
@@ -89,47 +90,68 @@ static const tUDSService gs_astUDSService[] =
 {
 	{
 			0x10u,
-			DEFALUT_SESSION | EXTEND_SESSION,
+			DEFALUT_SESSION |  PROGRAM_SESSION| EXTEND_SESSION ,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DigSession0x10
 	},
 	{
 			0x11u,
-			DEFALUT_SESSION | EXTEND_SESSION,
+			DEFALUT_SESSION | PROGRAM_SESSION| EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			DoResetMCU0x11
 	},
 	{
 			0x27u,
-			EXTEND_SESSION,
+			DEFALUT_SESSION |PROGRAM_SESSION| EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			NONE_SECURITY,
 			SecurityAccess0x27
 	},
 	{
 			0x22u,
-			DEFALUT_SESSION ,
+			PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			NONE_SECURITY,
 			ReadDataByIdentifier0x22
 	},
 	{
 			0x2Eu,
-			DEFALUT_SESSION,
+			PROGRAM_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			WriteDataByIdentifier0x2E
 	},
 	{
 			0x31u,
-			DEFALUT_SESSION|PROGRAM_SESSION ,
+			PROGRAM_SESSION |EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			RoutineControl0x31
 	},
-	
+	{
+			0x34u,
+			PROGRAM_SESSION ,
+			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
+			SECURITY_LEVEL_2,
+			RequestDownload0x34
+	},
+
+	{
+			0x36u,
+			PROGRAM_SESSION,
+			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
+			SECURITY_LEVEL_2,
+			TransferData0x36
+	},
+	{
+			0x37u,
+			PROGRAM_SESSION,
+			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
+			SECURITY_LEVEL_2,
+			RequestTransferExit0x37
+	},
 	
 	/* Tester present service */
 	{
@@ -315,10 +337,6 @@ void SetSecurityLevel(const uint8 i_SerSecurityLevel)
 	gs_stUdsInfo.SecurityLevel = i_SerSecurityLevel;
 }
 
-#define SetRequestIdType(xRequestIDType) (gs_stUdsInfo.RequsetIdMode = (xRequestIDType))
-
-
-#define UdsAppTimeToCount(xTime) ((xTime) / gs_stUdsAppCfg.CalledPeriod)
 
 
 void RestartS3Server(void)
@@ -430,7 +448,15 @@ void UDS_SystemTickCtl(void)
 	if ((TRUE == IsP2ServerTimeout()) && (FALSE == IsP2StarTimeout()))
 	{
 		RestartP2Server();
-		/* Note: actual NRC 0x78 response is handled by service functions if needed */
+		/* If a service is currently being processed (e.g., Flash erase which blocks
+		 * UDS_MainFun), send NRC 0x78 automatically from the tick handler. */
+		if (0u != gs_u8CurrentUdsServiceId)
+		{
+			tUdsAppMsgInfo stPendingMsg = {0u, 0u, {0u}, NULL_PTR};
+			stPendingMsg.xUdsId = TP_GetConfigTxMsgID();
+			SetNegativeErroCode(gs_u8CurrentUdsServiceId, NRC_RESPONSE_PENDING, &stPendingMsg);
+			(void) TP_WriteAFrameDataInTP(stPendingMsg.xUdsId, NULL_PTR, stPendingMsg.xDataLen, stPendingMsg.aDataBuf);
+		}
 	}
 
 	/* S3 timeout: automatically return to default session and reset security level */
@@ -621,6 +647,7 @@ void UDS_MainFun(void)
 
 			if (nullptr != pstUDSService[UDSSerIndex].pfSerNameFun)
 			{
+				gs_u8CurrentUdsServiceId = UDSSerNum;
 				pstUDSService[UDSSerIndex].pfSerNameFun((tUDSService*) &pstUDSService[UDSSerIndex], &stUdsAppMsg);
 			}
 			else
@@ -645,6 +672,7 @@ void UDS_MainFun(void)
 		stUdsAppMsg.xUdsId = TP_GetConfigTxMsgID();
 		(void) TP_WriteAFrameDataInTP(stUdsAppMsg.xUdsId, stUdsAppMsg.pfUDSTxMsgServiceCallBack, stUdsAppMsg.xDataLen, stUdsAppMsg.aDataBuf);
 	}
+	gs_u8CurrentUdsServiceId = 0u;
 }
 
 /* ??EEPROM?��??????
@@ -738,105 +766,26 @@ void SendMsgMainFun(void)
 }
 
 
-/**
- * @brief ????????? App ???��??Sector 6??
- * @note ??? Flash ?????????????��???��?? 0xA55A??
- */
 
 
-void readFlagS6(void)
+
+
+
+
+/* Build 0x50 positive response with P2Server_max and P2*Server_max timing parameters.
+ * Per ISO 14229-1:
+ *   Bytes 3-4: P2Server_max in ms (1ms unit)
+ *   Bytes 5-6: P2*Server_max in ms / 10 (10ms unit) */
+static void BuildSessionPositiveResponse(tUdsAppMsgInfo* m_pstPDUMsg, uint8 RequestSubfunction)
 {
-	uint16* p16;
-	uint8* p;
-	uint8 flag[2] = { 0x5a,0xa5 };
-	uint8 r = 0;
-	uint32 i;
-
-	if ((*(uint32*) FL_APP_Update_FLAG_Addr) == 0)
-	{
-		Flash_BackupAppBlocks();
-	}
-
-	p16 = (uint16*) FL_APP_FLAG_Addr;
-	if (*p16 == 0)
-	{
-		flag[0] = (uint8) FL_APP_FLAG;
-		flag[1] = (uint8) (FL_APP_FLAG >> 8);
-		uint32 data[8];
-		data[0] = *(uint32*) FL_APP_FLAG_Addr;
-		if (FL_APP_FLAG == data[0])
-		{
-			r = 0;
-		}
-		else
-		{
-
-			Flash_erasePFlash_port(FL_APP_FLAG_Addr);
-
-			for (i = 0;i < 8;i++)
-			{
-				data[i] = 0;
-			}
-			data[0] = FL_APP_FLAG;
-
-			Flash_writePFlash_port(FL_APP_FLAG_Addr, data, PFLASH_PAGE_LENGTH);
-
-
-			if (FL_APP_FLAG == *(uint32*) FL_APP_FLAG_Addr)
-			{
-				r = 0;
-			}
-			else
-			{
-				r = 3;
-			}
-		}
-	}
-	else
-	{
-		r = 2;
-	}
-	if (r == 0)
-	{
-
-		p = (uint8*) RAM_BOOT_MODE_Addr;
-	}
-	else
-	{
-
-	}
+	m_pstPDUMsg->aDataBuf[0u] = 0x50u;
+	m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
+	m_pstPDUMsg->aDataBuf[2u] = (uint8)(gs_stUdsAppCfg.xP2Server >> 8);
+	m_pstPDUMsg->aDataBuf[3u] = (uint8)(gs_stUdsAppCfg.xP2Server);
+	m_pstPDUMsg->aDataBuf[4u] = (uint8)((gs_stUdsAppCfg.xP2Star / 10u) >> 8);
+	m_pstPDUMsg->aDataBuf[5u] = (uint8)(gs_stUdsAppCfg.xP2Star / 10u);
+	m_pstPDUMsg->xDataLen = 6u;
 }
-
-
-void readFlag(void)
-{
-	uint32 flashFlagAddr = 0xa0020020;
-	uint16 currentFlag = *(uint16*) flashFlagAddr;
-
-
-	if (currentFlag == FL_APP_FLAG)
-	{
-		return;
-	}
-	else
-	{
-
-		Flash_erasePFlash_port(flashFlagAddr);
-
-
-		uint32 pageData1[8] = { 0 };
-
-		pageData1[0] = 0xF8004091;
-		pageData1[1] = 0x3422FFD9;
-		pageData1[2] = 0x90000FDC;
-
-		Flash_writePFlash_port(flashFlagAddr, pageData1, PFLASH_PAGE_LENGTH);
-
-
-		currentFlag = *(uint16*) flashFlagAddr;
-	}
-}
-
 
 static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
@@ -851,9 +800,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	switch (RequestSubfunction)
 	{
 		case 0x01u:
-			m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-			m_pstPDUMsg->xDataLen = 2u;
+			BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 			SetCurrentSession(DEFALUT_SESSION);
 			SetSecurityLevel(NONE_SECURITY);
 			break;
@@ -878,9 +825,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			}
 			else
 			{
-				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-				m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-				m_pstPDUMsg->xDataLen = 2u;
+				BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 				SetCurrentSession(PROGRAM_SESSION);
 				/* OEM: mark programming session phase */
 				g_bootPhase = BOOT_PHASE_PROG_SESSION;
@@ -898,9 +843,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 			break;
 		case 0x03u:
-			m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-			m_pstPDUMsg->xDataLen = 2u;
+			BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 			SetCurrentSession(EXTEND_SESSION);
 			RestartS3Server();
 			break;
@@ -1156,6 +1099,25 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		return;
 	}
 
+	if(did==AFFF)
+	{
+		m_pstPDUMsg->aDataBuf[1u] = 0xAF;
+		m_pstPDUMsg->aDataBuf[2u] = 0xFF;
+		uint32 activeBank = Boot_DualBank_GetActiveBank();
+		uint8 targetBankChar;
+		/* Report the inactive bank as the target for next flashing */
+		if (activeBank == BANK_B)
+		{
+			targetBankChar = 0x0A; /* Bank A is inactive, will be flashed next */
+		}
+		else
+		{
+			targetBankChar = 0x0B; /* Bank B is inactive, will be flashed next */
+		}
+		m_pstPDUMsg->aDataBuf[3u] = targetBankChar;
+		m_pstPDUMsg->xDataLen = 4;
+		return;
+	}
 	for (int i = 0; i < sizeof(g_rwDataTable) / sizeof(g_rwDataTable[0]); i++)
 	{
 		if (g_rwDataTable[i].did == did)
@@ -1210,7 +1172,7 @@ static void WriteDataByIdentifier0x2E(struct UDSServiceInfo* i_pstUDSServiceInfo
 	 *         36~45: 刷写日期(年月日)
 	 *         46~55: 刷写后软件号
 	 *         56~65: 刷写后软件版本号
-	 * Data stored in DFlash Sector 0, UTF-8 encoded
+	 *
 	 */
 	if (did == F15A)
 	{
@@ -1339,6 +1301,11 @@ static uint32 gs_RxBlockNum = 0u;
 static uint32 gs_DownloadCRC = 0xFFFFFFFFu;
 static uint8  gs_bCrcActive = FALSE;
 
+/* Current UDS service ID being processed in UDS_MainFun.
+ * Used by UDS_SystemTickCtl to send NRC 0x78 when P2 times out
+ * while the main loop is blocked by long-running operations (e.g. Flash erase). */
+static uint8 gs_u8CurrentUdsServiceId = 0u;
+
 
 static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
@@ -1369,36 +1336,26 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		}
 		gs_stDowloadDataInfo.StartAddr = (gs_stDowloadDataInfo.StartAddr & 0x00FFFFFF) | 0xA0000000;
 
-		/*=====================================================================
-		 * 统一 HEX 地址处理
-		 * 统一 HEX 使用 Bank A 的地址范围 (0x80020000~0x800FFFFF)。
-		 * 无论地址在统一 HEX 范围内还是直接指定 Bank B 地址，
-		 * 都由 Bootloader 根据当前 targetWriteBank 决定实际写入位置。
-		 *====================================================================*/
+		/* Determine target bank from the address in the HEX file */
 		{
 			uint32 cachedAddr = gs_stDowloadDataInfo.StartAddr - 0x20000000u;
 
-			/* Unified HEX: use targetWriteBank set by CheckProgrammingConditions */
-			if (Boot_DualBank_IsUnifiedHexAddr(cachedAddr))
-			{
-				/* Unified HEX address: targetWriteBank already set by 0x31 01 FFFD */
-			}
-			/* Direct Bank B address specified */
-			else if ((cachedAddr >= BANK_B_START_ADDR) && (cachedAddr < BANK_B_END_ADDR))
+			if ((cachedAddr >= BANK_B_START_ADDR) && (cachedAddr < BANK_B_END_ADDR))
 			{
 				Boot_DualBank_SetTargetWriteBank(BANK_B);
 			}
-			/* Default to Bank A */
-			else
+			else if ((cachedAddr >= BANK_A_START_ADDR) && (cachedAddr < BANK_A_END_ADDR))
 			{
 				Boot_DualBank_SetTargetWriteBank(BANK_A);
 			}
+			else
+			{
+				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
+				Ret = FALSE;
+			}
 		}
 
-		/* 将统一 HEX 地址重映射到目标 Bank 的实际地址 */
-		gs_stDowloadDataInfo.StartAddr = Boot_DualBank_RemapUnifiedAddr(gs_stDowloadDataInfo.StartAddr);
-
-		if (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank())
+		if ((TRUE == Ret) && (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank()))
 		{
 			/* Never allow flashing the active bank, even if it appears invalid.
 			 * The dual-bank design always writes to the INACTIVE bank first,
@@ -1947,21 +1904,7 @@ static boolean IsSectorInTargetBank(uint16 sector)
 static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow)
 {
 	uint16 blockNum = (blockHigh << 8) | blockLow;
-	uint16 actualBlockNum;
-
-	/* 0. Unified HEX sector remap:
-	 *    If the sector number is in the unified HEX range (S8~S22),
-	 *    remap it to the target bank's actual sector number.
-	 *    This allows the unified HEX to use Bank A's sector layout
-	 *    regardless of which bank is the actual target. */
-	if ((blockNum >= BANK_A_SECTOR_START) && (blockNum <= BANK_A_SECTOR_END))
-	{
-		actualBlockNum = Boot_DualBank_RemapUnifiedSector(blockNum);
-	}
-	else
-	{
-		actualBlockNum = blockNum;
-	}
+	uint16 actualBlockNum = blockNum;
 
 	/* 1. Check valid sector range */
 	if (actualBlockNum >= IFXFLASH_PFLASH_NUM_LOG_SECTORS)
@@ -1975,12 +1918,25 @@ static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow)
 		return 0xFC;
 	}
 
-	/* 3. Ensure the sector belongs to the currently selected target bank.
-	 *    g_udsTargetBank is set during RequestDownload (0x34) based on
-	 *    the start address provided by the tester. */
+	/* 3. Auto-detect target bank from sector number if it doesn't match current target.
+	 *    This resolves the issue where DFlash flags retain the previous session's
+	 *    targetWriteBank (e.g. BANK_A), causing Bank B erase (S23~S26) to fail
+	 *    with 0xFD (sector not in target bank).
+	 *    shuaxie.py sends physical sector numbers: Bank A = 8~22, Bank B = 23~26. */
 	if (!IsSectorInTargetBank(actualBlockNum))
 	{
-		return 0xFD;
+		if ((actualBlockNum >= BANK_B_SECTOR_START) && (actualBlockNum <= BANK_B_SECTOR_END))
+		{
+			Boot_DualBank_SetTargetWriteBank(BANK_B);
+		}
+		else if ((actualBlockNum >= BANK_A_SECTOR_START) && (actualBlockNum <= BANK_A_SECTOR_END))
+		{
+			Boot_DualBank_SetTargetWriteBank(BANK_A);
+		}
+		else
+		{
+			return 0xFD; /* Sector not in any valid bank range */
+		}
 	}
 
 	/* 4. Execute erase on the actual (remapped) sector */

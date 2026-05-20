@@ -93,6 +93,8 @@ typedef enum
 
 	/* Vehicle Info */
 	F190 = 0xF190u, /* ????VIN??? */
+	/* Software Active bank*/
+	AFFF =0xAFFF,
 }rw_data_did;
 
 #define VIN_F190                          "W0L00043MB541326"

@@ -1,10 +1,10 @@
 /*
- * @ 名称: multi_cyc_fifo.h
- * @ 描述:
- * @ 作者: Tomy
- * @ 日期: 2021年2月5日
- * @ 版本: V1.0
- * @ 历史: V1.0 2021年2月5日 Summary
+ * @ ????: multi_cyc_fifo.h
+ * @ ????:
+ * @ ????: Tomy
+ * @ ????: 2021??2??5??
+ * @ ?汾: V1.0
+ * @ ???: V1.0 2021??2??5?? Summary
  *
  * MIT License. Copyright (c) 2021 SummerFalls.
  */
@@ -42,7 +42,7 @@ typedef unsigned short tLen;
 #ifdef EN_LIN_TP
 #define TOTAL_FIFO_BYTES (450u) /* Config total bytes */
 #elif defined EN_CAN_TP
-#define TOTAL_FIFO_BYTES (1024u) /* Config total bytes */
+#define TOTAL_FIFO_BYTES (1400u) /* Config total bytes: 4 FIFOs * ~300B each + margin */
 #else
 #define TOTAL_FIFO_BYTES (100u) /* Config total bytes */
 #endif

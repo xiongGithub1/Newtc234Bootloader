@@ -73,7 +73,7 @@ static const tUdsTimeInfo gs_stUdsAppCfg =
 	3u,
 	10000u,
 	5000u,
-	50u,    /* P2 Server time (ms): 50ms */
+	2000u,    /* P2 Server time (ms): 50ms */
 	5000u   /* P2* Server time (ms): 5000ms */
 };
 
@@ -87,6 +87,11 @@ static tUdsInfo gs_stUdsInfo =
 	0u,
 	0u
 };
+
+/* Current UDS service ID being processed in UDS_MainFun.
+ * Used by UDS_SystemTickCtl to send NRC 0x78 when P2 times out
+ * while the main loop is blocked by long-running operations (e.g. Flash erase). */
+static uint8 gs_u8CurrentUdsServiceId = 0u;
 
 static const tUDSService gs_astUDSService[] =
 {
@@ -476,6 +481,15 @@ void UDS_SystemTickCtl(void)
 	if ((TRUE == IsP2ServerTimeout()) && (FALSE == IsP2StarTimeout()))
 	{
 		RestartP2Server();
+		/* If a service is currently being processed (e.g., Flash erase which blocks
+		 * UDS_MainFun), send NRC 0x78 automatically from the tick handler. */
+		if (0u != gs_u8CurrentUdsServiceId)
+		{
+			tUdsAppMsgInfo stPendingMsg = {0u, 0u, {0u}, NULL_PTR};
+			stPendingMsg.xUdsId = TP_GetConfigTxMsgID();
+			SetNegativeErroCode(gs_u8CurrentUdsServiceId, NRC_SERVICE_BUSY, &stPendingMsg);
+			(void) TP_WriteAFrameDataInTP(stPendingMsg.xUdsId, NULL_PTR, stPendingMsg.xDataLen, stPendingMsg.aDataBuf);
+		}
 	}
 
 	/* S3 timeout: automatically return to default session and reset security level */
@@ -664,6 +678,7 @@ void UDS_MainFun(void)
 
 			if (nullptr != pstUDSService[UDSSerIndex].pfSerNameFun)
 			{
+				gs_u8CurrentUdsServiceId = UDSSerNum;
 				pstUDSService[UDSSerIndex].pfSerNameFun((tUDSService*) &pstUDSService[UDSSerIndex], &stUdsAppMsg);
 			}
 			else
@@ -688,6 +703,7 @@ void UDS_MainFun(void)
 		stUdsAppMsg.xUdsId = TP_GetConfigTxMsgID();
 		(void) TP_WriteAFrameDataInTP(stUdsAppMsg.xUdsId, stUdsAppMsg.pfUDSTxMsgServiceCallBack, stUdsAppMsg.xDataLen, stUdsAppMsg.aDataBuf);
 	}
+	gs_u8CurrentUdsServiceId = 0u;
 }
 
 /* ??EEPROM?锟斤拷??????
@@ -906,6 +922,21 @@ static void DoResetToBootloader(uint8 status)
 }
 #endif
 
+/* Build 0x50 positive response with P2Server_max and P2*Server_max timing parameters.
+ * Per ISO 14229-1:
+ *   Bytes 3-4: P2Server_max in ms (1ms unit)
+ *   Bytes 5-6: P2*Server_max in ms / 10 (10ms unit) */
+static void BuildSessionPositiveResponse(tUdsAppMsgInfo* m_pstPDUMsg, uint8 RequestSubfunction)
+{
+	m_pstPDUMsg->aDataBuf[0u] = 0x50u;
+	m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
+	m_pstPDUMsg->aDataBuf[2u] = (uint8)(gs_stUdsAppCfg.xP2Server >> 8);
+	m_pstPDUMsg->aDataBuf[3u] = (uint8)(gs_stUdsAppCfg.xP2Server);
+	m_pstPDUMsg->aDataBuf[4u] = (uint8)((gs_stUdsAppCfg.xP2Star / 10u) >> 8);
+	m_pstPDUMsg->aDataBuf[5u] = (uint8)(gs_stUdsAppCfg.xP2Star / 10u);
+	m_pstPDUMsg->xDataLen = 6u;
+}
+
 static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
 {
@@ -919,9 +950,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	switch (RequestSubfunction)
 	{
 		case 0x01u:
-			m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-			m_pstPDUMsg->xDataLen = 2u;
+			BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 			SetCurrentSession(DEFALUT_SESSION);
 			SetSecurityLevel(NONE_SECURITY);
 			break;
@@ -942,9 +971,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			}
 			else
 			{
-				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-				m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-				m_pstPDUMsg->xDataLen = 2u;
+				BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 				SetCurrentSession(PROGRAM_SESSION);
 #ifdef DIAGNOSTIC_MODE_FOR_APP
 				/* APP mode: set bootloader flag and reset after positive response is sent */
@@ -964,9 +991,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 			break;
 		case 0x03u:
-			m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
-			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
-			m_pstPDUMsg->xDataLen = 2u;
+			BuildSessionPositiveResponse(m_pstPDUMsg, RequestSubfunction);
 			SetCurrentSession(EXTEND_SESSION);
 			break;
 		case 0x83u:

@@ -94,7 +94,7 @@ void MainProgram(void)
 
     	if((g_LoopFlag % 1000) == 0)	// 500ms
     	{
-    		txcanmsg.usRxTxDataId = 0x123;
+    		txcanmsg.usRxTxDataId = 0x122;
     		txcanmsg.aucDataBuf[0] = 1;
     		txcanmsg.aucDataBuf[1] = 1;
     		txcanmsg.aucDataBuf[2] = 1;

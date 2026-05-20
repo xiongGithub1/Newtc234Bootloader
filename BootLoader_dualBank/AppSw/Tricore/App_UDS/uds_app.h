@@ -49,6 +49,12 @@ typedef uint16 tUdsTime;
 #define DOWLOAD_DATA_ADDR_LEN (4u) /* Download data addr len */
 #define DOWLOAD_DATA_LEN (4u)      /* Download data len */
 
+#define SetRequestIdType(xRequestIDType) (gs_stUdsInfo.RequsetIdMode = (xRequestIDType))
+
+
+#define UdsAppTimeToCount(xTime) ((xTime) / gs_stUdsAppCfg.CalledPeriod)
+
+
 /***********************UDS service Static Global value************************/
 
 /*uds servie sub function config table*/
@@ -121,7 +127,7 @@ typedef struct
 {
     tUdsId xUdsId;
     tUdsLen xDataLen;//250627
-#define UDS_DATA_BUF_SIZE   (150u)
+#define UDS_DATA_BUF_SIZE   (256u)
     uint8 aDataBuf[UDS_DATA_BUF_SIZE];
 //    uint8 aDataBuf[4096u];//250627
 
@@ -232,6 +238,7 @@ typedef struct {
 
 static uint32 gs_DownloadCRC ;
 static uint8  gs_bCrcActive ;
+static uint8 gs_u8CurrentUdsServiceId ;
 void SetNegativeErroCode(const uint8 i_UDSServiceNum, const uint8 i_ErroCode,tUdsAppMsgInfo *m_pstPDUMsg);
 //extern tUDSCommCtrlMode g_CanMsgCommCtrlMode;
 static uint8 IsReceivedKeyRight(const uint8 *i_pReceivedKey, const uint8 *i_pTxSeed,const uint8 KeyLen);

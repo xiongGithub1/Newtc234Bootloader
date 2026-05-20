@@ -108,7 +108,7 @@ void core0_main(void)
     resetReason = ResetStatus_Previous();
     isPowerOnReset = ((resetReason & 0x01u) != 0u) ? TRUE : FALSE;
 
-    //    IfxCpu_disableInterrupts();
+    IfxCpu_disableInterrupts();
     /* app init*/
 
     IfxScuClock_init();

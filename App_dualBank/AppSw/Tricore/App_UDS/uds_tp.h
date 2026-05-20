@@ -1,7 +1,7 @@
 /*
  * can_tp.h
  *
- *  Created on: 2021年11月26日
+ *  Created on: 2021??11??26??
  *      Author: Administrator
  */
 
@@ -23,16 +23,16 @@ typedef unsigned short tNetTime;
 typedef unsigned short tBlockSize;
 
 
-#define RX_TP_QUEUE_ID ('R')   /* TP RX FIFO ID  ASCII码是82*/
-#define TX_TP_QUEUE_ID ('T')   /* TP TX FIFO ID  ASCII码是84*/
+#define RX_TP_QUEUE_ID ('R')   /* TP RX FIFO ID  ASCII????82*/
+#define TX_TP_QUEUE_ID ('T')   /* TP TX FIFO ID  ASCII????84*/
 
 /* Define FIFO length */
-#define TX_TP_QUEUE_LEN (150u)  /* UDS send message to TP max length */
-#define RX_TP_QUEUE_LEN (150u)  /* UDS read message from TP max length */
+#define TX_TP_QUEUE_LEN (300u)  /* UDS send message to TP max length */
+#define RX_TP_QUEUE_LEN (300u)  /* UDS read message from TP max length */
 
 #define RX_BUS_FIFO_LEN     (300u)      /* RX BUS FIFO length */
-#define RX_BUS_FIFO         ('r')       /* RX bus FIFO ASCII码是114*/
-#define TX_BUS_FIFO         ('t')       /* RX bus FIFO ASCII码是116*/
+#define RX_BUS_FIFO         ('r')       /* RX bus FIFO ASCII????114*/
+#define TX_BUS_FIFO         ('t')       /* RX bus FIFO ASCII????116*/
 #define TX_BUS_FIFO_LEN     (300)      /* RX BUS FIFO length */
 
 
@@ -55,7 +55,7 @@ typedef struct
 #define FF_DATA_MIN_LEN         (8u)    /* Min First Frame data len*/
 
 #define CF_DATA_MAX_LEN         (7u)    /* Single Consecutive Frame max data len */
-#define MAX_CF_DATA_LEN         (150u)  /* Max Consecutive Frame data len */
+#define MAX_CF_DATA_LEN         (300u)  /* Max Consecutive Frame data len */
 
 #define NORMAL_ADDRESSING (0u) /* Normal addressing */
 #define MIXED_ADDRESSING  (1u) /* Mixed addressing */
@@ -141,20 +141,20 @@ typedef struct
 typedef uint16 tCanTpDataLen;
 typedef struct
 {
-    tUdsId xCanTpId;                 /* CAN TP message ID  2个字节*/
-    tCanTpDataLen xPduDataLen;       /* PDU data len(RX/TX data len) 2个字节*/
-    tCanTpDataLen xFFDataLen;        /* RX/TX FF data len 2个字节*/
-    uint8 aDataBuf[MAX_CF_DATA_LEN]; /* RX/TX data buffer 150个字节*/
+    tUdsId xCanTpId;                 /* CAN TP message ID  2?????*/
+    tCanTpDataLen xPduDataLen;       /* PDU data len(RX/TX data len) 2?????*/
+    tCanTpDataLen xFFDataLen;        /* RX/TX FF data len 2?????*/
+    uint8 aDataBuf[MAX_CF_DATA_LEN]; /* RX/TX data buffer 150?????*/
 } tCanTpDataInfo;
 
 typedef struct
 {
-    uint8 ucSN;               /* SN 1个字节*/
-    uint8 ucBlockSize;        /* Block size 1个字节*/
-    tNetTime xSTmin;          /* STmin 2个字节*/
-    tNetTime xMaxWatiTimeout; /* Timeout time 2个字节*/
-    tCanTpDataInfo stCanTpDataInfo;	//156个字节
-    // 实际情况是因为考虑到内存对齐规则（通常编译器会对齐到其最大成员的大小），因此该结构体实际大小为164字节
+    uint8 ucSN;               /* SN 1?????*/
+    uint8 ucBlockSize;        /* Block size 1?????*/
+    tNetTime xSTmin;          /* STmin 2?????*/
+    tNetTime xMaxWatiTimeout; /* Timeout time 2?????*/
+    tCanTpDataInfo stCanTpDataInfo;	//156?????
+    // ?????????????????????????????????????????????????С???????????????С?164???
 } tCanTpInfo;
 
 typedef struct
