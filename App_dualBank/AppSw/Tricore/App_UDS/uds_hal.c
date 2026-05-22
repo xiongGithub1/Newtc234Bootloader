@@ -20,7 +20,7 @@ void SoftwarewReset(void)
     /* Ensure all Flash operations are complete before reset */
 //    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
 //    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
-
+    
     IfxCpu_triggerSwReset();
     while(1)
     {

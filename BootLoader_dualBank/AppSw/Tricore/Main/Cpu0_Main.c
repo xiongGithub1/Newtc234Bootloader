@@ -47,28 +47,7 @@
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
 
-/** \brief Main entry point after CPU boot-up.
- *
- *  It initialise the system and enter the endless loop that handles the demo
- */
 
-uint32 ResetStatus_Previous(void)
-{
-    uint32 rststat;
-
-    volatile Ifx_SCU_RSTSTAT* scu_rststat = &SCU_RSTSTAT;
-    rststat = scu_rststat->U;
-
-    IfxScuWdt_clearSafetyEndinit(IfxScuWdt_getSafetyWatchdogPassword());
-    volatile Ifx_SCU_RSTCON2* scu_rstcon2 = &SCU_RSTCON2;
-    scu_rstcon2->B.CLRC = 1;
-    IfxScuWdt_setSafetyEndinit(IfxScuWdt_getSafetyWatchdogPassword());
-
-    return rststat;
-}
-
-uint32 resetReason;
-boolean isPowerOnReset;
 
 /* OEM: startup phase timeout protection (max 100ms from reset to jump decision) */
 #define BOOT_STARTUP_TIMEOUT_MS     100u
@@ -80,7 +59,7 @@ void core0_main(void)
     //	*p = 0;
 
     /* === Phase 1: System Startup (OEM Standard) === */
-    g_bootPhase = BOOT_PHASE_STARTUP;
+    g_bootPhase = BOOT_PHASE_ERROR;
 
     /*
      * Enable CPU Watchdog to prevent runaway after Trap.
@@ -104,9 +83,6 @@ void core0_main(void)
     }
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
 
-    /* OEM: Record reset reason for diagnostic and fault analysis */
-    resetReason = ResetStatus_Previous();
-    isPowerOnReset = ((resetReason & 0x01u) != 0u) ? TRUE : FALSE;
 
     IfxCpu_disableInterrupts();
     /* app init*/

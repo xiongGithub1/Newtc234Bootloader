@@ -316,6 +316,17 @@ void CanMainProcess(void)
 	QueueMsgObject txMsgObj;
 	if(tl_queue_take_item(&gl_txDataQueue,&txMsgObj))
 	{
-		drv_can1_send((tRxTxCanMsg *)&txMsgObj);
+		if(TRUE == drv_can1_send((tRxTxCanMsg *)&txMsgObj))
+		{
+			uint32 txWaitCnt = 100000u;
+
+			while((TRUE == IfxMultican_Can_MsgObj_isTransmitRequested(&g_MulticanBasic.drivers.canNode0MsgTx2[0]))
+					&& (txWaitCnt > 0u))
+			{
+				txWaitCnt--;
+			}
+
+			CANTP_DoTxMsgSuccessfulCallBack();
+		}
 	}
 }

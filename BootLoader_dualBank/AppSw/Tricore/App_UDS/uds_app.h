@@ -27,7 +27,7 @@
 #include "Flash.h"
 #include "App_bootloader.h"
 #include "Boot_DualBank.h"
-
+#include "Stm.h"
 typedef uint16 tUdsTime;
 
 /* Define session mode */

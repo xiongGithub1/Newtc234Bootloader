@@ -92,7 +92,7 @@ typedef enum
     BOOT_PHASE_ERROR            = 0xFFu    /* Unrecoverable error / trap */
 } BootPhase_t;
 
-extern volatile BootPhase_t g_bootPhase;
+extern  BootPhase_t g_bootPhase;
 
 typedef struct
 {

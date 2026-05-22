@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * \file    did_dflash.c
  * \brief   DID DFlash Storage Manager Implementation
- * \note    All text DID data stored with UTF-8 encoding
+ * \note    All text DID data stored with ASCII encoding
  *********************************************************************************************************************/
 
 #include "did_dflash.h"
@@ -28,7 +28,7 @@
 static uint8 s_sector1Backup[DFLASH_SECTOR1_SIZE];
 static uint8 s_backupValid = FALSE;
 
-/* Default DID values (UTF-8 encoded) */
+/* Default DID values (ASCII encoded) */
 static const uint8 s_default_F186[DID_SIZE_F186] = "BOOT_V2.00";
 static const uint8 s_default_F187[DID_SIZE_F187] = "CK3565_100X9014";
 static const uint8 s_default_F188[DID_SIZE_F188] = "SW_IEBS_001";
@@ -57,6 +57,9 @@ static boolean DID_DFlash_WriteDefaults(void)
     uint32 i;
     uint32 pageData[2];  /* DFlash page = 8 bytes = 2 x uint32 */
     uint32 addr;
+    uint16 j;
+    uint16 pageCnt;
+    uint32 idx;
 
     /* Write each DID default value */
     struct {
@@ -84,15 +87,21 @@ static boolean DID_DFlash_WriteDefaults(void)
     {
         addr = DFLASH_DID_BASE_ADDR + didList[i].offset;
         /* Pad with zeros to 8-byte boundary for DFlash page write */
-        uint8 padded[16] = {0};
+        uint8 padded[32] = {0};
         tl_memcpy(padded, didList[i].data, didList[i].size);
 
-        pageData[0] = ((uint32)padded[0]) | ((uint32)padded[1] << 8) |
-                      ((uint32)padded[2] << 16) | ((uint32)padded[3] << 24);
-        pageData[1] = ((uint32)padded[4]) | ((uint32)padded[5] << 8) |
-                      ((uint32)padded[6] << 16) | ((uint32)padded[7] << 24);
+        pageCnt = (didList[i].size + DFLASH_PAGE_LENGTH - 1u) / DFLASH_PAGE_LENGTH;
 
-        Flash_writeDFlash_port(addr, pageData, DFLASH_PAGE_LENGTH);
+        for (j = 0; j < pageCnt; j++)
+        {
+            idx = j * DFLASH_PAGE_LENGTH;
+            pageData[0] = ((uint32)padded[idx]) | ((uint32)padded[idx + 1] << 8) |
+                          ((uint32)padded[idx + 2] << 16) | ((uint32)padded[idx + 3] << 24);
+            pageData[1] = ((uint32)padded[idx + 4]) | ((uint32)padded[idx + 5] << 8) |
+                          ((uint32)padded[idx + 6] << 16) | ((uint32)padded[idx + 7] << 24);
+
+            Flash_writeDFlash_port(addr + idx, pageData, DFLASH_PAGE_LENGTH);
+        }
     }
 
     /* Write magic number at end of sector */

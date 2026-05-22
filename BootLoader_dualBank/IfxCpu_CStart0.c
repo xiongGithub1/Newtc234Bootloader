@@ -219,16 +219,6 @@ void _START(void)
 /** \brief Boot Mode Header 0
  * Boot mode header at memory location 0c8000 0000.
  */
-//const uint32 BootModeHeader_0[] = {
-//    0x00000000u,                 /* STADBM first user code at 0x8000 0020h */
-//    0xb3590070u,                 /* BMI = 0070h BMHDID = B359h */
-//    0x00000000u,                 /* ChkStart */
-//    0x00000000u,                 /* ChkEnd */
-//    0x00000000u,                 /* CRCrange */
-//    0x00000000u,                 /* !CRCrange */
-//    0x791eb864u,                 /* CRChead */
-//    0x86e1479bu                  /* !CRChead */
-//};
 
 const uint32 BootModeHeader_0[] = {
 	0xA0000020,

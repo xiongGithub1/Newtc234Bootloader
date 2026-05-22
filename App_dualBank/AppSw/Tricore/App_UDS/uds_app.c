@@ -15,6 +15,8 @@
 #include "App_bootloader.h"
 #include "Boot_DualBank.h"
 #include "can_nm.h"
+#include "Can.h"
+#include "Tmr.h"
 
 uint32 pageData1[128];
 
@@ -30,7 +32,7 @@ const  uint8 gs_aCheckProgrammingDependencyId[4u] = { 0x31u, 0x01u, 0xFFu, 0x01u
 
 /* DID Data stored in DFlash - use direct pointers for read access
  * Sector 1: 0xAF002000 ~ 0xAF003FFF (Static DID data F186~F197)
- * All text data encoded in UTF-8
+ * All text data encoded in ASCII
  */
 
 uint8 data_bsidid_f180[] = BSID_F180;
@@ -74,7 +76,7 @@ static const tUdsTimeInfo gs_stUdsAppCfg =
 	3u,
 	10000u,
 	5000u,
-	2000u,    /* P2 Server time (ms): 50ms */
+	2000u,    /* P2 Server time (ms): 2000ms */
 	5000u   /* P2* Server time (ms): 5000ms */
 };
 
@@ -157,7 +159,7 @@ static const tUDSService gs_astUDSService[] =
 	},
 	{
 			0x31u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			PROGRAM_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR,
 			SECURITY_LEVEL_1,
 			RoutineControl0x31
@@ -685,7 +687,7 @@ void UDS_MainFun(void)
 			else
 			{
 
-				SetNegativeErroCode(stUdsAppMsg.aDataBuf[0u], 4, &stUdsAppMsg);
+				SetNegativeErroCode(stUdsAppMsg.aDataBuf[0u], NRC_CONDITIONS_NOT_CORRECT, &stUdsAppMsg);
 			}
 
 			break;
@@ -789,11 +791,6 @@ void SendMsgMainFun(void)
 		txMsg.usRxTxDataId = msgId;
 		tl_memcpy(txMsg.aucDataBuf, aucMsgBuf, 8);
 		DrvCanSendMessage(&txMsg);
-		CANTP_DoTxMsgSuccessfulCallBack();
-
-
-
-
 	}
 }
 
@@ -1023,6 +1020,15 @@ static void DoHardReset(uint8 status)
 {
 	if (TX_MSG_SUCCESSFUL == status)
 	{
+		/* Deinitialize peripherals before reset to leave a clean state */
+		CAN_deinit();
+		TMR_deinit();
+
+		// 关闭STM比较器中断（模块层）
+		IfxStm_disableComparatorInterrupt(g_Stm.stmSfr, g_Stm.stmConfig.comparator);
+
+		// 关闭SRC中断源（系统层）- 双重保险
+		IfxSrc_disable(&MODULE_SRC.STM.STM[0].SR0);
 		HardReset();
 	}
 }
@@ -1034,6 +1040,15 @@ static void DoSoftReset(uint8 status)
 {
 	if (TX_MSG_SUCCESSFUL == status)
 	{
+		/* Deinitialize peripherals before reset to leave a clean state */
+		CAN_deinit();
+		TMR_deinit();
+
+		// 关闭STM比较器中断（模块层）
+		IfxStm_disableComparatorInterrupt(g_Stm.stmSfr, g_Stm.stmConfig.comparator);
+
+		// 关闭SRC中断源（系统层）- 双重保险
+		IfxSrc_disable(&MODULE_SRC.STM.STM[0].SR0);
 		SW_Reset();
 	}
 }
@@ -1074,6 +1089,8 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 	uint8 RequestSubfunction = m_pstPDUMsg->aDataBuf[1u];
 	static uint8 s_aSeedBuf[SA_ALGORITHM_SEED_LEN] = { 0u };
+	static uint8 s_seedRequestedL1 = FALSE;
+	static uint8 s_seedRequestedL2 = FALSE;
 	static uint8 s_securityAttemptCnt = 0u;
 	static const uint8 MAX_SECURITY_ATTEMPTS = 3u;
 	uint8 ret = FALSE;
@@ -1098,6 +1115,8 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			{
 				fsl_memcpy(&m_pstPDUMsg->aDataBuf[2u], s_aSeedBuf, SA_ALGORITHM_SEED_LEN);
 				m_pstPDUMsg->xDataLen = 2u + SA_ALGORITHM_SEED_LEN;
+				s_seedRequestedL1 = TRUE;
+				s_seedRequestedL2 = FALSE;
 			}
 			else
 			{
@@ -1107,17 +1126,24 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			break;
 
 		case 0x02u:
+			if (TRUE != s_seedRequestedL1)
+			{
+				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
+				break;
+			}
 
 			if (TRUE == IsReceivedKeyRight(&m_pstPDUMsg->aDataBuf[2u], s_aSeedBuf, 1u))
 			{
 				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 				m_pstPDUMsg->xDataLen = 2u;
 				fsl_memset(s_aSeedBuf, 0x1u, sizeof(s_aSeedBuf));
+				s_seedRequestedL1 = FALSE;
 				s_securityAttemptCnt = 0u;
 				SetSecurityLevel(SECURITY_LEVEL_1);
 			}
 			else
 			{
+				s_seedRequestedL1 = FALSE;
 				s_securityAttemptCnt++;
 				if (s_securityAttemptCnt >= MAX_SECURITY_ATTEMPTS)
 				{
@@ -1141,6 +1167,8 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			{
 				fsl_memcpy(&m_pstPDUMsg->aDataBuf[2u], s_aSeedBuf, SA_ALGORITHM_SEED_LEN);
 				m_pstPDUMsg->xDataLen = 2u + SA_ALGORITHM_SEED_LEN;
+				s_seedRequestedL2 = TRUE;
+				s_seedRequestedL1 = FALSE;
 			}
 			else
 			{
@@ -1150,17 +1178,24 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			break;
 
 		case 0x04u:
+			if (TRUE != s_seedRequestedL2)
+			{
+				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
+				break;
+			}
 
 			if (TRUE == IsReceivedKeyRight(&m_pstPDUMsg->aDataBuf[2u], s_aSeedBuf, 2u))
 			{
 				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 				m_pstPDUMsg->xDataLen = 2u;
 				fsl_memset(s_aSeedBuf, 0x1u, sizeof(s_aSeedBuf));
+				s_seedRequestedL2 = FALSE;
 				s_securityAttemptCnt = 0u;
 				SetSecurityLevel(SECURITY_LEVEL_2);
 			}
 			else
 			{
+				s_seedRequestedL2 = FALSE;
 				s_securityAttemptCnt++;
 				if (s_securityAttemptCnt >= MAX_SECURITY_ATTEMPTS)
 				{

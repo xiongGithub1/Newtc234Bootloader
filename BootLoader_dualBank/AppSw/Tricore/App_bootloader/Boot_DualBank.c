@@ -87,8 +87,8 @@ void MeasureEraseBankA_Time(void)
 static uint32 g_activeBank = BANK_A;
 
 /* Global boot phase identifier for OEM traceability */
-volatile BootPhase_t g_bootPhase = BOOT_PHASE_STARTUP;
-
+BootPhase_t g_bootPhase = BOOT_PHASE_STARTUP;
+//volatile BootPhase_t g_bootPhase = BOOT_PHASE_STARTUP;
 /*********************************************************************************************************************/
 /*---------------------------------------------Private CRC32 Table---------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -736,7 +736,7 @@ void Boot_DualBank_SelectAndJump(void)
         flags.main.sequence++;
         Boot_DualBank_WriteFlags(&flags);
 
-        if (flags.main.bootAttempts >= MAX_BOOT_ATTEMPTS)
+        if (flags.main.bootAttempts > MAX_BOOT_ATTEMPTS)
         {
             g_bootPhase = BOOT_PHASE_ROLLBACK;
 

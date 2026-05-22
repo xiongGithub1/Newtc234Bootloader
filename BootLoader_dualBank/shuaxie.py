@@ -65,6 +65,29 @@ _g_erased_sectors = []
 
 TOTAL_CHECK_CMD = bytes.fromhex("31 01 DF FF")
 
+FINGERPRINT_DATA = [
+    # 2E F1 5A (SID + DID)
+    0x2E, 0xF1, 0x5A,
+    # 0~15: 诊断仪设备号 "TOOL1234567890AB"
+    0x55, 0x4F, 0x4F, 0x4C, 0x31, 0x32, 0x33, 0x34,
+    0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x41, 0x42,
+    # 16~25: 刷写前软件号 "SW_OLD_002"
+    0x53, 0x57, 0x5F, 0x4F, 0x4C, 0x44, 0x5F, 0x30,
+    0x30, 0x32,
+    # 26~35: 刷写前版本号 "VER_OLD_02"
+    0x56, 0x45, 0x52, 0x5F, 0x4F, 0x4C, 0x44, 0x5F,
+    0x30, 0x32,
+    # 36~45: 刷写日期 "2025052200"
+    0x32, 0x30, 0x32, 0x35, 0x30, 0x35, 0x32, 0x32, 0x30, 0x30,
+    # 46~55: 刷写后软件号 "SW_NEW_003"
+    0x53, 0x57, 0x5F, 0x4E, 0x45, 0x57, 0x5F, 0x30,
+    0x30, 0x33,
+    # 56~65: 刷写后版本号 "VER_NEW_03"
+    0x56, 0x45, 0x52, 0x5F, 0x4E, 0x45, 0x57, 0x5F,
+    0x30, 0x33,
+]
+
+
 def uds_request(uds, sid, data, desc="UDS"):
     """
     发送 UDS 请求并自动检查响应状态。
@@ -112,6 +135,19 @@ def security_access(uds, level, desc):
     else:
         app.log_e(f"[{desc}] ❌ Security Level {level} failed")
         return False
+
+
+def write_fingerprint(uds):
+    """2E F1 5A: write programming fingerprint."""
+    if len(FINGERPRINT_DATA) != 69:
+        app.log_e(f"[Fingerprint] ❌ Invalid fingerprint length: {len(FINGERPRINT_DATA)} bytes, expected 69")
+        return False
+    if FINGERPRINT_DATA[0:3] != [0x2E, 0xF1, 0x5A]:
+        app.log_e("[Fingerprint] ❌ Invalid fingerprint header, expected 2E F1 5A")
+        return False
+
+    # uds_request() takes SID separately, so send DID + 66-byte fingerprint payload.
+    return uds_request(uds, 0x2E, FINGERPRINT_DATA[1:], "Write Fingerprint F15A") is not None
 
 
 def erase_target_bank(uds):
@@ -530,11 +566,10 @@ def do_flash_process():
         #     app.log_i("[Precond] ✅ Preconditions OK")
 
         # ------------------------------------------------------------
-        # 9. 写指纹信息 2E F1 5A 55 55
-        #    如需修改指纹内容，请调整 data 字段
+        # 9. 写指纹信息 2E F1 5A + 66 bytes
         # ------------------------------------------------------------
-        # if not uds_request(uds, 0x2E, [0xF1, 0x5A], "Write Fingerprint"):
-        #     return
+        if not write_fingerprint(uds):
+            return
 
         # ------------------------------------------------------------
         # 10. 擦除目标 Bank (31 01 FF 00)
@@ -574,12 +609,15 @@ def do_flash_process():
         # ------------------------------------------------------------
         # 13. 后编程阶段 - 恢复系统正常工作状态
         # ------------------------------------------------------------
+        time.sleep(1)
         app.log_i("[Post] ====== Post-Programming Phase ======")
 
         # 13.1 切换到扩展会话 10 03
         if not session_control(uds, 0x03, "Extended Session (Post)"):
             app.log_w("[Post] ⚠️ Failed to enter Extended Session, continue...")
-
+        
+        if not security_access(uds, 1, "SA L1"):
+            return
         # 13.2 恢复通信 28 00 03 (Enable Rx/Tx)
         if not uds_request(uds, 0x28, [0x00, 0x03], "Enable Communication"):
             app.log_w("[Post] ⚠️ Failed to enable communication, continue...")

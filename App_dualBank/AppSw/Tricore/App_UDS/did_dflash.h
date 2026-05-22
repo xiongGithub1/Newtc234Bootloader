@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * \file    did_dflash.h
  * \brief   DID DFlash Storage Manager - Provides persistent storage for UDS DID data
- * \note    All DID data stored in DFlash with UTF-8 encoding
+ * \note    All DID data stored in DFlash with ASCII encoding
  *          Sector 0 (0xAF000000): Bootloader Flags + F15A fingerprint
  *          Sector 1 (0xAF002000): Static DID data (F186~F197, F15B records)
  *********************************************************************************************************************/
@@ -50,7 +50,7 @@ void DID_DFlash_Init(void);
 /**
  * @brief Write DID data to DFlash (Sector 1)
  * @param offset  Offset within Sector 1 (use DFLASH_DID_Fxxx_OFFSET)
- * @param data    Pointer to data buffer (UTF-8 encoded)
+ * @param data    Pointer to data buffer (ASCII encoded)
  * @param length  Data length in bytes
  * @return TRUE if successful, FALSE otherwise
  * @note  This function handles erase+write of the entire Sector 1

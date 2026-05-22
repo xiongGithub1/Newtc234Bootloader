@@ -1,28 +1,28 @@
 /******************************************************************************
 
-                  °æÈ¨ËùÓÐ (C), 2020-2030, ÖØÇìºÍÌìµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+                  ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½ (C), 2020-2030, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
 
  ******************************************************************************
-  ÎÄ ¼þ Ãû  : CANRxTxInterface.c
-  °æ ±¾ ºÅ  : ³õ¸å
-  ×÷    Õß    :
-  Éú³ÉÈÕÆÚ : 2021Äê10ÔÂ15ÈÕ
-  ×î½üÐÞ¸Ä :
-  ¹¦ÄÜÃèÊö : CANÍ¨Ñ¶³õÊ¼»¯Ïà¹ØÉèÖÃ
-  º¯ÊýÁÐ±í :
-  ÐÞ¸ÄÀúÊ· :
-  1.ÈÕ    ÆÚ  :
-  2.×÷    Õß  :
-    ÐÞ¸ÄÄÚÈÝ   :20221210 Ôö¼ÓÁËCANFD½Úµã³õÊ¼»¯µÄº¯Êý£¬CANFD½ÓÊÕÖÐ¶ÏµÄº¯Êý£¬CANFDÊý¾Ý·¢ËÍ³õÊ¼
-    »¯º¯Êý£¬ÔÚÄ£¿é³õÊ¼»¯º¯ÊýÀïÔö¼ÓÁËCANºÍCANFDµÄÑ¡ÔñÏî£¬Ôö¼ÓÁËCANFD·¢ËÍºÍ½ÓÊÕµÄID¶¨Òå¡£Ôø¾ü
-  20221212Èç¹ûÒªÔÚCANFDÖÐÖ»·¢ËÍ8¸ö×Ö½ÚµÄÊý¾Ý£¬ÄÇÃ´¾ÍÐèÒªÔÚCANFD³õÊ¼»¯º¯Êývoid
-  CAN_TLE9252_config_node0_CANFD(void)ÖÐ£¬°Ñ·¢ËÍ×Ö½Ú³¤¶ÈcanMsgObjConfig.control.messageLen
-  = IfxMultican_DataLengthCode_32;¸ÄÎªIfxMultican_DataLengthCode_8;È»ºóÔÙ¸ÄÆäËüµÄ¡£
+  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½  : CANRxTxInterface.c
+  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½  : ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½    ï¿½ï¿½    :
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : 2021ï¿½ï¿½10ï¿½ï¿½15ï¿½ï¿½
+  ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ :
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : CANÍ¨Ñ¶ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ :
+  ï¿½Þ¸ï¿½ï¿½ï¿½Ê· :
+  1.ï¿½ï¿½    ï¿½ï¿½  :
+  2.ï¿½ï¿½    ï¿½ï¿½  :
+    ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½   :20221210 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CANFDï¿½Úµï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½CANFDï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ÏµÄºï¿½ï¿½ï¿½ï¿½ï¿½CANFDï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í³ï¿½Ê¼
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CANï¿½ï¿½CANFDï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CANFDï¿½ï¿½ï¿½ÍºÍ½ï¿½ï¿½Õµï¿½IDï¿½ï¿½ï¿½å¡£ï¿½ï¿½ï¿½ï¿½
+  20221212ï¿½ï¿½ï¿½Òªï¿½ï¿½CANFDï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ï¿½Ö½Úµï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½CANFDï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½void
+  CAN_TLE9252_config_node0_CANFD(void)ï¿½Ð£ï¿½ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½Ö½Ú³ï¿½ï¿½ï¿½canMsgObjConfig.control.messageLen
+  = IfxMultican_DataLengthCode_32;ï¿½ï¿½ÎªIfxMultican_DataLengthCode_8;È»ï¿½ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½
 ******************************************************************************/
 
 
 /*****************************************************************************/
-/*----------------------------------°üº¬Í·ÎÄ¼þ--------------------------------*/
+/*----------------------------------ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½--------------------------------*/
 /*****************************************************************************/
 #include "MultiCAN.h"
 #include "CANRxTxInterface.h"
@@ -35,19 +35,19 @@
 /*-----------------------------------Macros-----------------------------------*/
 /******************************************************************************/
 /*
-// ÓÃÓÚµØÖ··ÖÅä£¬µ«Ó¦¸ÃÃ»ÓÐÓÃÉÏ£¬²Î¿¼20221121ÕÔ¹¤·¢µÄCANFDÇý¶¯³ÌÐò
+// ï¿½ï¿½ï¿½Úµï¿½Ö·ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½Ó¦ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ï£ï¿½ï¿½Î¿ï¿½20221121ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½CANFDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #pragma align 32
 Ifx_CAN_MO   g_MoBuff;   //ram ,dma to mo
 #pragma align 32
 */
-// ±¨ÎÄ½âÎöº¯ÊýÈë¿Ú
+// ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 static tpfDataParser gl_appRxCanMsgMainFuction = ((void *) 0);
 static tpfDataParser gl_udsRxCanMsgMainFuction = ((void *) 0);
 
 
-// ÊÕ·¢»º³åÇø
-DataQueue gl_rxDataQueue;// ½ÓÊÕ»º³åÇø
-DataQueue gl_txDataQueue;// ·¢ËÍ»º³åÇø
+// ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+DataQueue gl_rxDataQueue;// ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½
+DataQueue gl_txDataQueue;// ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
 /******************************************************************************/
@@ -64,14 +64,14 @@ DataQueue gl_txDataQueue;// ·¢ËÍ»º³åÇø
 /*------------------------------Global variables------------------------------*/
 /******************************************************************************/
 CanRX_MsgObjInit CanRxFrm_9252_InitTab[]=
-{//ÏûÏ¢¶ÔÏóID  CANÏûÏ¢ID
+{//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ID  CANï¿½ï¿½Ï¢ID
 	{ 20,     UDS_FUN_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
 	{ 21,     UDS_PHY_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
 };
 
 
 CanTX_MsgObjInit CanTxFrm_9252_InitTab[]=
-{//           CANÏûÏ¢ID
+{//           CANï¿½ï¿½Ï¢ID
     { 10,     UDS_RESP_ADDR_ID,   	Enable_Rx_Enable_Tx,   ((void*)0)},// UDS_RESP_ADDR_ID
 };
 
@@ -136,7 +136,7 @@ void CANtle9252Send(uint16 messageId, uint32 dataLow, uint32 dataHigh )
 }
 
 
-// ÉèÖÃCANµÄ¹¤×÷Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½CANï¿½Ä¹ï¿½ï¿½ï¿½Ä£Ê½
 void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 {
 	switch(TLE9252mode)
@@ -144,7 +144,7 @@ void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 	case Normal:
 	    Tle9252EnterNormalMode();
 		break;
-	case ReceiveOnly:	// ÅäÖÃCAN1½øÈëÖ»ÊÕÄ£Ê½
+	case ReceiveOnly:	// ï¿½ï¿½ï¿½ï¿½CAN1ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ä£Ê½
 		Tle9252EnterReceiveOnlyMode();
 		break;
 	case GoToSleep:
@@ -159,7 +159,7 @@ void drv_can9252_set_mode(TLE925x_CAN_MODE TLE9252mode)
 }
 
 
-// ÉèÖÃCANµÄ¹¤×÷Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½CANï¿½Ä¹ï¿½ï¿½ï¿½Ä£Ê½
 void drv_can9251_set_mode(TLE925x_CAN_MODE TLE9251mode)
 {
 	switch(TLE9251mode)
@@ -198,17 +198,17 @@ uint8 drv_can1_send(tRxTxCanMsg *txMsg)
 		if(CanTxFrm_9252_InitTab[idx].RxTxStatus == Disbale_Rx_Disbale_Tx ||
 				CanTxFrm_9252_InitTab[idx].RxTxStatus == Enable_Rx_Disable_Tx)
 		{
-			//±íÊ¾UDSÒÑ½ûÖ¹¸Ã±¨ÎÄµÄ·¢ËÍ£¬Ö±½Ó·µ»Ø
+			//ï¿½ï¿½Ê¾UDSï¿½Ñ½ï¿½Ö¹ï¿½Ã±ï¿½ï¿½ÄµÄ·ï¿½ï¿½Í£ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½
 			return TRUE;
 		}
 		else
 		{
-			//Ê¹ÓÃwhile¼ì²â×´Ì¬£¬µ±bus´íÎó»òÕß·¢ËÍÊ§°ÜÊ±»á½øÈëËÀÑ­»·£¿
+			//Ê¹ï¿½ï¿½whileï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½busï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß·ï¿½ï¿½ï¿½Ê§ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½
 			//while (IfxMultican_Can_MsgObj_sendMessage(msgObj, &msg) == IfxMultican_Status_notSentBusy);
 
 			if(IfxMultican_Can_MsgObj_isTransmitRequested(&g_MulticanBasic.drivers.canNode0MsgTx2[0]))
 			{
-				//Ç°Ò»¸ö±¨ÎÄ±»¹ÒÆð£¬±íÊ¾·¢ËÍÊ§°Ü
+				//Ç°Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ð£¬±ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
 				return FALSE;
 			}
 			else
@@ -262,7 +262,7 @@ void DrvCanRxTxModeSet(uint8 mode)
 		{
 			continue;
 		}
-		else if(mode == UDS_CC_MODE_RX_TX)	// Ê¹ÄÜ½ÓÊÕ
+		else if(mode == UDS_CC_MODE_RX_TX)	// Ê¹ï¿½Ü½ï¿½ï¿½ï¿½
 		{
 			CanTxFrm_9252_InitTab[j].RxTxStatus = Enable_Rx_Enable_Tx;
 		}
@@ -281,14 +281,14 @@ void DrvCanRxTxModeSet(uint8 mode)
 	}
 }
 
-// CANÊÕ·¢±¨ÎÄ´¦Àíº¯Êý
+// CANï¿½Õ·ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CanMainProcess(void)
 {
-	// ´¦Àí½ÓÊÕ±¨ÎÄ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ±ï¿½ï¿½ï¿½
 	QueueMsgObject rxMsgObj;
 	if(tl_queue_take_item(&gl_rxDataQueue,&rxMsgObj))
 	{
-		// Ö´ÐÐ±¨ÎÄ½âÎö
+		// Ö´ï¿½Ð±ï¿½ï¿½Ä½ï¿½ï¿½ï¿½
 		if(rxMsgObj.id == UDS_FUN_ADDR_ID || rxMsgObj.id == UDS_PHY_ADDR_ID)
 		{
 			if(gl_udsRxCanMsgMainFuction != ((void *) 0))
@@ -305,10 +305,21 @@ void CanMainProcess(void)
 		}
 	}
 
-	// ´¦Àí·¢ËÍ±¨ÎÄ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í±ï¿½ï¿½ï¿½
 	QueueMsgObject txMsgObj;
 	if(tl_queue_take_item(&gl_txDataQueue,&txMsgObj))
 	{
-		drv_can1_send((tRxTxCanMsg *)&txMsgObj);
+		if(TRUE == drv_can1_send((tRxTxCanMsg *)&txMsgObj))
+		{
+			uint32 txWaitCnt = 100000u;
+
+			while((TRUE == IfxMultican_Can_MsgObj_isTransmitRequested(&g_MulticanBasic.drivers.canNode0MsgTx2[0]))
+					&& (txWaitCnt > 0u))
+			{
+				txWaitCnt--;
+			}
+
+			CANTP_DoTxMsgSuccessfulCallBack();
+		}
 	}
 }

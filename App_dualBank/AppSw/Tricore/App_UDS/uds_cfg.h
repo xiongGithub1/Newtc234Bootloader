@@ -2,7 +2,7 @@
  * @Author: qinXiong
  * @Date: 2026-04-29 09:02:27
  * @LastEditors: Qxiong&&2307975018@qq.com
- * @LastEditTime: 2026-05-20 18:11:14
+ * @LastEditTime: 2026-05-21 09:49:18
  * @Description: 
  */
 /**********************************************************************************************************************
@@ -111,7 +111,7 @@ typedef enum
 	* DFlash DID Storage Layout
 	* Sector 0 (0xAF000000): Bootloader Flags + F15A fingerprint
 	* Sector 1 (0xAF002000): Static DID data (F186~F197, F15B records)
-	* All text data encoded in UTF-8
+	* All text data encoded in ASCII
 	*===========================================================================*/
 
 /* Sector 0: Flags + Fingerprint */

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEX ↔ ASCII 转换工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .panel {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .panel-title {
+            color: #00d4ff;
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-title::before {
+            content: "▸";
+            color: #00d4ff;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            color: #aaa;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: #00ff88;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0,212,255,0.2);
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,212,255,0.3);
+        }
+        button.secondary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+        }
+        button.secondary:hover {
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+        button.info {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        /* 结果展示区 */
+        .result-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .result-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(0,212,255,0.2);
+        }
+        .result-label {
+            color: #aaa;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .result-content {
+            color: #00ff88;
+            font-size: 16px;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+        .result-content .non-printable {
+            color: #ff6b6b;
+            background: rgba(255,107,107,0.15);
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        .result-content .printable {
+            color: #00ff88;
+        }
+
+        /* 详细表格 */
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .detail-table th {
+            background: rgba(0,212,255,0.15);
+            color: #00d4ff;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid rgba(0,212,255,0.3);
+        }
+        .detail-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .detail-table tr:hover td {
+            background: rgba(0,212,255,0.05);
+        }
+        .hex-cell { color: #00d4ff; }
+        .dec-cell { color: #ffaa00; }
+        .ascii-cell { color: #00ff88; }
+        .nonprint { color: #ff6b6b; background: rgba(255,107,107,0.1); }
+
+        /* 对比模式 */
+        .compare-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .match { color: #00ff88; }
+        .diff { color: #ff6b6b; background: rgba(255,107,107,0.1); }
+
+        /* 示例 */
+        .examples {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0,212,255,0.05);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        .example-item {
+            cursor: pointer;
+            color: #00d4ff;
+            margin: 5px 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .example-item:hover {
+            background: rgba(0,212,255,0.15);
+        }
+        .example-label {
+            color: #888;
+            margin-right: 8px;
+        }
+
+        /* 统计信息 */
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .stat-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 3px solid #00d4ff;
+        }
+        .stat-label {
+            color: #888;
+            font-size: 11px;
+        }
+        .stat-value {
+            color: #00ff88;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* UTF-8 特殊显示 */
+        .utf8-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(78,205,196,0.05);
+            border-radius: 6px;
+            border-left: 3px solid #4ecdc4;
+        }
+        .utf8-info h4 {
+            color: #4ecdc4;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .result-area,
+            .compare-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 HEX ↔ ASCII 转换工具</h1>
+        <p class="subtitle">用于验证 UDS 诊断返回数据（如 22 F186）的 ASCII / UTF-8 内容，支持双向转换</p>
+
+        <!-- 输入区 -->
+        <div class="panel">
+            <div class="panel-title">输入十六进制数据</div>
+            <div class="input-group">
+                <label>粘贴从 CANoe / 诊断工具复制的 HEX 数据（支持空格分隔）：</label>
+                <textarea id="hexInput" placeholder="例如: 62 F1 86 42 4F 4F 54 5F 56 32 2E 30 30&#10;或: 424F4F545F56322E3030"></textarea>
+            </div>
+            <div class="btn-row">
+                <button onclick="convert()">🔍 转换并解析</button>
+                <button class="info" onclick="clearInput()">🗑️ 清空</button>
+                <button class="secondary" onclick="toggleCompare()">📊 对比模式</button>
+            </div>
+
+            <div class="examples">
+                <div style="color:#888;margin-bottom:8px;">📝 快速示例（点击填入）：</div>
+                <div class="example-item" onclick="setExample('62F186424F4F545F56322E3030')">
+                    <span class="example-label">[F186 默认]</span> 62 F1 86 42 4F 4F 54 5F 56 32 2E 30 30 → "BOOT_V2.00"
+                </div>
+                <div class="example-item" onclick="setExample('62F193453030')">
+                    <span class="example-label">[F193 硬件版本]</span> 62 F1 93 45 30 30 → "E00"
+                </div>
+                <div class="example-item" onclick="setExample('62F18B3230323630353138')">
+                    <span class="example-label">[F18B 日期]</span> 62 F1 8B 32 30 32 36 30 35 31 38 → "20260518"
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计 -->
+        <div class="panel" id="statsPanel" style="display:none;">
+            <div class="panel-title">数据统计</div>
+            <div class="stats" id="statsContent"></div>
+        </div>
+
+        <!-- 结果区 -->
+        <div class="panel" id="resultPanel" style="display:none;">
+            <div class="panel-title">解析结果</div>
+            <div class="result-area">
+                <div class="result-box">
+                    <div class="result-label">ASCII 字符串（绿色=可打印，红色=不可打印）：</div>
+                    <div class="result-content" id="asciiResult"></div>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">纯文本（不可打印字符显示为 · ）：</div>
+                    <div class="result-content" id="textResult"></div>
+                </div>
+            </div>
+
+            <div class="utf8-info" id="utf8Info" style="display:none;">
+                <h4>🌐 UTF-8 解码</h4>
+                <div id="utf8Content"></div>
+            </div>
+        </div>
+
+        <!-- 详细字节表 -->
+        <div class="panel" id="detailPanel" style="display:none;">
+            <div class="panel-title">逐字节详细解析</div>
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>偏移</th>
+                        <th>HEX</th>
+                        <th>十进制</th>
+                        <th>二进制</th>
+                        <th>ASCII</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody id="detailBody"></tbody>
+            </table>
+        </div>
+
+        <!-- ASCII 转 HEX -->
+        <div class="panel">
+            <div class="panel-title">输入 ASCII 文本（转 HEX）</div>
+            <div class="input-group">
+                <label>输入普通文本，自动转换为十六进制字节（空格分隔）：</label>
+                <textarea id="asciiInput" placeholder="例如: BOOT_V2.00&#10;或: CK3565_100X9014"></textarea>
+            </div>
+            <div class="btn-row">
+                <button onclick="convertAsciiToHex()">🔁 ASCII 转 HEX</button>
+                <button class="info" onclick="clearAsciiInput()">🗑️ 清空</button>
+            </div>
+            <div class="examples">
+                <div style="color:#888;margin-bottom:8px;">📝 快速示例（点击填入）：</div>
+                <div class="example-item" onclick="setAsciiExample('BOOT_V2.00')">
+                    <span class="example-label">[F186 默认]</span> "BOOT_V2.00" → 42 4F 4F 54 5F 56 32 2E 30 30
+                </div>
+                <div class="example-item" onclick="setAsciiExample('CK3565_100X9014')">
+                    <span class="example-label">[F187 零件号]</span> "CK3565_100X9014" → 43 4B 33 35 36 35 5F 31 30 30 58 39 30 31 34
+                </div>
+                <div class="example-item" onclick="setAsciiExample('SW_IEBS_001')">
+                    <span class="example-label">[F188 软件号]</span> "SW_IEBS_001" → 53 57 5F 49 45 42 53 5F 30 30 31
+                </div>
+            </div>
+            <div id="asciiToHexResult" style="display:none; margin-top:15px;">
+                <div class="result-box">
+                    <div class="result-label">转换结果（可直接复制到诊断工具）：</div>
+                    <div class="result-content" id="hexOutputResult" style="color:#00d4ff;"></div>
+                </div>
+                <div class="result-box" style="margin-top:10px;">
+                    <div class="result-label">连续 HEX 字符串：</div>
+                    <div class="result-content" id="hexOutputCompact" style="color:#ffaa00;"></div>
+                </div>
+                <div class="result-box" style="margin-top:10px;">
+                    <div class="result-label">带 UDS 响应格式（62 F1 xx + HEX）：</div>
+                    <div class="result-content" id="hexOutputUDS" style="color:#4ecdc4;"></div>
+                </div>
+                <div class="result-box" style="margin-top:10px;">
+                    <div class="result-label">C 数组格式（可直接复制到代码）：</div>
+                    <div class="result-content" id="hexOutputCStyle" style="color:#ff6b6b;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 对比模式 -->
+        <div class="panel" id="comparePanel" style="display:none;">
+            <div class="panel-title">对比模式（验证写入与读取是否一致）</div>
+            <div class="compare-row">
+                <div class="input-group">
+                    <label>期望数据（写入时的 HEX）：</label>
+                    <textarea id="hexExpected" placeholder="写入时的 HEX 数据"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>实际返回（读取到的 HEX）：</label>
+                    <textarea id="hexActual" placeholder="读取到的 HEX 数据"></textarea>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button onclick="compareHex()">🔍 对比差异</button>
+            </div>
+            <div id="compareResult"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // 去除所有非十六进制字符（支持 0x55,0x4F 和 55 4F 两种格式）
+        function cleanHex(str) {
+            // 先移除常见的 C 风格前缀和分隔符: 0x 0X 逗号 空格 换行 制表符等
+            return str.replace(/\b0[xX]/g, '').replace(/[^0-9A-Fa-f]/g, '');
+        }
+
+        // 将清洁后的hex字符串转为字节数组
+        function hexToBytes(hex) {
+            const bytes = [];
+            for (let i = 0; i < hex.length; i += 2) {
+                if (i + 1 < hex.length) {
+                    bytes.push(parseInt(hex.substr(i, 2), 16));
+                }
+            }
+            return bytes;
+        }
+
+        // 判断是否为可打印ASCII
+        function isPrintable(byte) {
+            return byte >= 0x20 && byte <= 0x7E;
+        }
+
+        // 获取ASCII字符或显示不可打印
+        function getAsciiChar(byte, highlight = true) {
+            if (isPrintable(byte)) {
+                const char = String.fromCharCode(byte);
+                if (highlight) {
+                    return `<span class="printable">${char}</span>`;
+                }
+                return char;
+            }
+            if (byte === 0x00) {
+                return highlight ? `<span class="non-printable">[NULL]</span>` : '.';
+            }
+            if (byte === 0x0A) {
+                return highlight ? `<span class="non-printable">[LF]</span>` : '.';
+            }
+            if (byte === 0x0D) {
+                return highlight ? `<span class="non-printable">[CR]</span>` : '.';
+            }
+            if (byte === 0x09) {
+                return highlight ? `<span class="non-printable">[TAB]</span>` : '.';
+            }
+            return highlight ? `<span class="non-printable">[0x${byte.toString(16).padStart(2,'0').toUpperCase()}]</span>` : '.';
+        }
+
+        // 尝试UTF-8解码
+        function tryUtf8Decode(bytes) {
+            try {
+                const decoder = new TextDecoder('utf-8', { fatal: true });
+                const uint8Arr = new Uint8Array(bytes);
+                return decoder.decode(uint8Arr);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function convert() {
+            const input = document.getElementById('hexInput').value;
+            const clean = cleanHex(input);
+
+            if (clean.length === 0) {
+                alert('请输入有效的十六进制数据');
+                return;
+            }
+            if (clean.length % 2 !== 0) {
+                alert('十六进制数据长度应为偶数（每字节2个字符）');
+                return;
+            }
+
+            const bytes = hexToBytes(clean);
+
+            // 统计
+            const printables = bytes.filter(b => isPrintable(b)).length;
+            const nulls = bytes.filter(b => b === 0).length;
+            document.getElementById('statsPanel').style.display = 'block';
+            document.getElementById('statsContent').innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-label">总字节数</div>
+                    <div class="stat-value">${bytes.length}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">可打印字符</div>
+                    <div class="stat-value">${printables}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">不可打印/控制字符</div>
+                    <div class="stat-value">${bytes.length - printables}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">NULL (0x00)</div>
+                    <div class="stat-value">${nulls}</div>
+                </div>
+            `;
+
+            // ASCII结果
+            let asciiHtml = '';
+            let textHtml = '';
+            bytes.forEach(b => {
+                asciiHtml += getAsciiChar(b, true);
+                textHtml += getAsciiChar(b, false);
+            });
+            document.getElementById('asciiResult').innerHTML = asciiHtml;
+            document.getElementById('textResult').textContent = textHtml;
+            document.getElementById('resultPanel').style.display = 'block';
+
+            // UTF-8解码尝试
+            const utf8Str = tryUtf8Decode(bytes);
+            if (utf8Str && utf8Str !== textHtml) {
+                document.getElementById('utf8Info').style.display = 'block';
+                document.getElementById('utf8Content').textContent = utf8Str;
+            } else {
+                document.getElementById('utf8Info').style.display = 'none';
+            }
+
+            // 详细表格
+            let tbody = '';
+            bytes.forEach((b, idx) => {
+                const hex = b.toString(16).padStart(2, '0').toUpperCase();
+                const bin = b.toString(2).padStart(8, '0');
+                const char = isPrintable(b) ? String.fromCharCode(b) : '';
+                const nonprintClass = isPrintable(b) ? '' : 'nonprint';
+                let desc = '';
+                if (b === 0x00) desc = 'NULL';
+                else if (b === 0x0A) desc = '换行 LF';
+                else if (b === 0x0D) desc = '回车 CR';
+                else if (b === 0x09) desc = '制表符 TAB';
+                else if (b === 0x20) desc = '空格';
+                else if (b >= 0x30 && b <= 0x39) desc = '数字 ' + char;
+                else if (b >= 0x41 && b <= 0x5A) desc = '大写字母 ' + char;
+                else if (b >= 0x61 && b <= 0x7A) desc = '小写字母 ' + char;
+                else if (!isPrintable(b)) desc = '控制字符';
+
+                tbody += `<tr>
+                    <td>${idx}</td>
+                    <td class="hex-cell">0x${hex}</td>
+                    <td class="dec-cell">${b}</td>
+                    <td>${bin}</td>
+                    <td class="ascii-cell ${nonprintClass}">${char || '-'}</td>
+                    <td style="color:#888">${desc}</td>
+                </tr>`;
+            });
+            document.getElementById('detailBody').innerHTML = tbody;
+            document.getElementById('detailPanel').style.display = 'block';
+        }
+
+        function clearInput() {
+            document.getElementById('hexInput').value = '';
+            document.getElementById('resultPanel').style.display = 'none';
+            document.getElementById('detailPanel').style.display = 'none';
+            document.getElementById('statsPanel').style.display = 'none';
+        }
+
+        // ASCII 转 HEX 核心函数
+        function convertAsciiToHex() {
+            const input = document.getElementById('asciiInput').value;
+            if (!input) {
+                alert('请输入 ASCII 文本');
+                return;
+            }
+
+            const encoder = new TextEncoder();
+            const bytes = encoder.encode(input); // UTF-8 编码为字节数组
+
+            let spaced = '';
+            let compact = '';
+            let udsPrefix = '';
+
+            bytes.forEach((b, i) => {
+                const hex = b.toString(16).padStart(2, '0').toUpperCase();
+                spaced += hex + ' ';
+                compact += hex;
+            });
+
+            spaced = spaced.trim();
+
+            // 尝试推测 DID 并生成 UDS 格式（仅作参考）
+            // 根据内容长度猜测常见 DID
+            let didGuess = '??';
+            const len = bytes.length;
+            if (len === 10) didGuess = '86';      // F186 BOOT_V2.00
+            else if (len === 16) didGuess = '87'; // F187 零件号
+            else if (len === 11) didGuess = '88'; // F188 SW_IEBS_001
+            else if (len === 10) didGuess = '89'; // F189 VER_1.0.0
+            else if (len === 8)  didGuess = '8B'; // F18B 日期
+            else if (len === 17) didGuess = '90'; // F190 VIN
+            else if (len === 3)  didGuess = '93'; // F193 E00
+
+            udsPrefix = '62 F1 ' + didGuess + ' ' + spaced;
+
+            // C 数组格式：0x55, 0x4F, ...（每 8 个换行）
+            let cStyle = '';
+            bytes.forEach((b, i) => {
+                if (i > 0) cStyle += ', ';
+                if (i > 0 && i % 8 === 0) cStyle += '\n';
+                cStyle += '0x' + b.toString(16).padStart(2, '0').toUpperCase();
+            });
+
+            document.getElementById('hexOutputResult').textContent = spaced;
+            document.getElementById('hexOutputCompact').textContent = compact;
+            document.getElementById('hexOutputUDS').textContent = udsPrefix;
+            document.getElementById('hexOutputCStyle').textContent = cStyle;
+            document.getElementById('asciiToHexResult').style.display = 'block';
+        }
+
+        function clearAsciiInput() {
+            document.getElementById('asciiInput').value = '';
+            document.getElementById('asciiToHexResult').style.display = 'none';
+        }
+
+        function setAsciiExample(text) {
+            document.getElementById('asciiInput').value = text;
+            convertAsciiToHex();
+        }
+
+        function setExample(hex) {
+            // 格式化为带空格的形式
+            let formatted = '';
+            for (let i = 0; i < hex.length; i += 2) {
+                formatted += hex.substr(i, 2) + ' ';
+            }
+            document.getElementById('hexInput').value = formatted.trim();
+            convert();
+        }
+
+        function toggleCompare() {
+            const panel = document.getElementById('comparePanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function compareHex() {
+            const expected = cleanHex(document.getElementById('hexExpected').value);
+            const actual = cleanHex(document.getElementById('hexActual').value);
+
+            if (!expected || !actual) {
+                alert('请填写两侧的 HEX 数据');
+                return;
+            }
+
+            const expBytes = hexToBytes(expected);
+            const actBytes = hexToBytes(actual);
+            const maxLen = Math.max(expBytes.length, actBytes.length);
+
+            let html = '<table class="detail-table"><thead><tr>';
+            html += '<th>偏移</th><th>期望 HEX</th><th>期望 ASCII</th><th>实际 HEX</th><th>实际 ASCII</th><th>结果</th>';
+            html += '</tr></thead><tbody>';
+
+            let diffCount = 0;
+            for (let i = 0; i < maxLen; i++) {
+                const e = i < expBytes.length ? expBytes[i] : null;
+                const a = i < actBytes.length ? actBytes[i] : null;
+                const match = e !== null && a !== null && e === a;
+                if (!match) diffCount++;
+
+                const eHex = e !== null ? e.toString(16).padStart(2,'0').toUpperCase() : '--';
+                const aHex = a !== null ? a.toString(16).padStart(2,'0').toUpperCase() : '--';
+                const eChar = e !== null ? (isPrintable(e) ? String.fromCharCode(e) : '.') : '';
+                const aChar = a !== null ? (isPrintable(a) ? String.fromCharCode(a) : '.') : '';
+
+                const rowClass = match ? '' : 'diff';
+                const result = match ? '<span class="match">✓ 一致</span>' : '<span class="diff">✗ 差异</span>';
+
+                html += `<tr class="${rowClass}">
+                    <td>${i}</td>
+                    <td class="hex-cell">${eHex}</td>
+                    <td class="ascii-cell">${eChar}</td>
+                    <td class="hex-cell">${aHex}</td>
+                    <td class="ascii-cell">${aChar}</td>
+                    <td>${result}</td>
+                </tr>`;
+            }
+
+            html += '</tbody></table>';
+            html += `<div style="margin-top:15px;padding:10px;background:rgba(0,0,0,0.3);border-radius:6px;">
+                <strong>对比结果：</strong> 
+                ${diffCount === 0 
+                    ? '<span class="match">✓ 所有字节完全一致！写入与读取数据匹配。</span>' 
+                    : `<span class="diff">✗ 发现 ${diffCount} 处差异，请检查数据。</span>`}
+            </div>`;
+
+            document.getElementById('compareResult').innerHTML = html;
+        }
+
+        // 支持 Ctrl+Enter 快捷转换
+        document.getElementById('hexInput').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                convert();
+            }
+        });
+    </script>
+</body>
+</html>

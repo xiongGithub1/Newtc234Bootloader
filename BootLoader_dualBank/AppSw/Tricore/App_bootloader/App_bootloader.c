@@ -77,8 +77,8 @@ void SW_Reset(void)
 {
 	/* Ensure all Flash operations (PFlash/DFlash) are complete before reset
 	 * to avoid bus error on reboot due to busy Flash controller */
-	IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
-	IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
+//	IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
+//	IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
 
 	IfxScuWdt_clearSafetyEndinit(IfxScuWdt_getSafetyWatchdogPassword());
 	IfxCpu_triggerSwReset();
@@ -357,8 +357,8 @@ void AppBL_init(void)
 	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
 
 	/* init DTC manager */
-	dtcInit();
-
+	// dtcInit();
+	IfxStm_init();
     initTime();
 
     /* flash */
@@ -366,7 +366,7 @@ void AppBL_init(void)
 
     /* bsp  tmr */
     TMR_init();
-	IfxStm_init();
+	
     return;
 }
 
