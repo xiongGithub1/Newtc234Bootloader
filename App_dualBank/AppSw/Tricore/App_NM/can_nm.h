@@ -24,13 +24,16 @@
 /* NM Configuration                                                           */
 /*============================================================================*/
 #define CANNM_NODE_ID                       (0x01u)     /* This ECU node ID */
-#define CANNM_NM_PDU_CAN_ID                 (0x500u)    /* NM message CAN ID */
+#define CANNM_NM_PDU_CAN_ID                 (0x601u)    /* This ECU NM TX CAN ID */
+#define CANNM_NM_PDU_CAN_ID_BASE            (0x600u)    /* NM RX CAN ID base */
+#define CANNM_NM_PDU_CAN_ID_MASK            (0x700u)    /* NM RX CAN ID mask */
+#define CANNM_IS_NM_CAN_ID(id)              ((((id) & CANNM_NM_PDU_CAN_ID_MASK) == CANNM_NM_PDU_CAN_ID_BASE) ? TRUE : FALSE)
 #define CANNM_NM_PDU_LENGTH                 (8u)
 
 /* AUTOSAR NM Timing Parameters (ms) */
 #define CANNM_T_NM_TIMEOUT                  (2000u)     /* NmTimeoutTime */
 #define CANNM_T_REPEAT_MESSAGE              (1600u)     /* RepeatMessageTime */
-#define CANNM_T_NM_MESSAGE_CYCLE            (20u)       /* NmMessageCycleTime */
+#define CANNM_T_NM_MESSAGE_CYCLE            (100u)       /* NmMessageCycleTime */
 #define CANNM_T_WAIT_BUS_SLEEP              (4000u)     /* WaitBusSleepTime */
 #define CANNM_T_START_NM_TX                 (20u)       /* Start-up first NM msg delay */
 #define CANNM_T_START_APPEND                (10u)       /* Random append to first msg */
@@ -93,5 +96,12 @@ uint8 CanNm_IsBusSleep(void);
 
 void CanNm_RegisterSleepIndicationCbk(CanNm_SleepIndicationCbkType cbk);
 void CanNm_RegisterNetworkModeCbk(CanNm_NetworkModeIndicationCbkType cbk);
+
+/* Debug helper: read last CanNm Rx observation */
+void CanNm_GetRxDebugInfo(uint32 *extRxCount,
+                          uint32 *selfFilteredCount,
+                          uint16 *lastCanId,
+                          uint8  *lastNodeId,
+                          uint8  *lastCbv);
 
 #endif /* CAN_NM_H_ */

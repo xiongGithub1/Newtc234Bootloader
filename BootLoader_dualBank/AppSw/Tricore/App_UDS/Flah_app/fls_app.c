@@ -111,7 +111,10 @@ uint8 Flash_ProgramRegion(uint32 i_addr,uint8 *i_pDataBuf,uint32 i_dataLen)
         result = FALSE;
     }
 
-	result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen); // ֱ�ӵ���д�뺯��
+	if (TRUE == result)
+	{
+		result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen);
+	} // ֱ�ӵ���д�뺯��
 
 	if (TRUE == result)
 	{

@@ -319,7 +319,13 @@ void CanMainProcess(void)
 				txWaitCnt--;
 			}
 
-			CANTP_DoTxMsgSuccessfulCallBack();
+			/* Only report success if the frame was actually transmitted.
+			 * If txWaitCnt reached 0, transmission timed out and must not be
+			 * reported as successful to the TP layer. */
+			if (txWaitCnt > 0u)
+			{
+				CANTP_DoTxMsgSuccessfulCallBack();
+			}
 		}
 	}
 }

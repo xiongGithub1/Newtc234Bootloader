@@ -63,6 +63,7 @@
 #define ISR_PRIORITY_CAN0_ER					41
 #define ISR_PRIORITY_CAN1_RX					42
 #define ISR_PRIORITY_CAN1_ER					43
+#define ISR_PRIORITY_VADC_QUEUE                 44
 
 
 #define ISR_PRIORITY_CCU6_TIMER     2   /**< \brief Define the CCU6 TIMER interrupt priority.  */

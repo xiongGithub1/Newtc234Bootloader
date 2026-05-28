@@ -1568,7 +1568,7 @@ static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 	if (TRUE == Ret)
 	{
-		Flash_SetNextDownloadStep(FL_CHECKSUM_STEP);
+		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 
 
 
@@ -1587,17 +1587,18 @@ static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 uint16 CheckProgrammingConditions(void) {
 	uint8 canFlash = 1;
 	uint8 targetBankChar;
-	uint32 targetWriteBank = Boot_DualBank_GetActiveBank();
+	uint32 targetWriteBank = Boot_DualBank_GetTargetWriteBank();
 
+	/* Report the currently selected target write bank without modifying it.
+	 * The target bank is set during RequestDownload (0x34) based on the
+	 * start address in the HEX file. */
 	if (targetWriteBank == BANK_B)
 	{
-		targetBankChar = 0x0A;
-		Boot_DualBank_SetTargetWriteBank(BANK_A);
+		targetBankChar = 0x0B;
 	}
 	else
 	{
-		targetBankChar = 0x0B;
-		Boot_DualBank_SetTargetWriteBank(BANK_B);
+		targetBankChar = 0x0A;
 	}
 
 	return ((uint16) canFlash << 8) | (uint16) targetBankChar;
@@ -1859,50 +1860,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 				break;
 			}
 
-			switch (currentRoutine)
-			{
-
-				case jumpToApp:
-					{
-						g_bootPhase = BOOT_PHASE_JUMP_DECISION;
-						if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
-						{
-							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);
-							break;
-						}
-						m_pstPDUMsg->aDataBuf[0] = 0x71;
-						m_pstPDUMsg->aDataBuf[1] = 0x02;
-						m_pstPDUMsg->aDataBuf[2] = jumpToApp;
-						m_pstPDUMsg->xDataLen = 3;
-
-
-						m_pstPDUMsg->pfUDSTxMsgServiceCallBack = &DoJumpToActiveBank;
-						break;
-					}
-#if 0  
-					* (uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
-					p = (uint8*) RAM_BOOT_MODE_Addr;
-					m_pstPDUMsg->aDataBuf[0] = 0x71;
-					m_pstPDUMsg->aDataBuf[1] = 0x02;
-					m_pstPDUMsg->aDataBuf[2] = jumpToApp;
-					m_pstPDUMsg->aDataBuf[3] = p[1];
-					m_pstPDUMsg->aDataBuf[4] = p[2];
-					m_pstPDUMsg->xDataLen = 5;
-
-					break;
-#endif
-				case jumpToBL:
-					*(uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_APP;
-					p = (uint8*) RAM_BOOT_MODE_Addr;
-					m_pstPDUMsg->aDataBuf[0] = 0x71;
-					m_pstPDUMsg->aDataBuf[1] = 0x02;
-					m_pstPDUMsg->aDataBuf[2] = jumpToBL;
-					m_pstPDUMsg->aDataBuf[3] = p[1];
-					m_pstPDUMsg->aDataBuf[4] = p[2];
-					m_pstPDUMsg->xDataLen = 5;
-					break;
-			}
-			break;
+			
 
 		case 0x03:
 			if (currentRoutine == 0)

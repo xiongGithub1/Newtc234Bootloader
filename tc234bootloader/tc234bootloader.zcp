@@ -5,6 +5,31 @@
             {
                 "channel": 1,
                 "items": [
+                    {
+                        "items": [
+                            {
+                                "items": [
+                                    {
+                                        "brs": true,
+                                        "cycleTime": 1000,
+                                        "data": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "fdf": true,
+                                        "isActive": false,
+                                        "items": [
+                                        ],
+                                        "name": "lunsu_5_30",
+                                        "repetitions": -1,
+                                        "sendType": 0,
+                                        "type": "message"
+                                    }
+                                ],
+                                "name": "Vector__XXX",
+                                "type": "node"
+                            }
+                        ],
+                        "name": "{2a225331-fc0b-428b-ab4d-da350c800ad0}",
+                        "type": "database"
+                    }
                 ]
             }
         ],
@@ -19,7 +44,7 @@
     "DataRecorder": [
         {
             "ChannelID": "CAN 1",
-            "Enable": false,
+            "Enable": true,
             "FileNameOption": 1,
             "FilePath": "E:/workFiles/IEBS/IEBSBootloader/tc234bootloader/Recorder1.asc",
             "MaxFileSize": 100,
@@ -69,6 +94,7 @@
             "chnIndex": 0,
             "comment": "",
             "databases": [
+                "{2a225331-fc0b-428b-ab4d-da350c800ad0}"
             ],
             "devIndex": 0,
             "devName": "",
@@ -101,7 +127,7 @@
         "rules": [
         ]
     },
-    "currentPage": "{fbe69733-160f-4e99-81b2-808f0c40d247}",
+    "currentPage": "{374b2527-bf4f-4a40-8669-5462dc3e77e6}",
     "database": {
         "expressionVariables": {
             "extra": {
@@ -111,6 +137,13 @@
         },
         "fileCharsetAutoConvert": true,
         "files": [
+            {
+                "extra": {
+                },
+                "filepath": "E:/canTest/lunsu5_30.dbc",
+                "id": "{2a225331-fc0b-428b-ab4d-da350c800ad0}",
+                "type": 1
+            }
         ],
         "funcVariables": {
             "extra": {
@@ -9270,20 +9303,20 @@
                         "y": 43
                     },
                     {
-                        "height": 610,
+                        "height": 594,
                         "index": 2,
-                        "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
-                        "width": 739,
-                        "x": 0,
-                        "y": -21
+                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
+                        "width": 760,
+                        "x": 838,
+                        "y": -12
                     },
                     {
-                        "height": 594,
+                        "height": 610,
                         "index": 3,
-                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
-                        "width": 858,
-                        "x": 738,
-                        "y": -12
+                        "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
+                        "width": 844,
+                        "x": 0,
+                        "y": -21
                     }
                 ]
             },
@@ -9301,7 +9334,7 @@
                         "uuid": "{ba6716ea-abed-431c-874b-3faed8e49892}",
                         "width": 800,
                         "x": 778,
-                        "y": 34
+                        "y": 113
                     },
                     {
                         "height": 600,
@@ -9309,15 +9342,12 @@
                         "uuid": "{ddd1f9b7-eec8-4c55-988e-ccffe291ebc7}",
                         "width": 800,
                         "x": 704,
-                        "y": -11
+                        "y": 68
                     },
                     {
-                        "height": 600,
                         "index": 3,
-                        "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
-                        "width": 801,
-                        "x": 773,
-                        "y": -78
+                        "minimized": true,
+                        "uuid": "{c87ff368-cdf4-458c-b099-ba443066e3cf}"
                     },
                     {
                         "height": 594,
@@ -9325,15 +9355,15 @@
                         "uuid": "{a782bbe6-9d7b-42f8-a4b3-930770317e77}",
                         "width": 774,
                         "x": 0,
-                        "y": -77
+                        "y": 2
                     },
                     {
-                        "height": 480,
+                        "height": 600,
                         "index": 5,
-                        "uuid": "{c87ff368-cdf4-458c-b099-ba443066e3cf}",
-                        "width": 800,
-                        "x": 803,
-                        "y": 23
+                        "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+                        "width": 801,
+                        "x": 774,
+                        "y": 0
                     }
                 ]
             },
@@ -9347,33 +9377,63 @@
                 "subWindows": [
                     {
                         "height": 400,
-                        "index": 1,
                         "uuid": "{9e0288ee-e16f-4934-ae99-3c7fcc14e521}",
                         "width": 800,
-                        "x": 845,
-                        "y": 505
-                    },
-                    {
-                        "height": 596,
-                        "index": 2,
-                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
-                        "width": 828,
                         "x": 0,
-                        "y": 9
+                        "y": 189
                     },
                     {
                         "height": 600,
-                        "index": 3,
+                        "index": 1,
                         "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
                         "width": 786,
                         "x": 823,
                         "y": 0
+                    },
+                    {
+                        "height": 600,
+                        "index": 2,
+                        "uuid": "{b2d7ebfc-3e2d-4fc2-82b6-c8fe566bd7ce}",
+                        "width": 800,
+                        "x": 820,
+                        "y": 0
+                    },
+                    {
+                        "index": 3,
+                        "maximized": true,
+                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}"
                     }
                 ]
             },
             "index": 3,
             "name": "uds",
             "uuid": "{fbe69733-160f-4e99-81b2-808f0c40d247}"
+        },
+        {
+            "comment": "",
+            "details": {
+                "subWindows": [
+                    {
+                        "height": 588,
+                        "index": 1,
+                        "uuid": "{9e0288ee-e16f-4934-ae99-3c7fcc14e521}",
+                        "width": 905,
+                        "x": 690,
+                        "y": 0
+                    },
+                    {
+                        "height": 594,
+                        "index": 2,
+                        "uuid": "{0561c1f9-8763-4ca0-b190-04a822452a8a}",
+                        "width": 690,
+                        "x": 0,
+                        "y": 0
+                    }
+                ]
+            },
+            "index": 4,
+            "name": "canNm",
+            "uuid": "{374b2527-bf4f-4a40-8669-5462dc3e77e6}"
         }
     ],
     "subWindows": [
@@ -9382,7 +9442,7 @@
             "details": {
                 "args": "",
                 "isAutoStart": false,
-                "lastModified": 1779243898465,
+                "lastModified": 1779844172906,
                 "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/BootLoader_dualBank/shuaxie.py"
             },
             "index": 1,
@@ -10495,8 +10555,8 @@
                 "floatValueAccuracy": "3",
                 "isValidDecimalEnabled": "true",
                 "numberMode": "0",
-                "pageCount": "1000",
-                "pauseCacheFrameCount": "100000",
+                "pageCount": "10000",
+                "pauseCacheFrameCount": "1000000",
                 "pauseCacheSeconds": "60",
                 "showAbsoluteDateFlag": "false",
                 "showErrorView": "false",
@@ -11789,115 +11849,2117 @@
                         },
                         "check_response": false,
                         "custom_addressing": false,
+                        "data": "02 ",
+                        "delay": 0,
+                        "desc": "诊断会话控制",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x10",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "Diagnostic Session Control",
+                            "enabled": true,
+                            "id": "0x10",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Default Session",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Programming Session",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Extended Diagnostic Session",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Safety System Diagnostic Session",
+                                    "id": "0x04",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "sessionKeepEnagled": false
+            },
+            "index": 4,
+            "name": "ECU刷新",
+            "userData": "DoCAN",
+            "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+            "windowType": "ECU Flash"
+        },
+        {
+            "comment": "",
+            "details": {
+                "SearchView": {
+                    "case": false,
+                    "children": true,
+                    "history": false,
+                    "input": "",
+                    "inputs": "",
+                    "wholeWords": false
+                },
+                "autoScrollToLatest": "true",
+                "detailViewLayout": "3",
+                "displayMode": "0",
+                "errorFieldsData": [
+                    {
+                        "field": 0,
+                        "field_name": "E_Zero",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "",
+                        "width": 150
+                    },
+                    {
+                        "field": 1,
+                        "field_name": "E_No",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "序号",
+                        "width": 65
+                    },
+                    {
+                        "field": 2,
+                        "field_name": "E_Time",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "时间",
+                        "width": 150
+                    },
+                    {
+                        "field": 3,
+                        "field_name": "E_Number",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "索引",
+                        "width": 60
+                    },
+                    {
+                        "field": 4,
+                        "field_name": "E_Channel",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "通道",
+                        "width": 60
+                    },
+                    {
+                        "field": 5,
+                        "field_name": "E_Identifier",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 6,
+                        "field_name": "E_Name",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "名称",
+                        "width": 100
+                    },
+                    {
+                        "field": 7,
+                        "field_name": "E_DNGroup",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "组",
+                        "width": 60
+                    },
+                    {
+                        "field": 8,
+                        "field_name": "E_DNMessageID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息ID(hex)",
+                        "width": 60
+                    },
+                    {
+                        "field": 9,
+                        "field_name": "E_DNMessage",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息描述",
+                        "width": 200
+                    },
+                    {
+                        "field": 10,
+                        "field_name": "E_DNDir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源/目的",
+                        "width": 80
+                    },
+                    {
+                        "field": 11,
+                        "field_name": "E_DNMAC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "MAC ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 12,
+                        "field_name": "E_DNService",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 13,
+                        "field_name": "E_DNRR",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "请求/响应",
+                        "width": 80
+                    },
+                    {
+                        "field": 14,
+                        "field_name": "E_PGN",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PGN",
+                        "width": 100
+                    },
+                    {
+                        "field": 15,
+                        "field_name": "E_EventType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "事件类型",
+                        "width": 100
+                    },
+                    {
+                        "field": 16,
+                        "field_name": "E_SenderNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "发送节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 17,
+                        "field_name": "E_ReceiveNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "接收节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 18,
+                        "field_name": "E_Src",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 19,
+                        "field_name": "E_Dest",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目的地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 20,
+                        "field_name": "E_SourcePort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 21,
+                        "field_name": "E_DestPort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目标端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 22,
+                        "field_name": "E_Priority",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "优先级",
+                        "width": 50
+                    },
+                    {
+                        "field": 23,
+                        "field_name": "E_Dir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方向",
+                        "width": 50
+                    },
+                    {
+                        "field": 24,
+                        "field_name": "E_Length",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 25,
+                        "field_name": "E_DLC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "DLC",
+                        "width": 40
+                    },
+                    {
+                        "field": 26,
+                        "field_name": "E_Data",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据",
+                        "width": 163
+                    },
+                    {
+                        "field": 27,
+                        "field_name": "E_HexData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十六进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 28,
+                        "field_name": "E_DecData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 29,
+                        "field_name": "E_BinData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(二进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 30,
+                        "field_name": "E_ASCIIData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(字符)",
+                        "width": 160
+                    },
+                    {
+                        "field": 31,
+                        "field_name": "E_Command",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "命令",
+                        "width": 100
+                    },
+                    {
+                        "field": 32,
+                        "field_name": "E_Interpretation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "解释",
+                        "width": 857
+                    },
+                    {
+                        "field": 33,
+                        "field_name": "E_J1939Type",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 34,
+                        "field_name": "E_Violation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "违例",
+                        "width": 150
+                    },
+                    {
+                        "field": 35,
+                        "field_name": "E_Remote",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "远程帧",
+                        "width": 60
+                    },
+                    {
+                        "field": 36,
+                        "field_name": "E_ESI",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ESI",
+                        "width": 60
+                    },
+                    {
+                        "field": 37,
+                        "field_name": "E_ProtectedID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PID",
+                        "width": 60
+                    },
+                    {
+                        "field": 38,
+                        "field_name": "E_CheckSum",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧校验和",
+                        "width": 60
+                    },
+                    {
+                        "field": 39,
+                        "field_name": "E_VlanID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "VLAN ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 40,
+                        "field_name": "E_EtherType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "以太网类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 41,
+                        "field_name": "E_PacketLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "包长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 42,
+                        "field_name": "E_EtherProtocol",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "协议",
+                        "width": 60
+                    },
+                    {
+                        "field": 43,
+                        "field_name": "E_DiagType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 44,
+                        "field_name": "E_DiagDataLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 45,
+                        "field_name": "E_SOMEIP_ServiceID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 46,
+                        "field_name": "E_SOMEIP_MethodID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 47,
+                        "field_name": "E_SOMEIP_ServiceName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 48,
+                        "field_name": "E_SOMEIP_MethodName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法",
+                        "width": 100
+                    },
+                    {
+                        "field": 49,
+                        "field_name": "E_SOMEIP_ClientID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "客户端ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 50,
+                        "field_name": "E_SOMEIP_SessionID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "会话ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 51,
+                        "field_name": "E_SOMEIP_MessageType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息类型",
+                        "width": 90
+                    },
+                    {
+                        "field": 52,
+                        "field_name": "E_SOMEIP_ReturnCode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "返回码",
+                        "width": 60
+                    },
+                    {
+                        "field": 53,
+                        "field_name": "E_FrameCounter",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧计数",
+                        "width": 60
+                    }
+                ],
+                "fadeOutOldEvent": "true",
+                "fadeOutUnchangedBytes": "true",
+                "fieldLayoutKey": "CAN/FD",
+                "fieldsData": [
+                    {
+                        "field": 0,
+                        "field_name": "E_Zero",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "",
+                        "width": 150
+                    },
+                    {
+                        "field": 1,
+                        "field_name": "E_No",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "序号",
+                        "width": 65
+                    },
+                    {
+                        "field": 2,
+                        "field_name": "E_Time",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "时间",
+                        "width": 150
+                    },
+                    {
+                        "field": 3,
+                        "field_name": "E_Number",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "索引",
+                        "width": 60
+                    },
+                    {
+                        "field": 4,
+                        "field_name": "E_Channel",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "通道",
+                        "width": 60
+                    },
+                    {
+                        "field": 5,
+                        "field_name": "E_Identifier",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 6,
+                        "field_name": "E_Name",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "名称",
+                        "width": 100
+                    },
+                    {
+                        "field": 7,
+                        "field_name": "E_DNGroup",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "组",
+                        "width": 60
+                    },
+                    {
+                        "field": 8,
+                        "field_name": "E_DNMessageID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息ID(hex)",
+                        "width": 60
+                    },
+                    {
+                        "field": 9,
+                        "field_name": "E_DNMessage",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息描述",
+                        "width": 200
+                    },
+                    {
+                        "field": 10,
+                        "field_name": "E_DNDir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源/目的",
+                        "width": 80
+                    },
+                    {
+                        "field": 11,
+                        "field_name": "E_DNMAC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "MAC ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 12,
+                        "field_name": "E_DNService",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 13,
+                        "field_name": "E_DNRR",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "请求/响应",
+                        "width": 80
+                    },
+                    {
+                        "field": 14,
+                        "field_name": "E_PGN",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PGN",
+                        "width": 100
+                    },
+                    {
+                        "field": 15,
+                        "field_name": "E_EventType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "事件类型",
+                        "width": 100
+                    },
+                    {
+                        "field": 16,
+                        "field_name": "E_SenderNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "发送节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 17,
+                        "field_name": "E_ReceiveNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "接收节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 18,
+                        "field_name": "E_Src",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 19,
+                        "field_name": "E_Dest",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目的地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 20,
+                        "field_name": "E_SourcePort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 21,
+                        "field_name": "E_DestPort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目标端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 22,
+                        "field_name": "E_Priority",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "优先级",
+                        "width": 50
+                    },
+                    {
+                        "field": 23,
+                        "field_name": "E_Dir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方向",
+                        "width": 50
+                    },
+                    {
+                        "field": 24,
+                        "field_name": "E_Length",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 25,
+                        "field_name": "E_DLC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "DLC",
+                        "width": 40
+                    },
+                    {
+                        "field": 26,
+                        "field_name": "E_Data",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据",
+                        "width": 163
+                    },
+                    {
+                        "field": 27,
+                        "field_name": "E_HexData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十六进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 28,
+                        "field_name": "E_DecData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 29,
+                        "field_name": "E_BinData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(二进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 30,
+                        "field_name": "E_ASCIIData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(字符)",
+                        "width": 160
+                    },
+                    {
+                        "field": 31,
+                        "field_name": "E_Command",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "命令",
+                        "width": 100
+                    },
+                    {
+                        "field": 32,
+                        "field_name": "E_Interpretation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "解释",
+                        "width": 857
+                    },
+                    {
+                        "field": 33,
+                        "field_name": "E_J1939Type",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 34,
+                        "field_name": "E_Violation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "违例",
+                        "width": 150
+                    },
+                    {
+                        "field": 35,
+                        "field_name": "E_Remote",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "远程帧",
+                        "width": 60
+                    },
+                    {
+                        "field": 36,
+                        "field_name": "E_ESI",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ESI",
+                        "width": 60
+                    },
+                    {
+                        "field": 37,
+                        "field_name": "E_ProtectedID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PID",
+                        "width": 60
+                    },
+                    {
+                        "field": 38,
+                        "field_name": "E_CheckSum",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧校验和",
+                        "width": 60
+                    },
+                    {
+                        "field": 39,
+                        "field_name": "E_VlanID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "VLAN ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 40,
+                        "field_name": "E_EtherType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "以太网类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 41,
+                        "field_name": "E_PacketLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "包长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 42,
+                        "field_name": "E_EtherProtocol",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "协议",
+                        "width": 60
+                    },
+                    {
+                        "field": 43,
+                        "field_name": "E_DiagType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 44,
+                        "field_name": "E_DiagDataLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 45,
+                        "field_name": "E_SOMEIP_ServiceID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 46,
+                        "field_name": "E_SOMEIP_MethodID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 47,
+                        "field_name": "E_SOMEIP_ServiceName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 48,
+                        "field_name": "E_SOMEIP_MethodName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法",
+                        "width": 100
+                    },
+                    {
+                        "field": 49,
+                        "field_name": "E_SOMEIP_ClientID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "客户端ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 50,
+                        "field_name": "E_SOMEIP_SessionID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "会话ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 51,
+                        "field_name": "E_SOMEIP_MessageType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息类型",
+                        "width": 90
+                    },
+                    {
+                        "field": 52,
+                        "field_name": "E_SOMEIP_ReturnCode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "返回码",
+                        "width": 60
+                    },
+                    {
+                        "field": 53,
+                        "field_name": "E_FrameCounter",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧计数",
+                        "width": 60
+                    }
+                ],
+                "floatValueAccuracy": "3",
+                "isValidDecimalEnabled": "true",
+                "numberMode": "0",
+                "pageCount": "1000",
+                "pauseCacheFrameCount": "100000",
+                "pauseCacheSeconds": "60",
+                "showAbsoluteDateFlag": "false",
+                "showErrorView": "false",
+                "showNumber": "false",
+                "startClear": "true",
+                "timeAccuracy": "6",
+                "timeMode": "0",
+                "viewIndex": "0",
+                "viewLayout": "4",
+                "viewSizes": "0"
+            },
+            "index": 5,
+            "name": "报文",
+            "userData": "",
+            "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
+            "windowType": "Trace Window"
+        },
+        {
+            "comment": "",
+            "details": {
+                "configuration": {
+                    "addressing": {
+                        "extend": false,
+                        "functionalAddress": "0x7DF",
+                        "mode": {
+                            "addressingMode": 0,
+                            "ecuAddr": 0,
+                            "extensionAddr": 0,
+                            "strictAddrMode": false,
+                            "testerAddr": 0
+                        },
+                        "physicalAddress": "0x74C",
+                        "responseAddress": "0x75C"
+                    },
+                    "debug": {
+                        "udsInterface": 0
+                    },
+                    "doip": {
+                        "aliveCheckMaxIdleTimeMs": 0,
+                        "connectTimeout": 2000,
+                        "connectionMode": 0,
+                        "isResponseAliveCheckEnabled": false,
+                        "remotePort": 13400,
+                        "sendActivationPacket": true
+                    },
+                    "flash": {
+                        "stopOnFailure": true
+                    },
+                    "output": {
+                        "outputMaxRowCount": 100000,
+                        "showRawFrame": false,
+                        "singleFileMaxRowCount": 100000
+                    },
+                    "script": {
+                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
+                    },
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
+                    "sessionKeep": {
+                        "addressingType": 1,
+                        "enabled": false,
+                        "interval": 2000,
+                        "suppressResponse": true
+                    },
+                    "tp": {
+                        "blockDownloadRetry": 2,
+                        "blockSize": 0,
+                        "fcTimeout": 1000,
+                        "fillByte": "0x0",
+                        "frameType": 0,
+                        "isModifyEcuSTmin": false,
+                        "isfillByte": true,
+                        "localSTmin": 0,
+                        "p2Timeout": 2000,
+                        "p2xTimeout": 5000,
+                        "protocalVersion": 0,
+                        "remoteSTmin": 0
+                    }
+                },
+                "currentDataTab": 0,
+                "dataTabs": [
+                    {
+                        "groups": [
+                            {
+                                "items": [
+                                    {
+                                        "id": "10 01",
+                                        "name": "DefaultSession",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "10 01",
+                                            "delayMs": 0,
+                                            "desc": "默认会话",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "DefaultSession",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "11 01",
+                                        "name": "HardReset",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "11 01",
+                                            "delayMs": 0,
+                                            "desc": "硬重置",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "HardReset",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "27 01",
+                                        "name": "RequestSeed1",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "27 01",
+                                            "delayMs": 0,
+                                            "desc": "请求Seed 1",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "RequestSeed1",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "27 02",
+                                        "name": "SendKey2",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "27 02 00 00 00 00",
+                                            "delayMs": 0,
+                                            "desc": "发送Key 2",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "SendKey2",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "10 02",
+                                        "name": "ProgrammingSession",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "10 02",
+                                            "delayMs": 0,
+                                            "desc": "编程会话",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ProgrammingSession",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "10 03",
+                                        "name": "ExtendedDiagnosticSession",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "10 03",
+                                            "delayMs": 0,
+                                            "desc": "扩展诊断会话",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ExtendedDiagnosticSession",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "27 01",
+                                        "name": "RequestSeed1",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "27 01",
+                                            "delayMs": 0,
+                                            "desc": "请求Seed 1",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "RequestSeed1",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "3E 00",
+                                        "name": "ZeroSubFunction",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "3E 00",
+                                            "delayMs": 0,
+                                            "desc": "0子服务",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ZeroSubFunction",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "11 03",
+                                        "name": "SoftReset",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "11 03",
+                                            "delayMs": 0,
+                                            "desc": "软重置",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "SoftReset",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "85 01",
+                                        "name": "on",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "85 01 00",
+                                            "delayMs": 0,
+                                            "desc": "开",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "on",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "19 01",
+                                        "name": "ReportNumberOfDTCByStatusMask",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "19 01 00",
+                                            "delayMs": 0,
+                                            "desc": "按状态掩码报告DTC数量",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ReportNumberOfDTCByStatusMask",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    }
+                                ],
+                                "name": "默认分组",
+                                "type": "Group"
+                            }
+                        ],
+                        "name": "新页"
+                    }
+                ],
+                "sendCount": 1,
+                "windowSettings": {
+                    "uintDisplayType": 0
+                }
+            },
+            "index": 6,
+            "name": "UDS诊断",
+            "userData": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
+            "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
+            "windowType": "UDS Diagnostics"
+        },
+        {
+            "comment": "",
+            "details": {
+                "playbackConfiguration": {
+                    "channelMap": {
+                        "datas": [
+                        ],
+                        "schemes": [
+                        ]
+                    },
+                    "filter": {
+                        "datas": [
+                        ],
+                        "schemes": [
+                        ]
+                    },
+                    "loggerList": {
+                        "frameLogger": {
+                            "data": [
+                            ],
+                            "layout": {
+                                "colList": [
+                                    250,
+                                    160,
+                                    320,
+                                    80,
+                                    111
+                                ],
+                                "rowList": [
+                                ]
+                            }
+                        }
+                    },
+                    "setting": {
+                        "autostart": false,
+                        "ethOnlineSetting": {
+                            "dstMac": "000000000000",
+                            "ethEthernetPolicy": 2,
+                            "ethLoopBackPolicy": 2,
+                            "srcMac": "000000000000",
+                            "useNetworkCardMAC": 1
+                        },
+                        "failurePolicy": 0,
+                        "linOnlineSetting": {
+                            "replayHeader": 1,
+                            "replayHeaderModel": 0
+                        },
+                        "mode": 0,
+                        "rePlayInterval": 0,
+                        "rePlayRange": 0,
+                        "rePlayTimes": 1,
+                        "skip": 1,
+                        "speed": 1,
+                        "stepinterval": 500,
+                        "timestampFormat": 0,
+                        "timestampformat": 0,
+                        "totalTimeLeftH": 0,
+                        "totalTimeLeftL": 0,
+                        "totalTimeRightH": 0,
+                        "totalTimeRightL": 0
+                    },
+                    "splitter": [
+                        14,
+                        14
+                    ],
+                    "version": "2.0.0"
+                }
+            },
+            "index": 7,
+            "name": "数据回放",
+            "userData": "",
+            "uuid": "{f122509d-c4a8-4a74-894a-493b115865c7}",
+            "windowType": "Playback Window"
+        },
+        {
+            "comment": "",
+            "details": {
+                "autostart": false,
+                "bytesPerRow": 16,
+                "failurePolicy": 1,
+                "interval": 10,
+                "items": [
+                    {
+                        "ID": 1663,
+                        "channel": 1,
+                        "data": "02 00 00 00 00 00 00 00",
+                        "dataLength": 8,
+                        "enabled": true,
+                        "frameType": 0,
+                        "generators": {
+                        },
+                        "interval": 10,
+                        "name": "帧",
+                        "times": 1,
+                        "type": 1
+                    },
+                    {
+                        "ID": 1653,
+                        "channel": 1,
+                        "data": "03 01 00 00 00 00 00 00",
+                        "dataLength": 8,
+                        "enabled": true,
+                        "frameType": 0,
+                        "generators": {
+                        },
+                        "interval": 10,
+                        "name": "帧",
+                        "times": 1,
+                        "type": 1
+                    },
+                    {
+                        "ID": 291,
+                        "channel": 1,
+                        "data": "01 00 00 00 00 00 00 00",
+                        "dataLength": 8,
+                        "enabled": true,
+                        "frameType": 0,
+                        "generators": {
+                        },
+                        "interval": 10,
+                        "name": "帧",
+                        "times": 1,
+                        "type": 1
+                    },
+                    {
+                        "ID": 291,
+                        "channel": 1,
+                        "data": "00 00 00 00 00 00 00 00",
+                        "dataLength": 8,
+                        "enabled": true,
+                        "frameType": 0,
+                        "generators": {
+                        },
+                        "interval": 10,
+                        "name": "帧",
+                        "times": 1,
+                        "type": 1
+                    }
+                ],
+                "layout": {
+                    "frame": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAALAAYAAAACAAAACgAAAGQAAAAJAAAAZAAAA3kAAAALAQAAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAALAAAAPAAAAAEAAAAAAAAAeAAAAAEAAAAAAAAAPAAAAAEAAAAAAAAAWgAAAAEAAAAAAAAAoAAAAAEAAAAAAAAALQAAAAEAAAAAAAAASwAAAAEAAAAAAAAARgAAAAEAAAAAAAAA0QAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAD6AAAAABk",
+                    "signals": "AAAA/wAAAAAAAAABAAAAAP////8BAAAAAAAAAAAAAAAJAAEAAAABAAAACAAAAGQAAALzAAAACQEBAAEAAAAAAAAAAAAAAABk/////wAAAIEAAAAAAAAACQAAAK8AAAABAAAAAAAAAFUAAAABAAAAAAAAAHgAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAADIAAAABAAAAAAAAAGQAAAABAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAZA==",
+                    "splitter": "AAAA/wAAAAEAAAACAAAAwAAAAOIA/////wEAAAACAA=="
+                },
+                "maxRetryTimes": 3,
+                "parallel": true,
+                "parallelJobs": 512,
+                "resetGenerators": true,
+                "retryInterval": 10,
+                "showAddress": true,
+                "showAscii": false,
+                "showStatus": false,
+                "template": {
+                    "channel": 1,
+                    "data": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "frameType": 6,
+                    "id": 1,
+                    "interval": 10,
+                    "length": 64,
+                    "times": 1
+                },
+                "times": 1,
+                "version": 1
+            },
+            "index": 8,
+            "name": "报文发送",
+            "userData": "",
+            "uuid": "{9e0288ee-e16f-4934-ae99-3c7fcc14e521}",
+            "windowType": "CAN Transmit"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1779174276428,
+                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/BootLoader_dualBank/fasong.py"
+            },
+            "index": 9,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{567031a6-7260-496a-9798-b8e3c69aa392}",
+            "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1779174276428,
+                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/BootLoader_dualBank/fasong.py"
+            },
+            "index": 10,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{ba6716ea-abed-431c-874b-3faed8e49892}",
+            "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1779334059855,
+                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/ZcanProDll/测试22.py"
+            },
+            "index": 11,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{c87ff368-cdf4-458c-b099-ba443066e3cf}",
+            "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "configuration": {
+                    "addressing": {
+                        "extend": false,
+                        "functionalAddress": "0x7DF",
+                        "mode": {
+                            "addressingMode": 0,
+                            "ecuAddr": 0,
+                            "extensionAddr": 0,
+                            "strictAddrMode": false,
+                            "testerAddr": 0
+                        },
+                        "physicalAddress": "0x74C",
+                        "responseAddress": "0x75C"
+                    },
+                    "debug": {
+                        "udsInterface": 0
+                    },
+                    "doip": {
+                        "aliveCheckMaxIdleTimeMs": 0,
+                        "connectTimeout": 2000,
+                        "connectionMode": 0,
+                        "isResponseAliveCheckEnabled": false,
+                        "remotePort": 13400,
+                        "sendActivationPacket": true
+                    },
+                    "flash": {
+                        "stopOnFailure": true
+                    },
+                    "output": {
+                        "outputMaxRowCount": 100000,
+                        "showRawFrame": false,
+                        "singleFileMaxRowCount": 100000
+                    },
+                    "script": {
+                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
+                    },
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
+                    "sessionKeep": {
+                        "addressingType": 1,
+                        "enabled": false,
+                        "interval": 2000,
+                        "suppressResponse": true
+                    },
+                    "tp": {
+                        "blockDownloadRetry": 2,
+                        "blockSize": 0,
+                        "fcTimeout": 1000,
+                        "fillByte": "0x0",
+                        "frameType": 0,
+                        "isModifyEcuSTmin": false,
+                        "isfillByte": true,
+                        "localSTmin": 0,
+                        "p2Timeout": 2000,
+                        "p2xTimeout": 5000,
+                        "protocalVersion": 0,
+                        "remoteSTmin": 0
+                    }
+                },
+                "deviceId": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
+                "flashCount": 1,
+                "flashInfo": [
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
+                        "data": "03 ",
+                        "delay": 0,
+                        "desc": "诊断会话控制",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x10",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "Diagnostic Session Control",
+                            "enabled": true,
+                            "id": "0x10",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Default Session",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Programming Session",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Extended Diagnostic Session",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Safety System Diagnostic Session",
+                                    "id": "0x04",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "custom_addressing": false,
+                        "data": "",
+                        "delay": 0,
+                        "desc": "安全访问",
+                        "deviceScript": "",
+                        "dll": "E:/workFiles/IEBS/tc234bootloader/ZcanProDll/Debug/ZcanProDll.dll",
+                        "functionaddr": false,
+                        "ignore_unlocked_check": false,
+                        "isOptionFromSignal": false,
+                        "isVariantFromSignal": false,
+                        "level": 1,
+                        "libType": 0,
+                        "option": "",
+                        "type": "security",
+                        "variant": "",
+                        "wasmData": ""
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
+                        "data": "02 ",
+                        "delay": 0,
+                        "desc": "诊断会话控制",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x10",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "Diagnostic Session Control",
+                            "enabled": true,
+                            "id": "0x10",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Default Session",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Programming Session",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Extended Diagnostic Session",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Safety System Diagnostic Session",
+                                    "id": "0x04",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "sessionKeepEnagled": false
+            },
+            "index": 12,
+            "name": "ECU刷新",
+            "userData": "DoCAN",
+            "uuid": "{ddd1f9b7-eec8-4c55-988e-ccffe291ebc7}",
+            "windowType": "ECU Flash"
+        },
+        {
+            "comment": "",
+            "details": {
+                "configuration": {
+                    "addressing": {
+                        "extend": false,
+                        "functionalAddress": "0x7DF",
+                        "mode": {
+                            "addressingMode": 0,
+                            "ecuAddr": 0,
+                            "extensionAddr": 0,
+                            "strictAddrMode": false,
+                            "testerAddr": 0
+                        },
+                        "physicalAddress": "0x74C",
+                        "responseAddress": "0x75C"
+                    },
+                    "debug": {
+                        "udsInterface": 0
+                    },
+                    "doip": {
+                        "aliveCheckMaxIdleTimeMs": 0,
+                        "connectTimeout": 2000,
+                        "connectionMode": 0,
+                        "isResponseAliveCheckEnabled": false,
+                        "remotePort": 13400,
+                        "sendActivationPacket": true
+                    },
+                    "flash": {
+                        "stopOnFailure": true
+                    },
+                    "output": {
+                        "outputMaxRowCount": 100000,
+                        "showRawFrame": false,
+                        "singleFileMaxRowCount": 100000
+                    },
+                    "script": {
+                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
+                    },
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
+                    "sessionKeep": {
+                        "addressingType": 1,
+                        "enabled": false,
+                        "interval": 2000,
+                        "suppressResponse": true
+                    },
+                    "tp": {
+                        "blockDownloadRetry": 2,
+                        "blockSize": 0,
+                        "fcTimeout": 1000,
+                        "fillByte": "0x0",
+                        "frameType": 0,
+                        "isModifyEcuSTmin": false,
+                        "isfillByte": true,
+                        "localSTmin": 0,
+                        "p2Timeout": 2000,
+                        "p2xTimeout": 5000,
+                        "protocalVersion": 0,
+                        "remoteSTmin": 0
+                    }
+                },
+                "deviceId": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
+                "flashCount": 1,
+                "flashInfo": [
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
+                        "data": "03 ",
+                        "delay": 0,
+                        "desc": "诊断会话控制",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x10",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "Diagnostic Session Control",
+                            "enabled": true,
+                            "id": "0x10",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Default Session",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Programming Session",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Extended Diagnostic Session",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Safety System Diagnostic Session",
+                                    "id": "0x04",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "custom_addressing": false,
+                        "data": "",
+                        "delay": 0,
+                        "desc": "安全访问",
+                        "deviceScript": "",
+                        "dll": "E:/workFiles/IEBS/tc234bootloader/ZcanProDll/Debug/ZcanProDll.dll",
+                        "functionaddr": false,
+                        "ignore_unlocked_check": false,
+                        "isOptionFromSignal": false,
+                        "isVariantFromSignal": false,
+                        "level": 1,
+                        "libType": 0,
+                        "option": "",
+                        "type": "security",
+                        "variant": "",
+                        "wasmData": ""
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
                         "data": "F1 5B",
-                        "delay": 0,
-                        "desc": "按标识符读取数据",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x22",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Read Data By Identifier",
-                            "enabled": true,
-                            "id": "0x22",
-                            "sub_services": [
-                            ]
-                        }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "F1 86",
-                        "delay": 0,
-                        "desc": "按标识符读取数据",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x22",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Read Data By Identifier",
-                            "enabled": true,
-                            "id": "0x22",
-                            "sub_services": [
-                            ]
-                        }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "F1 87",
-                        "delay": 0,
-                        "desc": "按标识符读取数据",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x22",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Read Data By Identifier",
-                            "enabled": true,
-                            "id": "0x22",
-                            "sub_services": [
-                            ]
-                        }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "F1 88",
-                        "delay": 0,
-                        "desc": "按标识符读取数据",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x22",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Read Data By Identifier",
-                            "enabled": true,
-                            "id": "0x22",
-                            "sub_services": [
-                            ]
-                        }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "F1 89",
                         "delay": 0,
                         "desc": "按标识符读取数据",
                         "expect_response_data": "",
@@ -11918,10 +13980,10 @@
                 ],
                 "sessionKeepEnagled": false
             },
-            "index": 4,
+            "index": 13,
             "name": "ECU刷新",
             "userData": "DoCAN",
-            "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+            "uuid": "{b2d7ebfc-3e2d-4fc2-82b6-c8fe566bd7ce}",
             "windowType": "ECU Flash"
         },
         {
@@ -13041,749 +15103,11 @@
                 "viewLayout": "4",
                 "viewSizes": "0"
             },
-            "index": 5,
+            "index": 14,
             "name": "报文",
             "userData": "",
-            "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
+            "uuid": "{0561c1f9-8763-4ca0-b190-04a822452a8a}",
             "windowType": "Trace Window"
-        },
-        {
-            "comment": "",
-            "details": {
-                "configuration": {
-                    "addressing": {
-                        "extend": false,
-                        "functionalAddress": "0x7DF",
-                        "mode": {
-                            "addressingMode": 0,
-                            "ecuAddr": 0,
-                            "extensionAddr": 0,
-                            "strictAddrMode": false,
-                            "testerAddr": 0
-                        },
-                        "physicalAddress": "0x74C",
-                        "responseAddress": "0x75C"
-                    },
-                    "debug": {
-                        "udsInterface": 0
-                    },
-                    "doip": {
-                        "aliveCheckMaxIdleTimeMs": 0,
-                        "connectTimeout": 2000,
-                        "connectionMode": 0,
-                        "isResponseAliveCheckEnabled": false,
-                        "remotePort": 13400,
-                        "sendActivationPacket": true
-                    },
-                    "flash": {
-                        "stopOnFailure": true
-                    },
-                    "output": {
-                        "outputMaxRowCount": 100000,
-                        "showRawFrame": false,
-                        "singleFileMaxRowCount": 100000
-                    },
-                    "script": {
-                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
-                    },
-                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
-                    "sessionKeep": {
-                        "addressingType": 1,
-                        "enabled": false,
-                        "interval": 2000,
-                        "suppressResponse": true
-                    },
-                    "tp": {
-                        "blockDownloadRetry": 2,
-                        "blockSize": 0,
-                        "fcTimeout": 1000,
-                        "fillByte": "0x0",
-                        "frameType": 0,
-                        "isModifyEcuSTmin": false,
-                        "isfillByte": true,
-                        "localSTmin": 0,
-                        "p2Timeout": 2000,
-                        "p2xTimeout": 5000,
-                        "protocalVersion": 0,
-                        "remoteSTmin": 0
-                    }
-                },
-                "currentDataTab": 0,
-                "dataTabs": [
-                    {
-                        "groups": [
-                            {
-                                "items": [
-                                    {
-                                        "id": "10 01",
-                                        "name": "DefaultSession",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "10 01",
-                                            "delayMs": 0,
-                                            "desc": "默认会话",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "DefaultSession",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "11 01",
-                                        "name": "HardReset",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "11 01",
-                                            "delayMs": 0,
-                                            "desc": "硬重置",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "HardReset",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "27 01",
-                                        "name": "RequestSeed1",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "27 01",
-                                            "delayMs": 0,
-                                            "desc": "请求Seed 1",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "RequestSeed1",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "27 02",
-                                        "name": "SendKey2",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "27 02 00 00 00 00",
-                                            "delayMs": 0,
-                                            "desc": "发送Key 2",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "SendKey2",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "10 02",
-                                        "name": "ProgrammingSession",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "10 02",
-                                            "delayMs": 0,
-                                            "desc": "编程会话",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "ProgrammingSession",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "10 03",
-                                        "name": "ExtendedDiagnosticSession",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "10 03",
-                                            "delayMs": 0,
-                                            "desc": "扩展诊断会话",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "ExtendedDiagnosticSession",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "27 01",
-                                        "name": "RequestSeed1",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "27 01",
-                                            "delayMs": 0,
-                                            "desc": "请求Seed 1",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "RequestSeed1",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "3E 00",
-                                        "name": "ZeroSubFunction",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "3E 00",
-                                            "delayMs": 0,
-                                            "desc": "0子服务",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "ZeroSubFunction",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "11 03",
-                                        "name": "SoftReset",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "11 03",
-                                            "delayMs": 0,
-                                            "desc": "软重置",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "SoftReset",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "85 01",
-                                        "name": "on",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "85 01 00",
-                                            "delayMs": 0,
-                                            "desc": "开",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "on",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    },
-                                    {
-                                        "id": "19 01",
-                                        "name": "ReportNumberOfDTCByStatusMask",
-                                        "taskItem": {
-                                            "addressing": {
-                                                "functional_address": "7DF",
-                                                "is_extend": false,
-                                                "physical_address": "74C",
-                                                "respons_address": "75C"
-                                            },
-                                            "addressingType": 0,
-                                            "data": "19 01 00",
-                                            "delayMs": 0,
-                                            "desc": "按状态掩码报告DTC数量",
-                                            "enabled": true,
-                                            "expectResponseData": "",
-                                            "isCheckResponse": false,
-                                            "isCustomAddressing": false,
-                                            "isSuppressResponse": false,
-                                            "name": "ReportNumberOfDTCByStatusMask",
-                                            "responseTraceType": 0,
-                                            "type": 5
-                                        },
-                                        "type": "Basic"
-                                    }
-                                ],
-                                "name": "默认分组",
-                                "type": "Group"
-                            }
-                        ],
-                        "name": "新页"
-                    }
-                ],
-                "sendCount": 1,
-                "windowSettings": {
-                    "uintDisplayType": 0
-                }
-            },
-            "index": 6,
-            "name": "UDS诊断",
-            "userData": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
-            "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
-            "windowType": "UDS Diagnostics"
-        },
-        {
-            "comment": "",
-            "details": {
-                "playbackConfiguration": {
-                    "channelMap": {
-                        "datas": [
-                        ],
-                        "schemes": [
-                        ]
-                    },
-                    "filter": {
-                        "datas": [
-                        ],
-                        "schemes": [
-                        ]
-                    },
-                    "loggerList": {
-                        "frameLogger": {
-                            "data": [
-                            ],
-                            "layout": {
-                                "colList": [
-                                    250,
-                                    160,
-                                    320,
-                                    80,
-                                    111
-                                ],
-                                "rowList": [
-                                ]
-                            }
-                        }
-                    },
-                    "setting": {
-                        "autostart": false,
-                        "ethOnlineSetting": {
-                            "dstMac": "000000000000",
-                            "ethEthernetPolicy": 2,
-                            "ethLoopBackPolicy": 2,
-                            "srcMac": "000000000000",
-                            "useNetworkCardMAC": 1
-                        },
-                        "failurePolicy": 0,
-                        "linOnlineSetting": {
-                            "replayHeader": 1,
-                            "replayHeaderModel": 0
-                        },
-                        "mode": 0,
-                        "rePlayInterval": 0,
-                        "rePlayRange": 0,
-                        "rePlayTimes": 1,
-                        "skip": 1,
-                        "speed": 1,
-                        "stepinterval": 500,
-                        "timestampFormat": 0,
-                        "timestampformat": 0,
-                        "totalTimeLeftH": 0,
-                        "totalTimeLeftL": 0,
-                        "totalTimeRightH": 0,
-                        "totalTimeRightL": 0
-                    },
-                    "splitter": [
-                        14,
-                        14
-                    ],
-                    "version": "2.0.0"
-                }
-            },
-            "index": 7,
-            "name": "数据回放",
-            "userData": "",
-            "uuid": "{f122509d-c4a8-4a74-894a-493b115865c7}",
-            "windowType": "Playback Window"
-        },
-        {
-            "comment": "",
-            "details": {
-                "autostart": false,
-                "bytesPerRow": 16,
-                "failurePolicy": 1,
-                "interval": 10,
-                "items": [
-                    {
-                        "ID": 1868,
-                        "channel": 1,
-                        "data": "03 22 f5 20 00 00 00 00",
-                        "dataLength": 8,
-                        "enabled": true,
-                        "frameType": 0,
-                        "generators": {
-                        },
-                        "interval": 10,
-                        "name": "帧",
-                        "times": 1,
-                        "type": 1
-                    }
-                ],
-                "layout": {
-                    "frame": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAALAAYAAAACAAAACQAAAGQAAAAKAAAAZAAAAxAAAAALAQAAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAALAAAAPAAAAAEAAAAAAAAAeAAAAAEAAAAAAAAAPAAAAAEAAAAAAAAAWgAAAAEAAAAAAAAAoAAAAAEAAAAAAAAALQAAAAEAAAAAAAAASwAAAAEAAAAAAAAARgAAAAEAAAAAAAAAaAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAD6AAAAABk",
-                    "signals": "AAAA/wAAAAAAAAABAAAAAP////8BAAAAAAAAAAAAAAAJAAEAAAABAAAACAAAAGQAAALzAAAACQEBAAEAAAAAAAAAAAAAAABk/////wAAAIEAAAAAAAAACQAAAK8AAAABAAAAAAAAAFUAAAABAAAAAAAAAHgAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAADIAAAABAAAAAAAAAGQAAAABAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAZA==",
-                    "splitter": "AAAA/wAAAAEAAAACAAAAwAAAAOIA/////wEAAAACAA=="
-                },
-                "maxRetryTimes": 3,
-                "parallel": true,
-                "parallelJobs": 512,
-                "resetGenerators": true,
-                "retryInterval": 10,
-                "showAddress": true,
-                "showAscii": false,
-                "showStatus": false,
-                "template": {
-                    "channel": 1,
-                    "data": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                    "frameType": 6,
-                    "id": 1,
-                    "interval": 10,
-                    "length": 64,
-                    "times": 1
-                },
-                "times": 1,
-                "version": 1
-            },
-            "index": 8,
-            "name": "报文发送",
-            "userData": "",
-            "uuid": "{9e0288ee-e16f-4934-ae99-3c7fcc14e521}",
-            "windowType": "CAN Transmit"
-        },
-        {
-            "comment": "",
-            "details": {
-                "args": "",
-                "isAutoStart": false,
-                "lastModified": 1779174276428,
-                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/BootLoader_dualBank/fasong.py"
-            },
-            "index": 9,
-            "name": "脚本",
-            "userData": "",
-            "uuid": "{567031a6-7260-496a-9798-b8e3c69aa392}",
-            "windowType": "Scripting"
-        },
-        {
-            "comment": "",
-            "details": {
-                "args": "",
-                "isAutoStart": false,
-                "lastModified": 1779174276428,
-                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/BootLoader_dualBank/fasong.py"
-            },
-            "index": 10,
-            "name": "脚本",
-            "userData": "",
-            "uuid": "{ba6716ea-abed-431c-874b-3faed8e49892}",
-            "windowType": "Scripting"
-        },
-        {
-            "comment": "",
-            "details": {
-                "args": "",
-                "isAutoStart": false,
-                "lastModified": 1779334059855,
-                "scriptFile": "E:/workFiles/IEBS/IEBSBootloader/ZcanProDll/测试22.py"
-            },
-            "index": 11,
-            "name": "脚本",
-            "userData": "",
-            "uuid": "{c87ff368-cdf4-458c-b099-ba443066e3cf}",
-            "windowType": "Scripting"
-        },
-        {
-            "comment": "",
-            "details": {
-                "configuration": {
-                    "addressing": {
-                        "extend": false,
-                        "functionalAddress": "0x7DF",
-                        "mode": {
-                            "addressingMode": 0,
-                            "ecuAddr": 0,
-                            "extensionAddr": 0,
-                            "strictAddrMode": false,
-                            "testerAddr": 0
-                        },
-                        "physicalAddress": "0x74C",
-                        "responseAddress": "0x75C"
-                    },
-                    "debug": {
-                        "udsInterface": 0
-                    },
-                    "doip": {
-                        "aliveCheckMaxIdleTimeMs": 0,
-                        "connectTimeout": 2000,
-                        "connectionMode": 0,
-                        "isResponseAliveCheckEnabled": false,
-                        "remotePort": 13400,
-                        "sendActivationPacket": true
-                    },
-                    "flash": {
-                        "stopOnFailure": true
-                    },
-                    "output": {
-                        "outputMaxRowCount": 100000,
-                        "showRawFrame": false,
-                        "singleFileMaxRowCount": 100000
-                    },
-                    "script": {
-                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
-                    },
-                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
-                    "sessionKeep": {
-                        "addressingType": 1,
-                        "enabled": false,
-                        "interval": 2000,
-                        "suppressResponse": true
-                    },
-                    "tp": {
-                        "blockDownloadRetry": 2,
-                        "blockSize": 0,
-                        "fcTimeout": 1000,
-                        "fillByte": "0x0",
-                        "frameType": 0,
-                        "isModifyEcuSTmin": false,
-                        "isfillByte": true,
-                        "localSTmin": 0,
-                        "p2Timeout": 2000,
-                        "p2xTimeout": 5000,
-                        "protocalVersion": 0,
-                        "remoteSTmin": 0
-                    }
-                },
-                "deviceId": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
-                "flashCount": 1,
-                "flashInfo": [
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "03 ",
-                        "delay": 0,
-                        "desc": "诊断会话控制",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x10",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Diagnostic Session Control",
-                            "enabled": true,
-                            "id": "0x10",
-                            "sub_services": [
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Default Session",
-                                    "id": "0x01",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Programming Session",
-                                    "id": "0x02",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Extended Diagnostic Session",
-                                    "id": "0x03",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Safety System Diagnostic Session",
-                                    "id": "0x04",
-                                    "isDataNode": false
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "custom_addressing": false,
-                        "data": "",
-                        "delay": 0,
-                        "desc": "安全访问",
-                        "deviceScript": "",
-                        "dll": "E:/workFiles/IEBS/tc234bootloader/ZcanProDll/Debug/ZcanProDll.dll",
-                        "functionaddr": false,
-                        "ignore_unlocked_check": false,
-                        "isOptionFromSignal": false,
-                        "isVariantFromSignal": false,
-                        "level": 1,
-                        "libType": 0,
-                        "option": "",
-                        "type": "security",
-                        "variant": "",
-                        "wasmData": ""
-                    },
-                    {
-                        "addressing": {
-                            "functional_address": "7DF",
-                            "is_extend": false,
-                            "physical_address": "74C",
-                            "respons_address": "75C"
-                        },
-                        "check_response": false,
-                        "custom_addressing": false,
-                        "data": "02 ",
-                        "delay": 0,
-                        "desc": "诊断会话控制",
-                        "expect_response_data": "",
-                        "functionaddr": false,
-                        "is_crc_cmd": "false",
-                        "sid": "0x10",
-                        "suppress_response": false,
-                        "type": "general",
-                        "uds_service": {
-                            "creation_type": 0,
-                            "desc": "Diagnostic Session Control",
-                            "enabled": true,
-                            "id": "0x10",
-                            "sub_services": [
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Default Session",
-                                    "id": "0x01",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Programming Session",
-                                    "id": "0x02",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Extended Diagnostic Session",
-                                    "id": "0x03",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Safety System Diagnostic Session",
-                                    "id": "0x04",
-                                    "isDataNode": false
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "sessionKeepEnagled": false
-            },
-            "index": 12,
-            "name": "ECU刷新",
-            "userData": "DoCAN",
-            "uuid": "{ddd1f9b7-eec8-4c55-988e-ccffe291ebc7}",
-            "windowType": "ECU Flash"
         }
     ],
     "symbolExplorer": {

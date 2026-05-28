@@ -68,7 +68,8 @@ CanRX_MsgObjInit CanRxFrm_9252_InitTab[]=
 {//???????ID  CAN???ID
 	{ 20,     UDS_FUN_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
 	{ 21,     UDS_PHY_ADDR_ID,		 Enable_Rx_Enable_Tx, ((void*)0)},
-	{ 22,     0x500u,				 Enable_Rx_Enable_Tx, ((void*)0)}, /* NM message receive */
+	{ 22,     CANNM_NM_PDU_CAN_ID_BASE, Enable_Rx_Enable_Tx, ((void*)0)}, /* NM message receive by mask (0x600-0x6FF) */
+	{ 23,     0x123,		 Enable_Rx_Enable_Tx, ((void*)0)},
 };
 
 
@@ -98,6 +99,7 @@ const uint16  CanTxFrm9252Num = (sizeof(CanTxFrm_9252_InitTab)/sizeof(CanTX_MsgO
 /******************************************************************************/
 IFX_INTERRUPT(isrCAN0_RX, 0, ISR_PRIORITY_CAN0_RX);
 
+uint8 CanNmkey=0;
 void isrCAN0_RX(void)
 {
     uint32 status = 0;
@@ -111,10 +113,24 @@ void isrCAN0_RX(void)
 			status = IfxMultican_Can_MsgObj_readMessage(&g_MulticanBasic.drivers.canNode0MsgRx2[j],&Node0Readmsg);
 			if(status != IfxMultican_Status_receiveEmpty)
 			{
-				if((Node0Readmsg.id==UDS_FUN_ADDR_ID)||(Node0Readmsg.id==UDS_PHY_ADDR_ID)||(Node0Readmsg.id==0x500u))
+				if((Node0Readmsg.id==UDS_FUN_ADDR_ID)||
+				   (Node0Readmsg.id==UDS_PHY_ADDR_ID)||
+				   (CANNM_IS_NM_CAN_ID(Node0Readmsg.id) == TRUE)||
+				   (Node0Readmsg.id==0x123)
+				)
 				{
+					if(Node0Readmsg.id==0x123){
+						if(Node0Readmsg.data[0]==1){
+							CanNmkey=1;
+						}
+						else
+						{
+							CanNmkey=0;
+						}
+					}
 					qmsg.id = (uint16)Node0Readmsg.id;
 					tl_memcpy(qmsg.data,Node0Readmsg.data,8);
+
 					tl_queue_add_item(&gl_rxDataQueue,&qmsg);
 				}
 			}
@@ -299,7 +315,7 @@ void CanMainProcess(void)
 				(gl_udsRxCanMsgMainFuction)((tRxTxCanMsg *)&rxMsgObj);
 			}
 		}
-		else if(rxMsgObj.id == 0x500u)
+		else if(CANNM_IS_NM_CAN_ID(rxMsgObj.id) == TRUE)
 		{
 			CanNm_RxIndication(rxMsgObj.id, rxMsgObj.data);
 		}

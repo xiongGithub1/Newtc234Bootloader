@@ -37,11 +37,19 @@ static uint8 gs_CanNmTxBuf[CANNM_NM_PDU_LENGTH];
 static CanNm_SleepIndicationCbkType gs_pfSleepIndCbk = ((void *)0);
 static CanNm_NetworkModeIndicationCbkType gs_pfNetworkModeCbk = ((void *)0);
 
+/* Rx debug observation */
+static volatile uint32 gs_CanNmExtRxCount = 0u;
+static volatile uint32 gs_CanNmSelfFilteredCount = 0u;
+static volatile uint16 gs_CanNmLastRxCanId = 0u;
+static volatile uint8  gs_CanNmLastRxNodeId = 0u;
+static volatile uint8  gs_CanNmLastRxCbv = 0u;
+
 /*============================================================================*/
 /* Local Function Prototypes                                                  */
 /*============================================================================*/
 static void CanNm_TransmitMessage(void);
 static void CanNm_EnterState(CanNm_StateType newState);
+static void CanNm_TxTimeoutException(void);
 
 /*============================================================================*/
 /* Internal Helper Functions                                                  */
@@ -49,6 +57,7 @@ static void CanNm_EnterState(CanNm_StateType newState);
 static void CanNm_TransmitMessage(void)
 {
     IfxMultican_Message msg;
+    uint32 txBusyGuard = 10000u;
     uint32 dataLow  = ((uint32)gs_CanNmTxBuf[0]) |
                       (((uint32)gs_CanNmTxBuf[1]) << 8) |
                       (((uint32)gs_CanNmTxBuf[2]) << 16) |
@@ -59,7 +68,30 @@ static void CanNm_TransmitMessage(void)
                       (((uint32)gs_CanNmTxBuf[7]) << 24);
 
     IfxMultican_Message_init(&msg, (uint32)CANNM_NM_PDU_CAN_ID, dataLow, dataHigh, IfxMultican_DataLengthCode_8);
-    while(IfxMultican_Can_MsgObj_sendMessage(&g_MulticanBasic.drivers.canNode0MsgTx2[0], &msg) == IfxMultican_Status_notSentBusy );
+    while (IfxMultican_Can_MsgObj_sendMessage(&g_MulticanBasic.drivers.canNode0MsgTx2[0], &msg) == IfxMultican_Status_notSentBusy)
+    {
+        if (txBusyGuard == 0u)
+        {
+            CanNm_TxTimeoutException();
+            return;
+        }
+        txBusyGuard--;
+    }
+}
+
+/*============================================================================*/
+/* Tx Timeout Exception Handler                                               */
+/*============================================================================*/
+static void CanNm_TxTimeoutException(void)
+{
+    /* AUTOSAR intent: on Tx timeout in Network Mode, re-enter Repeat Message
+     * and restart RepeatMessageTimer. */
+    if ((gs_CanNmState == CANNM_STATE_NORMAL_OPERATION) ||
+        (gs_CanNmState == CANNM_STATE_READY_SLEEP) ||
+        (gs_CanNmState == CANNM_STATE_REPEAT_MESSAGE))
+    {
+        CanNm_EnterState(CANNM_STATE_REPEAT_MESSAGE);
+    }
 }
 
 /*============================================================================*/
@@ -184,6 +216,12 @@ void CanNm_Init(void)
     gs_CanNmWaitBusSleepTimer = 0;
     gs_CanNmMsgCycleTimer     = 0;
     gs_CanNmImmediateTxCnt    = 0;
+
+    gs_CanNmExtRxCount = 0u;
+    gs_CanNmSelfFilteredCount = 0u;
+    gs_CanNmLastRxCanId = 0u;
+    gs_CanNmLastRxNodeId = 0u;
+    gs_CanNmLastRxCbv = 0u;
 }
 
 void CanNm_DeInit(void)
@@ -222,28 +260,37 @@ void CanNm_RxIndication(uint16 rxCanId, const uint8 *rxData)
 {
     uint8 rxNodeId;
     uint8 rxCbv;
+    uint8 repeatMsgBitSet;
 
     if (rxData == ((void *)0))
     {
         return;
     }
 
-    if (rxCanId != CANNM_NM_PDU_CAN_ID)
+    if (CANNM_IS_NM_CAN_ID(rxCanId) == FALSE)
     {
         return;
     }
 
     rxNodeId = rxData[0];
     rxCbv    = rxData[1];
+    repeatMsgBitSet = ((rxCbv & CANNM_CBV_REPEAT_MSG_REQUEST) != 0u) ? TRUE : FALSE;
+
+    gs_CanNmLastRxCanId = rxCanId;
+    gs_CanNmLastRxNodeId = rxNodeId;
+    gs_CanNmLastRxCbv = rxCbv;
 
     /* Ignore our own messages (loopback) */
     if (rxNodeId == CANNM_NODE_ID)
     {
+        gs_CanNmSelfFilteredCount++;
         return;
     }
 
+    gs_CanNmExtRxCount++;
+
     /* Handle Repeat Message Request */
-    if ((rxCbv & CANNM_CBV_REPEAT_MSG_REQUEST) != 0)
+    if (repeatMsgBitSet == TRUE)
     {
         gs_CanNmRepeatMsgRequested = TRUE;
     }
@@ -266,11 +313,45 @@ void CanNm_RxIndication(uint16 rxCanId, const uint8 *rxData)
         }
 
         case CANNM_STATE_REPEAT_MESSAGE:
-        case CANNM_STATE_NORMAL_OPERATION:
-        case CANNM_STATE_READY_SLEEP:
         {
             /* Restart NmTimeoutTimer */
             gs_CanNmTimeoutTimer = CANNM_T_NM_TIMEOUT;
+
+            /* AUTOSAR: Repeat Message Bit while in Repeat Message restarts
+             * RepeatMessageTimer. */
+            if (repeatMsgBitSet == TRUE)
+            {
+                gs_CanNmRepeatMsgTimer = CANNM_T_REPEAT_MESSAGE;
+            }
+            break;
+        }
+
+        case CANNM_STATE_NORMAL_OPERATION:
+        {
+            /* Restart NmTimeoutTimer */
+            gs_CanNmTimeoutTimer = CANNM_T_NM_TIMEOUT;
+
+            /* AUTOSAR: Repeat Message Bit in Normal Operation shall trigger
+             * transition to Repeat Message State. */
+            if (repeatMsgBitSet == TRUE)
+            {
+                CanNm_EnterState(CANNM_STATE_REPEAT_MESSAGE);
+            }
+            break;
+        }
+
+        case CANNM_STATE_READY_SLEEP:
+        {
+            /* AUTOSAR: in Network Mode (including Ready Sleep), RxIndication
+             * shall restart NmTimeoutTimer. */
+            gs_CanNmTimeoutTimer = CANNM_T_NM_TIMEOUT;
+
+            /* AUTOSAR: Repeat Message Bit in Ready Sleep triggers transition
+             * to Repeat Message State. */
+            if (repeatMsgBitSet == TRUE)
+            {
+                CanNm_EnterState(CANNM_STATE_REPEAT_MESSAGE);
+            }
             break;
         }
 
@@ -365,11 +446,12 @@ void CanNm_MainFunction(void)
                 CanNm_TransmitMessage();
             }
 
-            /* Check NmTimeoutTimer */
+            /* AUTOSAR CanNm: in Normal Operation, NmTimeout expiry shall not
+             * force transition to Prepare Bus-Sleep. Keep network mode active
+             * and restart NmTimeoutTimer. */
             if (gs_CanNmTimeoutTimer == 0)
             {
-                /* No NM messages from other nodes */
-                CanNm_EnterState(CANNM_STATE_PREPARE_BUS_SLEEP);
+                gs_CanNmTimeoutTimer = CANNM_T_NM_TIMEOUT;
             }
             break;
         }
@@ -445,4 +527,32 @@ void CanNm_RegisterSleepIndicationCbk(CanNm_SleepIndicationCbkType cbk)
 void CanNm_RegisterNetworkModeCbk(CanNm_NetworkModeIndicationCbkType cbk)
 {
     gs_pfNetworkModeCbk = cbk;
+}
+
+void CanNm_GetRxDebugInfo(uint32 *extRxCount,
+                          uint32 *selfFilteredCount,
+                          uint16 *lastCanId,
+                          uint8  *lastNodeId,
+                          uint8  *lastCbv)
+{
+    if (extRxCount != ((void *)0))
+    {
+        *extRxCount = gs_CanNmExtRxCount;
+    }
+    if (selfFilteredCount != ((void *)0))
+    {
+        *selfFilteredCount = gs_CanNmSelfFilteredCount;
+    }
+    if (lastCanId != ((void *)0))
+    {
+        *lastCanId = gs_CanNmLastRxCanId;
+    }
+    if (lastNodeId != ((void *)0))
+    {
+        *lastNodeId = gs_CanNmLastRxNodeId;
+    }
+    if (lastCbv != ((void *)0))
+    {
+        *lastCbv = gs_CanNmLastRxCbv;
+    }
 }

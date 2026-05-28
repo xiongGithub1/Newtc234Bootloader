@@ -342,7 +342,7 @@ void AppBL_init(void)
 
     /* init AUTOSAR CAN Network Management */
     CanNm_Init();
-    CanNm_NetworkRequest();
+    CanNm_NetworkRelease();
 
  dtcInit();
     initTime();
@@ -372,6 +372,7 @@ void AppBL_init(void)
 uint8 can_node1_error=0;
 void    AppUds_main(void)
 {
+    static uint8 nmTickDiv2 = 0u; /* AppUds_main is called every 0.5ms, divide to 1ms for CanNm tick */
     /* Dual Bank startup decision has been handled in Cpu0_Main.c via
      * Boot_DualBank_SelectAndJump(). If we reach here, both banks are
      * invalid or explicit bootloader mode is requested.
@@ -383,8 +384,12 @@ void    AppUds_main(void)
 
 	UdsMainProcess();
 	CanMainProcess();
-	   CanNm_SystemTickCtl();
-	   CanNm_MainFunction();
+       nmTickDiv2 ^= 1u;
+       if (nmTickDiv2 != 0u)
+       {
+           CanNm_SystemTickCtl();
+       }
+       CanNm_MainFunction();
 	dtcTestMainProc();
 
 	/* CAN bus error handling */
@@ -411,5 +416,4 @@ void    AppUds_main(void)
 
     return ;
 }
-
 

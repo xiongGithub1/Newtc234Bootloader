@@ -26,10 +26,8 @@
  /******************************************************************************/
 
 #include "Cpu0_Main.h"
-#include "MultiCAN.h"
-#include "Boot_DualBank.h"
-#include "did_dflash.h"
-#include "can_nm.h"
+#include "AppVadcScan.h"
+
 
 
 
@@ -39,6 +37,10 @@ uint32		g_BaseTime;
 uint32 		g_count2ms;		// 2ms计数器
 uint32 		g_count1ms;		// 1ms计数器
 tRxTxCanMsg txcanmsg;
+
+#define KL15_ADC_MAX_12BIT              (4095u)
+#define KL15_ADC_REQUEST_ON_THRESHOLD   (12.0f)
+#define KL15_ADC_REQUEST_OFF_THRESHOLD  (8.0f)
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
@@ -63,12 +65,14 @@ uint32 ResetStatus_Previous(void)
     return rststat;
 }
 
-uint8 num=10;
+uint8 num = 10;
+float kl15Value = 0;
+
 void MainProgram(void)
 {
 	static uint32 m_DetaTime = 0;
 	static boolean stage2Done = FALSE;
-	static boolean nmReleased = FALSE;
+	uint16 kl15Adc12bit;
 	//  测量多长时间执行一次while主循环标志20210129
     DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
     DetaTime.MainWhileTime.detatime = DetaTime.MainWhileTime.time1 - DetaTime.MainWhileTime.time2;
@@ -81,7 +85,14 @@ void MainProgram(void)
     	g_BaseTime += C_TIME_05MS;
     	g_LoopFlag ++;
         AppUds_main();
+        ADC_Scan_GetResult();
 
+        /* AN105 = Group1 Channel5 (KL15). Clamp to 12-bit range. */
+        kl15Adc12bit = (AnalogSample.AN105 > KL15_ADC_MAX_12BIT) ? KL15_ADC_MAX_12BIT : AnalogSample.AN105;
+        if(CanNmkey==1)
+        kl15Value = 5.0 * kl15Adc12bit * 0.00024414 * 0.1 * 78;
+        else
+        	kl15Value=0;
         /* Stage 2: Mark bank stable after 5 seconds of main loop running
          * (g_LoopFlag increments every 0.5ms, so 4000 = 2s).
          * Once stage 2 is passed, Bootloader treats subsequent resets as
@@ -92,25 +103,31 @@ void MainProgram(void)
             stage2Done = TRUE;
         }
 
-        /* After power-on, NM is active for ~2s to synchronize with the network,
-         * then release the network request to allow Bus-Sleep transition. */
-        if (!nmReleased && (g_LoopFlag >= 4000u))
+        /* KL15 local request with hysteresis to avoid request/release jitter. */
+        if ((kl15Value >= KL15_ADC_REQUEST_ON_THRESHOLD))
+        {
+            CanNm_NetworkRequest();
+            
+        }
+        else if ((kl15Value <= KL15_ADC_REQUEST_OFF_THRESHOLD))
         {
             CanNm_NetworkRelease();
-            nmReleased = TRUE;
         }
 
         /* brd */
 
     	if((g_LoopFlag % 1000) == 0)	// 500ms
-    	{
-    		txcanmsg.usRxTxDataId = 0x122;
-    		txcanmsg.aucDataBuf[0] = 1;
-    		txcanmsg.aucDataBuf[1] = 1;
-    		txcanmsg.aucDataBuf[2] = 1;
-    		txcanmsg.aucDataBuf[3] = 1;
-    		txcanmsg.aucDataBuf[4] = 1;
-    		drv_can1_send(&txcanmsg);
+        {
+            if (CanNm_IsNetworkRequested() == TRUE)
+    		{
+    			txcanmsg.usRxTxDataId = 0x122;
+    			txcanmsg.aucDataBuf[0] = 1;
+    			txcanmsg.aucDataBuf[1] = 1;
+    			txcanmsg.aucDataBuf[2] = 1;
+    			txcanmsg.aucDataBuf[3] = 1;
+    			txcanmsg.aucDataBuf[4] = 1;
+    			drv_can1_send(&txcanmsg);
+    		}
     	}
 
 
@@ -192,7 +209,10 @@ void core0_main(void)
     /* === APP Phase: Main Loop Running === */
     g_appPhase = APP_PHASE_RUN;
     g_BaseTime = Stm_GetSystemClock();
+    AppVadcQueue_init();            //ADC队列初始化
+	VadcAutoScanChannel_init();     //ADC扫描初始化
     IfxCpu_enableInterrupts();
+
     while (TRUE)
     {
         MainProgram();

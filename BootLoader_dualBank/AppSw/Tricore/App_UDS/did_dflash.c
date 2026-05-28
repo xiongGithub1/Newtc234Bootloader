@@ -199,7 +199,9 @@ boolean DID_DFlash_Write(uint16 offset, const uint8* data, uint16 length)
 
 boolean DID_DFlash_WriteF15A(const uint8* fingerprint)
 {
-    uint8 buf[FINGERPRINT_RECORD_SIZE];
+    /* Size padded to 72 bytes (multiple of DFLASH_PAGE_LENGTH=8) to prevent
+     * buffer overread in the write loop when i=64 reads up to index 71. */
+    uint8 buf[72];
     uint32 pageData[2];
     uint32 addr;
     uint8 i;

@@ -1,30 +1,31 @@
 /******************************************************************************
 
-                  °æÈ¨ËùÓĞ (C), 2020-2030, ÖØÇìºÍÌìµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+                  ç‰ˆæƒæ‰€æœ‰ (C), 2020-2030, é‡åº†å’Œå¤©ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
 
  ******************************************************************************
-  ÎÄ ¼ş Ãû  : MultiCAN.c
-  °æ ±¾ ºÅ  : ³õ¸å
-  ×÷    Õß    :
-  Éú³ÉÈÕÆÚ : 2021Äê10ÔÂ15ÈÕ
-  ×î½üĞŞ¸Ä :
-  ¹¦ÄÜÃèÊö : CANÍ¨Ñ¶³õÊ¼»¯Ïà¹ØÉèÖÃ
-  º¯ÊıÁĞ±í :
-  ĞŞ¸ÄÀúÊ· :
-  1.ÈÕ    ÆÚ  :
-  2.×÷    Õß  :
-    ĞŞ¸ÄÄÚÈİ   :20221210 Ôö¼ÓÁËCANFD½Úµã³õÊ¼»¯µÄº¯Êı£¬CANFD½ÓÊÕÖĞ¶ÏµÄº¯Êı£¬CANFDÊı¾İ·¢ËÍ³õÊ¼
-    »¯º¯Êı£¬ÔÚÄ£¿é³õÊ¼»¯º¯ÊıÀïÔö¼ÓÁËCANºÍCANFDµÄÑ¡ÔñÏî£¬Ôö¼ÓÁËCANFD·¢ËÍºÍ½ÓÊÕµÄID¶¨Òå¡£Ôø¾ü
-  20221212Èç¹ûÒªÔÚCANFDÖĞÖ»·¢ËÍ8¸ö×Ö½ÚµÄÊı¾İ£¬ÄÇÃ´¾ÍĞèÒªÔÚCANFD³õÊ¼»¯º¯Êıvoid
-  CAN_TLE9252_config_node0_CANFD(void)ÖĞ£¬°Ñ·¢ËÍ×Ö½Ú³¤¶ÈcanMsgObjConfig.control.messageLen
-  = IfxMultican_DataLengthCode_32;¸ÄÎªIfxMultican_DataLengthCode_8;È»ºóÔÙ¸ÄÆäËüµÄ¡£
+  æ–‡ ä»¶ å  : MultiCAN.c
+  ç‰ˆ æœ¬ å·  : åˆç¨¿
+  ä½œ    è€…    :
+  ç”Ÿæˆæ—¥æœŸ : 2021å¹´10æœˆ15æ—¥
+  æœ€è¿‘ä¿®æ”¹ :
+  åŠŸèƒ½æè¿° : CANé€šè®¯åˆå§‹åŒ–ç›¸å…³è®¾ç½®
+  å‡½æ•°åˆ—è¡¨ :
+  ä¿®æ”¹å†å² :
+  1.æ—¥    æœŸ  :
+  2.ä½œ    è€…  :
+    ä¿®æ”¹å†…å®¹   :20221210 å¢åŠ äº†CANFDèŠ‚ç‚¹åˆå§‹åŒ–çš„å‡½æ•°ï¼ŒCANFDæ¥æ”¶ä¸­æ–­çš„å‡½æ•°ï¼ŒCANFDæ•°æ®å‘é€åˆå§‹
+    åŒ–å‡½æ•°ï¼Œåœ¨æ¨¡å—åˆå§‹åŒ–å‡½æ•°é‡Œå¢åŠ äº†CANå’ŒCANFDçš„é€‰æ‹©é¡¹ï¼Œå¢åŠ äº†CANFDå‘é€å’Œæ¥æ”¶çš„IDå®šä¹‰ã€‚æ›¾å†›
+  20221212å¦‚æœè¦åœ¨CANFDä¸­åªå‘é€8ä¸ªå­—èŠ‚çš„æ•°æ®ï¼Œé‚£ä¹ˆå°±éœ€è¦åœ¨CANFDåˆå§‹åŒ–å‡½æ•°void
+  CAN_TLE9252_config_node0_CANFD(void)ä¸­ï¼ŒæŠŠå‘é€å­—èŠ‚é•¿åº¦canMsgObjConfig.control.messageLen
+  = IfxMultican_DataLengthCode_32;æ”¹ä¸ºIfxMultican_DataLengthCode_8;ç„¶åå†æ”¹å…¶å®ƒçš„ã€‚
 ******************************************************************************/
 
 
 /*****************************************************************************/
-/*----------------------------------°üº¬Í·ÎÄ¼ş--------------------------------*/
+/*----------------------------------åŒ…å«å¤´æ–‡ä»¶--------------------------------*/
 /*****************************************************************************/
 #include "MultiCAN.h"
+#include "can_nm.h"
 
 
 
@@ -63,39 +64,39 @@ IfxMultican_Message Node1Readmsg;	//9251
 
 
 /***************************************************************
- º¯ÊıÃû³Æ£º void Multican_init(void)
- ÊäÈë±äÁ¿£º
- Êä³ö±äÁ¿£º
- º¯Êı×¢ÊÍ£º CAN³õÊ¼»¯µÄ²½ÖèÊÇ£ºÔø¾ü20201228
- * 1¡¢CANÄ£¿éÅäÖÃ
- * 2¡¢CANÄ£¿é³õÊ¼»¯
- * 3¡¢CAN½ÚµãÅäÖÃ
- * 4¡¢CAN½Úµã³õÊ¼»¯
- * 5¡¢CANÏûÏ¢¶ÔÏóÅäÖÃ
- * 6¡¢CANÏûÏ¢¶ÔÏó³õÊ¼»¯
- * CAN1²ÉÓÃ²éÑ¯·½Ê½£¬Òò´Ë£¬´Ë´¦ÔİÊ±²»ÓÃÉèÖÃÖĞ¶ÏÓÅÏÈ¼¶¼°·şÎñ
+ å‡½æ•°åç§°ï¼š void Multican_init(void)
+ è¾“å…¥å˜é‡ï¼š
+ è¾“å‡ºå˜é‡ï¼š
+ å‡½æ•°æ³¨é‡Šï¼š CANåˆå§‹åŒ–çš„æ­¥éª¤æ˜¯ï¼šæ›¾å†›20201228
+ * 1ã€CANæ¨¡å—é…ç½®
+ * 2ã€CANæ¨¡å—åˆå§‹åŒ–
+ * 3ã€CANèŠ‚ç‚¹é…ç½®
+ * 4ã€CANèŠ‚ç‚¹åˆå§‹åŒ–
+ * 5ã€CANæ¶ˆæ¯å¯¹è±¡é…ç½®
+ * 6ã€CANæ¶ˆæ¯å¯¹è±¡åˆå§‹åŒ–
+ * CAN1é‡‡ç”¨æŸ¥è¯¢æ–¹å¼ï¼Œå› æ­¤ï¼Œæ­¤å¤„æš‚æ—¶ä¸ç”¨è®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§åŠæœåŠ¡
  **************************************************************/
 void Multican_init(void)
 {
-    /* create module config */                                                 // ´´½¨CANÄ£¿é
+    /* create module config */                                                 // åˆ›å»ºCANæ¨¡å—
     IfxMultican_Can_Config canConfig;
-    IfxMultican_Can_initModuleConfig(&canConfig, &MODULE_CAN);                 // ³õÊ¼»¯CANÄ£¿éÅäÖÃ
+    IfxMultican_Can_initModuleConfig(&canConfig, &MODULE_CAN);                 // åˆå§‹åŒ–CANæ¨¡å—é…ç½®
 
-    /* Set up the service request node,less than 16*/                          // ÉèÖÃÖĞ¶Ï·şÎñÇëÇó½Úµã£¬ĞëÉÙÓÚ16¸ö£¬ÏÂÃæ¹²ÉèÖÃÁË4¸ö½ÚµãÖ¸Õë
+    /* Set up the service request node,less than 16*/                          // è®¾ç½®ä¸­æ–­æœåŠ¡è¯·æ±‚èŠ‚ç‚¹ï¼Œé¡»å°‘äº16ä¸ªï¼Œä¸‹é¢å…±è®¾ç½®äº†4ä¸ªèŠ‚ç‚¹æŒ‡é’ˆ
     canConfig.nodePointer[IfxMultican_SrcId_1].priority = ISR_PRIORITY_CAN0_RX;// CAN0 RX interrupt priority
     canConfig.nodePointer[IfxMultican_SrcId_1].typeOfService = IfxSrc_Tos_cpu0;// Interrupt service type: CPU0
-    canConfig.nodePointer[IfxMultican_SrcId_2].priority = ISR_PRIORITY_CAN0_ER;// CAN0 node0´íÎóÖĞ¶Ï   busoff ÖĞ¶ÏÓÅÏÈ¼¶
-    canConfig.nodePointer[IfxMultican_SrcId_2].typeOfService = IfxSrc_Tos_cpu0;// ÖĞ¶Ï·şÎñÀàĞÍ£¬ CPUÖĞ¶ÏÏìÓ¦
-    // CAN1²ÉÓÃ²éÑ¯·½Ê½£¬Òò´Ë£¬´Ë´¦ÔİÊ±²»ÓÃÉèÖÃÖĞ¶ÏÓÅÏÈ¼¶¼°·şÎñ
+    canConfig.nodePointer[IfxMultican_SrcId_2].priority = ISR_PRIORITY_CAN0_ER;// CAN0 node0é”™è¯¯ä¸­æ–­   busoff ä¸­æ–­ä¼˜å…ˆçº§
+    canConfig.nodePointer[IfxMultican_SrcId_2].typeOfService = IfxSrc_Tos_cpu0;// ä¸­æ–­æœåŠ¡ç±»å‹ï¼Œ CPUä¸­æ–­å“åº”
+    // CAN1é‡‡ç”¨æŸ¥è¯¢æ–¹å¼ï¼Œå› æ­¤ï¼Œæ­¤å¤„æš‚æ—¶ä¸ç”¨è®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§åŠæœåŠ¡
     canConfig.nodePointer[IfxMultican_SrcId_3].priority = ISR_PRIORITY_CAN1_RX;// CAN1 RX interrupt priority
     canConfig.nodePointer[IfxMultican_SrcId_3].typeOfService = IfxSrc_Tos_cpu0;
-	canConfig.nodePointer[IfxMultican_SrcId_4].priority = ISR_PRIORITY_CAN1_ER;// CAN1´íÎóÖĞ¶Ï   busoff
+	canConfig.nodePointer[IfxMultican_SrcId_4].priority = ISR_PRIORITY_CAN1_ER;// CAN1é”™è¯¯ä¸­æ–­   busoff
 	canConfig.nodePointer[IfxMultican_SrcId_4].typeOfService = IfxSrc_Tos_cpu0;
 
     /* initialize module */
-    IfxMultican_Can_initModule(&g_MulticanBasic.drivers.can, &canConfig);       // ³õÊ¼»¯CANÄ£¿é
+    IfxMultican_Can_initModule(&g_MulticanBasic.drivers.can, &canConfig);       // åˆå§‹åŒ–CANæ¨¡å—
 
-    CAN_TLE9251_config_node1();                                                 // ½Úµã1ÅäÖÃÎªÆÕÍ¨CAN
+    CAN_TLE9251_config_node1();                                                 // èŠ‚ç‚¹1é…ç½®ä¸ºæ™®é€šCAN
 
 	CAN_TLE9252_config_node0();
 
@@ -107,51 +108,51 @@ void Multican_init(void)
 }
 
 /***************************************************************
- º¯ÊıÃû³Æ£º void CAN_TLE9251_config_node1(void)
- ÊäÈë±äÁ¿£º
- Êä³ö±äÁ¿£º
- º¯Êı×¢ÊÍ£º TLE9251 ½Úµã1ÅäÖÃ¼°³õÊ¼»¯£¬ÏûÏ¢¶ÔÏóÅäÖÃ¼°³õÊ¼»¯
+ å‡½æ•°åç§°ï¼š void CAN_TLE9251_config_node1(void)
+ è¾“å…¥å˜é‡ï¼š
+ è¾“å‡ºå˜é‡ï¼š
+ å‡½æ•°æ³¨é‡Šï¼š TLE9251 èŠ‚ç‚¹1é…ç½®åŠåˆå§‹åŒ–ï¼Œæ¶ˆæ¯å¯¹è±¡é…ç½®åŠåˆå§‹åŒ–
  **************************************************************/
-void CAN_TLE9251_config_node1(void)   // tle9251ÅäÖÃÎªCAN½Úµã1£¬Ôø¾ü20201228
+void CAN_TLE9251_config_node1(void)   // tle9251é…ç½®ä¸ºCANèŠ‚ç‚¹1ï¼Œæ›¾å†›20201228
 {
-	/* create CAN node config */                                                    // ´´½¨½ÚµãÅäÖÃ
+	/* create CAN node config */                                                    // åˆ›å»ºèŠ‚ç‚¹é…ç½®
     IfxMultican_Can_NodeConfig canNodeConfig;
     IfxMultican_Can_Node_initConfig(&canNodeConfig, &g_MulticanBasic.drivers.can);
 
     {  //node1
-    	canNodeConfig.baudrate  = CAN2_TLE9251V_BAUDRATE;     // 500 KBaud          // ¸ü¸Ä²¨ÌØÂÊÎª 500K
-        canNodeConfig.nodeId    = (IfxMultican_NodeId)((int)IfxMultican_NodeId_1);  // ¶¨Òå½Úµã ID
-        canNodeConfig.rxPin     = &CAN2_RXD_IO_CONFIG;                      		// Ö¸¶¨½ÓÊÕ¶ÔÓ¦µÄMCUÕë½Å
-        canNodeConfig.rxPinMode = IfxPort_InputMode_pullUp;                         // Ö¸¶¨Õë½ÅÊäÈëÄ£Ê½Îª½ÓÉÏÀ­µç×è
-        canNodeConfig.txPin     = &CAN2_TXD_IO_CONFIG;                      		// Ö¸¶¨·¢ËÍ¶ÔÓ¦µÄMCUÕë½Å
-        canNodeConfig.txPinMode = IfxPort_OutputMode_pushPull;                      // Ö¸¶¨Êä³öÄ£Ê½ÎªÍÆÍìÊ½
-        // tle9251½ÓÊÕ²»ÓÃÖĞ¶ÏĞÎÊ½£¬¶øÓÃ²éÑ¯·½Ê½£¬Òò´ËÕâÀï½ûÖ¹ÖĞ¶Ï
-//    	canNodeConfig.alertInterrupt.enabled = TRUE;                              	// Ê¹ÄÜ¾¯¸æÖĞ¶Ï
-//    	canNodeConfig.alertInterrupt.srcId   = IfxMultican_SrcId_4;               	// Ö¸¶¨´íÎóÖĞ¶ÏµÄÖĞ¶ÏID
+    	canNodeConfig.baudrate  = CAN2_TLE9251V_BAUDRATE;     // 500 KBaud          // æ›´æ”¹æ³¢ç‰¹ç‡ä¸º 500K
+        canNodeConfig.nodeId    = (IfxMultican_NodeId)((int)IfxMultican_NodeId_1);  // å®šä¹‰èŠ‚ç‚¹ ID
+        canNodeConfig.rxPin     = &CAN2_RXD_IO_CONFIG;                      		// æŒ‡å®šæ¥æ”¶å¯¹åº”çš„MCUé’ˆè„š
+        canNodeConfig.rxPinMode = IfxPort_InputMode_pullUp;                         // æŒ‡å®šé’ˆè„šè¾“å…¥æ¨¡å¼ä¸ºæ¥ä¸Šæ‹‰ç”µé˜»
+        canNodeConfig.txPin     = &CAN2_TXD_IO_CONFIG;                      		// æŒ‡å®šå‘é€å¯¹åº”çš„MCUé’ˆè„š
+        canNodeConfig.txPinMode = IfxPort_OutputMode_pushPull;                      // æŒ‡å®šè¾“å‡ºæ¨¡å¼ä¸ºæ¨æŒ½å¼
+        // tle9251æ¥æ”¶ä¸ç”¨ä¸­æ–­å½¢å¼ï¼Œè€Œç”¨æŸ¥è¯¢æ–¹å¼ï¼Œå› æ­¤è¿™é‡Œç¦æ­¢ä¸­æ–­
+//    	canNodeConfig.alertInterrupt.enabled = TRUE;                              	// ä½¿èƒ½è­¦å‘Šä¸­æ–­
+//    	canNodeConfig.alertInterrupt.srcId   = IfxMultican_SrcId_4;               	// æŒ‡å®šé”™è¯¯ä¸­æ–­çš„ä¸­æ–­ID
 
-        IfxMultican_Can_Node_init(&g_MulticanBasic.drivers.canNode1, &canNodeConfig); // ³õÊ¼»¯CAN½Úµã
+        IfxMultican_Can_Node_init(&g_MulticanBasic.drivers.canNode1, &canNodeConfig); // åˆå§‹åŒ–CANèŠ‚ç‚¹
     }
 
-    // ½Úµã1 CAN½ÓÊÕµÄÏûÏ¢¶ÔÏóÅäÖÃ
+    // èŠ‚ç‚¹1 CANæ¥æ”¶çš„æ¶ˆæ¯å¯¹è±¡é…ç½®
     {	//node1 msg1 of data receive
         /* create message object config */	//CAN Node 1
-        IfxMultican_Can_MsgObjConfig canMsgObjConfig;                               // ´´½¨ÏûÏ¢¶ÔÏóÅäÖÃ
+        IfxMultican_Can_MsgObjConfig canMsgObjConfig;                               // åˆ›å»ºæ¶ˆæ¯å¯¹è±¡é…ç½®
         IfxMultican_Can_MsgObj_initConfig(&canMsgObjConfig, &g_MulticanBasic.drivers.canNode1);
         canMsgObjConfig.msgObjId              = 1;
         canMsgObjConfig.messageId             = CAN1_MO_RXPDU_ID;
         canMsgObjConfig.acceptanceMask        = CAN_MO_RXPDU_Msk;
         canMsgObjConfig.frame                 = IfxMultican_Frame_receive;
         canMsgObjConfig.control.messageLen    = IfxMultican_DataLengthCode_8;
-        canMsgObjConfig.control.extendedFrame = FALSE;//¸ÄÎª±ê×¼Ö¡-20240816
+        canMsgObjConfig.control.extendedFrame = FALSE;//æ”¹ä¸ºæ ‡å‡†å¸§-20240816
         canMsgObjConfig.control.matchingId    = TRUE;
-        canMsgObjConfig.control.fastBitRate   = FALSE;		//Êı¾İÖ¡µÄ¿ìËÙ²¨ÌØÂÊÊ¹ÄÜ
+        canMsgObjConfig.control.fastBitRate   = FALSE;		//æ•°æ®å¸§çš„å¿«é€Ÿæ³¢ç‰¹ç‡ä½¿èƒ½
         canMsgObjConfig.rxInterrupt.enabled   = TRUE;
         canMsgObjConfig.rxInterrupt.srcId     = IfxMultican_SrcId_3;
         /* initialize message object */
         IfxMultican_Can_MsgObj_init(&g_MulticanBasic.drivers.canNode1MsgObjRx, &canMsgObjConfig);
     }
 
-    // ½Úµã1 CAN·¢ËÍµÄÏûÏ¢¶ÔÏóÅäÖÃ
+    // èŠ‚ç‚¹1 CANå‘é€çš„æ¶ˆæ¯å¯¹è±¡é…ç½®
     {	//node1 msg0 of data transmit
         /* create message object config */
         IfxMultican_Can_MsgObjConfig canMsgObjConfig;
@@ -161,9 +162,9 @@ void CAN_TLE9251_config_node1(void)   // tle9251ÅäÖÃÎªCAN½Úµã1£¬Ôø¾ü20201228
         canMsgObjConfig.acceptanceMask        = CAN_MO_TXPDU_Msk;
         canMsgObjConfig.frame                 = IfxMultican_Frame_transmit;
         canMsgObjConfig.control.messageLen    = IfxMultican_DataLengthCode_8;
-        canMsgObjConfig.control.extendedFrame = FALSE;//¸ÄÎª±ê×¼Ö¡-20240816
+        canMsgObjConfig.control.extendedFrame = FALSE;//æ”¹ä¸ºæ ‡å‡†å¸§-20240816
         canMsgObjConfig.control.matchingId    = TRUE;
-        canMsgObjConfig.control.fastBitRate   = FALSE;		//Êı¾İÖ¡µÄ¿ìËÙ²¨ÌØÂÊÊ¹ÄÜ
+        canMsgObjConfig.control.fastBitRate   = FALSE;		//æ•°æ®å¸§çš„å¿«é€Ÿæ³¢ç‰¹ç‡ä½¿èƒ½
         /* initialize message object */
         IfxMultican_Can_MsgObj_init(&g_MulticanBasic.drivers.canNode1MsgObjTx, &canMsgObjConfig);
     }
@@ -173,9 +174,9 @@ void CAN_TLE9251_config_node1(void)   // tle9251ÅäÖÃÎªCAN½Úµã1£¬Ôø¾ü20201228
 }
 
 
-void CAN_TLE9252_config_node0(void)         // tle9252ÅäÖÃÎªCAN½Úµã0£¬Ôø¾ü20201228
+void CAN_TLE9252_config_node0(void)         // tle9252é…ç½®ä¸ºCANèŠ‚ç‚¹0ï¼Œæ›¾å†›20201228
 {
-    /* create CAN node config */            // CAN½ÚµãÅäÖÃ
+    /* create CAN node config */            // CANèŠ‚ç‚¹é…ç½®
     IfxMultican_Can_NodeConfig canNodeConfig;
     IfxMultican_Can_Node_initConfig(&canNodeConfig, &g_MulticanBasic.drivers.can);
 
@@ -187,7 +188,7 @@ void CAN_TLE9252_config_node0(void)         // tle9252ÅäÖÃÎªCAN½Úµã0£¬Ôø¾ü202012
         canNodeConfig.txPin     = &CAN1_TXD_IO_CONFIG;
         canNodeConfig.txPinMode = IfxPort_OutputMode_pushPull;
 
-        // ´íÎóÖĞ¶Ï
+        // é”™è¯¯ä¸­æ–­
 //        canNodeConfig.alertInterrupt.enabled = TRUE;
 //        canNodeConfig.alertInterrupt.srcId = IfxMultican_SrcId_2;
 
@@ -209,15 +210,15 @@ void CAN_TLE9252_config_node0(void)         // tle9252ÅäÖÃÎªCAN½Úµã0£¬Ôø¾ü202012
 			canMsgObjConfig.frame                 = IfxMultican_Frame_transmit;
 			canMsgObjConfig.control.messageLen    = IfxMultican_DataLengthCode_8;
 			canMsgObjConfig.control.extendedFrame = FALSE;
-			canMsgObjConfig.control.matchingId    = TRUE;		//½ÓÊÕÊ±£¬ÊÇ·ñÆ¥ÅäIDEÎ»(±ê×¼»òÕßÀ©Õ¹Ö¡) Èç¹ûÎªFALSEÔò¶¼¿É½ÓÊÕ
-			canMsgObjConfig.control.fastBitRate   = FALSE;		//Êı¾İÖ¡µÄ¿ìËÙ²¨ÌØÂÊÊ¹ÄÜ
+			canMsgObjConfig.control.matchingId    = TRUE;		//æ¥æ”¶æ—¶ï¼Œæ˜¯å¦åŒ¹é…IDEä½(æ ‡å‡†æˆ–è€…æ‰©å±•å¸§) å¦‚æœä¸ºFALSEåˆ™éƒ½å¯æ¥æ”¶
+			canMsgObjConfig.control.fastBitRate   = FALSE;		//æ•°æ®å¸§çš„å¿«é€Ÿæ³¢ç‰¹ç‡ä½¿èƒ½
 
 			// initialize message object
 			IfxMultican_Can_MsgObj_init(&g_MulticanBasic.drivers.canNode0MsgTx2[i], &canMsgObjConfig);
 		}
     }
 
-    // ½Úµã0 CAN½ÓÊÕµÄÏûÏ¢¶ÔÏóÅäÖÃ
+    // èŠ‚ç‚¹0 CANæ¥æ”¶çš„æ¶ˆæ¯å¯¹è±¡é…ç½®
     {	//node0 msg1 of data receive
         /* create message object config */
 		IfxMultican_Can_MsgObjConfig canMsgObjConfig;
@@ -225,14 +226,21 @@ void CAN_TLE9252_config_node0(void)         // tle9252ÅäÖÃÎªCAN½Úµã0£¬Ôø¾ü202012
 
 		for(uint8 j = 0; j < CanRxFrm9252Num; j++)
 		{
-			canMsgObjConfig.msgObjId              = CanRxFrm_9252_InitTab[j].msgObjId; //¿Õ³öÁ½¸öMO×÷ÎªÉÏÒ»¸öMOµÄCANFDµÄtopÓëbottomÊı¾İ¿Õ¼ä
+			canMsgObjConfig.msgObjId              = CanRxFrm_9252_InitTab[j].msgObjId; //ç©ºå‡ºä¸¤ä¸ªMOä½œä¸ºä¸Šä¸€ä¸ªMOçš„CANFDçš„topä¸bottomæ•°æ®ç©ºé—´
 			canMsgObjConfig.messageId             = CanRxFrm_9252_InitTab[j].messageId;
-			canMsgObjConfig.acceptanceMask        = 0x7FFFFFFFUL;
+			if (CanRxFrm_9252_InitTab[j].messageId == CANNM_NM_PDU_CAN_ID_BASE)
+			{
+				canMsgObjConfig.acceptanceMask = CANNM_NM_PDU_CAN_ID_MASK; /* 0x600-0x6FF */
+			}
+			else
+			{
+				canMsgObjConfig.acceptanceMask = 0x7FFFFFFFUL;
+			}
 			canMsgObjConfig.frame                 = IfxMultican_Frame_receive;
 			canMsgObjConfig.control.messageLen    = IfxMultican_DataLengthCode_8;
 			canMsgObjConfig.control.extendedFrame = FALSE;
-			canMsgObjConfig.control.matchingId    = TRUE;		//½ÓÊÕÊ±£¬ÊÇ·ñÆ¥ÅäIDEÎ»(±ê×¼»òÕßÀ©Õ¹Ö¡) Èç¹ûÎªFALSEÔò¶¼¿É½ÓÊÕ
-			canMsgObjConfig.control.fastBitRate   = FALSE;		//Êı¾İÖ¡µÄ¿ìËÙ²¨ÌØÂÊÊ¹ÄÜ
+			canMsgObjConfig.control.matchingId    = TRUE;		//æ¥æ”¶æ—¶ï¼Œæ˜¯å¦åŒ¹é…IDEä½(æ ‡å‡†æˆ–è€…æ‰©å±•å¸§) å¦‚æœä¸ºFALSEåˆ™éƒ½å¯æ¥æ”¶
+			canMsgObjConfig.control.fastBitRate   = FALSE;		//æ•°æ®å¸§çš„å¿«é€Ÿæ³¢ç‰¹ç‡ä½¿èƒ½
 			canMsgObjConfig.rxInterrupt.enabled     = TRUE;
 			canMsgObjConfig.rxInterrupt.srcId       = IfxMultican_SrcId_1;
 

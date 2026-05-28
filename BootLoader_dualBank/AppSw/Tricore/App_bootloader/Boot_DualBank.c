@@ -211,8 +211,10 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t* flags)
     uint32 pageCnt;
     uint16 wdtPwd = IfxScuWdt_getCpuWatchdogPassword();
 
-    /* Backup F15A fingerprint before erase (if it exists beyond flag area) */
-    uint8 f15aBackup[FINGERPRINT_RECORD_SIZE];
+    /* Backup F15A fingerprint before erase (if it exists beyond flag area).
+     * Array size padded to 72 bytes (next multiple of DFLASH_PAGE_LENGTH=8)
+     * to prevent buffer overread when i=64 in the restore loop. */
+    uint8 f15aBackup[72];
     uint8 f15aValid = FALSE;
     {
         const uint8* pF15A = (const uint8*)DFLASH_F15A_FINGERPRINT_ADDR;

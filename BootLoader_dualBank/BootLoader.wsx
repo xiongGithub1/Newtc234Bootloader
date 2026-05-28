@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <stg format="2.0">
-	<OriginalWsp type="string">BootLoader_dualBank.wsx</OriginalWsp>
-	<BackupWspFlag type="flag">1</BackupWspFlag>
+	<OriginalWsp type="string">BootLoader.wsx</OriginalWsp>
+	<BackupWspFlag type="flag">0</BackupWspFlag>
 	<ProdInfo type="bin" size="52">vQTv/gAAAQAKAAMA4SADAAEA5QcAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo>
 	<ProdInfoString type="string">2021</ProdInfoString>
-	<CreationDate type="string">21.05.2026 17:13:35:000</CreationDate>
-	<LastWriteDate type="string">21.05.2026 17:47:27:000</LastWriteDate>
-	<UseWspCnt type="int">1</UseWspCnt>
+	<CreationDate type="string">27.05.2026 14:47:06:000</CreationDate>
+	<LastWriteDate type="string">27.05.2026 15:33:40:000</LastWriteDate>
 	<MainFrame type="key">
 		<NETPlacementRoot type="key">
 			<FormsData type="innerxml">
 				<FormsData>
 					<Bounds>
-						<X>207</X>
-						<Y>105</Y>
-						<Width>977</Width>
-						<Height>942</Height>
+						<X>26</X>
+						<Y>26</Y>
+						<Width>1112</Width>
+						<Height>671</Height>
 					</Bounds>
 					<ClientSize>
-						<Width>961</Width>
-						<Height>903</Height>
+						<Width>1104</Width>
+						<Height>640</Height>
 					</ClientSize>
-					<State>Maximized</State>
+					<State>Normal</State>
 				</FormsData>
 			</FormsData>
 			<UniqueControlIdDockingManagerControlData type="innerxml">
@@ -30,43 +29,7 @@
 					<DocumentDockStyle>Top</DocumentDockStyle>
 					<DockingControls>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>4</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>true</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW00</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>3</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW01</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>866</DockedDimension>
+							<DockedDimension>431</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Left</DockingType>
 							<FloatingBounds>
@@ -80,13 +43,13 @@
 							<DockingIndex>0</DockingIndex>
 							<PanelIndex>0</PanelIndex>
 							<ContainerType>DockPanel</ContainerType>
-							<Selected>true</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDESymbolExplWin.OPEN_VIEW</UniqueIdentifier>
+							<Selected>false</Selected>
+							<UniqueIdentifier>MainFrame.StdTargetManagerWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>892</DockedDimension>
+							<DockedDimension>737</DockedDimension>
 							<Cancelled>false</Cancelled>
-							<DockingType>Right</DockingType>
+							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
 								<X>0</X>
 								<Y>0</Y>
@@ -99,12 +62,12 @@
 							<PanelIndex>0</PanelIndex>
 							<ContainerType>DockPanel</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEWatchWin.OPEN_VIEW00</UniqueIdentifier>
+							<UniqueIdentifier>MainFrame.StdUDEMessageWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
+							<DockedDimension>365</DockedDimension>
 							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
+							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
 								<X>0</X>
 								<Y>0</Y>
@@ -113,11 +76,11 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>2</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
+							<DockingIndex>1</DockingIndex>
+							<PanelIndex>0</PanelIndex>
+							<ContainerType>DockPanel</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW02</UniqueIdentifier>
+							<UniqueIdentifier>MainFrame.UDEProgressWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
@@ -135,7 +98,7 @@
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW03</UniqueIdentifier>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW00</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
@@ -152,8 +115,26 @@
 							<DockingIndex>0</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW04</UniqueIdentifier>
+							<Selected>true</Selected>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW01</UniqueIdentifier>
+						</UniqueControlIdDockingControlData>
+						<UniqueControlIdDockingControlData>
+							<DockedDimension>289</DockedDimension>
+							<Cancelled>false</Cancelled>
+							<DockingType>Left</DockingType>
+							<FloatingBounds>
+								<X>0</X>
+								<Y>0</Y>
+								<Width>0</Width>
+								<Height>0</Height>
+							</FloatingBounds>
+							<AutoHide>false</AutoHide>
+							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
+							<DockingIndex>1</DockingIndex>
+							<PanelIndex>0</PanelIndex>
+							<ContainerType>DockPanel</ContainerType>
+							<Selected>true</Selected>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDESymbolExplWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 					</DockingControls>
 					<LeftDockingContainerControlData>
@@ -165,7 +146,7 @@
 					<RightDockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>478</Dimension>
+							<Dimension>200</Dimension>
 						</DockingContainerControlData>
 					</RightDockingContainerControlData>
 					<TopDockingContainerControlData>
@@ -177,7 +158,7 @@
 					<BottomDockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>171</Dimension>
+							<Dimension>200</Dimension>
 						</DockingContainerControlData>
 					</BottomDockingContainerControlData>
 					<TabbedDocumentContainerControlData>
@@ -210,7 +191,7 @@
 						<PanelBounds>
 							<X>0</X>
 							<Y>0</Y>
-							<Width>1920</Width>
+							<Width>1104</Width>
 							<Height>100</Height>
 						</PanelBounds>
 						<ToolBars>
@@ -241,7 +222,7 @@
 									<Width>111</Width>
 									<Height>25</Height>
 								</Bounds>
-								<Name>Window Toolbar</Name>
+								<Name>Show Toolbar</Name>
 								<AlwaysUnvisible>false</AlwaysUnvisible>
 								<Visible>false</Visible>
 								<ToolItemData>
@@ -258,7 +239,7 @@
 								<Bounds>
 									<X>0</X>
 									<Y>0</Y>
-									<Width>1920</Width>
+									<Width>1104</Width>
 									<Height>25</Height>
 								</Bounds>
 								<Name>Platform Main Menu</Name>
@@ -358,7 +339,7 @@
 									<Width>111</Width>
 									<Height>25</Height>
 								</Bounds>
-								<Name>Show Toolbar</Name>
+								<Name>Window Toolbar</Name>
 								<AlwaysUnvisible>false</AlwaysUnvisible>
 								<Visible>false</Visible>
 								<ToolItemData>
@@ -984,8 +965,8 @@
 					<BottomContainer>
 						<PanelBounds>
 							<X>0</X>
-							<Y>992</Y>
-							<Width>1920</Width>
+							<Y>615</Y>
+							<Width>1104</Width>
 							<Height>25</Height>
 						</PanelBounds>
 						<ToolBars>
@@ -993,7 +974,7 @@
 								<Bounds>
 									<X>0</X>
 									<Y>0</Y>
-									<Width>1920</Width>
+									<Width>1104</Width>
 									<Height>25</Height>
 								</Bounds>
 								<Name>Platform Status Bar</Name>
@@ -1024,7 +1005,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Core0 halted by reset</Text>
+										<Text>Core0 connect in progress...</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1044,16 +1025,16 @@
 							<X>0</X>
 							<Y>100</Y>
 							<Width>0</Width>
-							<Height>892</Height>
+							<Height>515</Height>
 						</PanelBounds>
 						<ToolBars></ToolBars>
 					</LeftContainer>
 					<RightContainer>
 						<PanelBounds>
-							<X>1920</X>
+							<X>1104</X>
 							<Y>100</Y>
 							<Width>0</Width>
-							<Height>892</Height>
+							<Height>515</Height>
 						</PanelBounds>
 						<ToolBars></ToolBars>
 					</RightContainer>
@@ -1099,16 +1080,115 @@
 			</ScreensControlData>
 		</NETPlacementRoot>
 		<StdTargetManagerWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">27.05.2026 14:47:11:300</FrameCreated>
+				<ViewSrv type="key">
+					<TargetBrowserView type="key">
+						<SplitterRatio type="int">100</SplitterRatio>
+						<ShowTargetState type="flag">1</ShowTargetState>
+						<SetDebuggerFocus type="flag">1</SetDebuggerFocus>
+						<ShowSymbolsOnHalt type="flag">1</ShowSymbolsOnHalt>
+					</TargetBrowserView>
+				</ViewSrv>
+				<NETFrameMode type="int">77824</NETFrameMode>
+				<NETFrameSaveIndex type="int">0</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</StdTargetManagerWin>
 		<StdUDEMessageWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">27.05.2026 14:47:11:206</FrameCreated>
+				<ViewSrv type="key">
+					<LogWin type="key">
+						<Index type="key">
+							<Width type="int">50</Width>
+							<Visible type="flag">1</Visible>
+						</Index>
+						<Type type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Type>
+						<Time type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Time>
+						<Targ type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Targ>
+						<Src type="key">
+							<Width type="int">150</Width>
+							<Visible type="flag">1</Visible>
+						</Src>
+						<Msg type="key">
+							<Width type="int">1000</Width>
+							<Visible type="flag">1</Visible>
+						</Msg>
+					</LogWin>
+					<Filter type="key">
+						<BypassMode type="flag">1</BypassMode>
+						<TypeFilter type="int">0</TypeFilter>
+					</Filter>
+				</ViewSrv>
+				<NETFrameMode type="int">90112</NETFrameMode>
+				<NETFrameSaveIndex type="int">1</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</StdUDEMessageWin>
 		<StdUDECmdWin type="key">
 			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 		</StdUDECmdWin>
 		<UDEProgressWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">27.05.2026 14:47:11:272</FrameCreated>
+				<ViewSrv type="key">
+					<_ExtentX type="bin" size="8">TyUAAA==</_ExtentX>
+					<_ExtentY type="bin" size="8">ZhIAAA==</_ExtentY>
+					<_StockProps type="bin" size="8">AAAAAA==</_StockProps>
+					<Columns type="bin" size="8">CAAAAA==</Columns>
+					<ColName00 type="bin" size="16">VABhAHMAawAAAA==</ColName00>
+					<TypeName00 type="bin" size="16">VABhAHMAawAAAA==</TypeName00>
+					<Format00 type="bin" size="8">AAAAAA==</Format00>
+					<Size00 type="bin" size="8">8AAAAA==</Size00>
+					<ColName01 type="bin" size="24">UAByAG8AZwByAGUAcwBzAAAA</ColName01>
+					<TypeName01 type="bin" size="24">UAByAG8AZwByAGUAcwBzAAAA</TypeName01>
+					<Format01 type="bin" size="8">AAAAAA==</Format01>
+					<Size01 type="bin" size="8">oAAAAA==</Size01>
+					<ColName02 type="bin" size="16">UwB0AGEAdABlAAAA</ColName02>
+					<TypeName02 type="bin" size="16">UwB0AGEAdABlAAAA</TypeName02>
+					<Format02 type="bin" size="8">AAAAAA==</Format02>
+					<Size02 type="bin" size="8">yAAAAA==</Size02>
+					<ColName03 type="bin" size="20">QwBhAG4AYwBlAGwAAAA=</ColName03>
+					<TypeName03 type="bin" size="20">QwBhAG4AYwBlAGwAAAA=</TypeName03>
+					<Format03 type="bin" size="8">AAAAAA==</Format03>
+					<Size03 type="bin" size="8">UAAAAA==</Size03>
+					<ColName04 type="bin" size="16">TwB3AG4AZQByAAAA</ColName04>
+					<TypeName04 type="bin" size="16">TwB3AG4AZQByAAAA</TypeName04>
+					<Format04 type="bin" size="8">AAAAAA==</Format04>
+					<Size04 type="bin" size="8">oAAAAA==</Size04>
+					<ColName05 type="bin" size="24">QwB1AHIAcgBlAG4AdAAAAA==</ColName05>
+					<TypeName05 type="bin" size="24">QwB1AHIAcgBlAG4AdAAAAA==</TypeName05>
+					<Format05 type="bin" size="8">AAAAAA==</Format05>
+					<Size05 type="bin" size="8">UAAAAA==</Size05>
+					<ColName06 type="bin" size="16">UwB0AGEAcgB0AAAA</ColName06>
+					<TypeName06 type="bin" size="16">UwB0AGEAcgB0AAAA</TypeName06>
+					<Format06 type="bin" size="8">AAAAAA==</Format06>
+					<Size06 type="bin" size="8">UAAAAA==</Size06>
+					<ColName07 type="bin" size="16">UwB0AG8AcAAAAA==</ColName07>
+					<TypeName07 type="bin" size="16">UwB0AG8AcAAAAA==</TypeName07>
+					<Format07 type="bin" size="8">AAAAAA==</Format07>
+					<Size07 type="bin" size="8">UAAAAA==</Size07>
+				</ViewSrv>
+				<NETFrameMode type="int">90113</NETFrameMode>
+				<NETFrameSaveIndex type="int">2</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</UDEProgressWin>
 		<StdUDEWspHTMLView type="key">
 			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -1133,7 +1213,7 @@
 			<MacroLib type="string">C:\Program Files\pls\UDE Starterkit 2021\StdLibrary.mso</MacroLib>
 		</Macro>
 		<PLACEMENT type="key">
-			<MULTICORELOADERDLG type="string">620,1301,397,644</MULTICORELOADERDLG>
+			<MULTICORELOADERDLG type="string">246,919,242,481</MULTICORELOADERDLG>
 		</PLACEMENT>
 		<EXTRAVALUE type="key">
 			<MULTICORELOADERDLG type="int">0</MULTICORELOADERDLG>
@@ -1141,12 +1221,19 @@
 		<Loader type="key">
 			<LOADER_REGKEY_WSP type="string">{bafe3233-2a53-406c-8975-cce53c53f258}</LOADER_REGKEY_WSP>
 		</Loader>
+		<UDESTK.ProgressWin type="key">
+			<Normal type="string">;Courier;9.75;0;0;0;0;400;0;000000;FFFFFF</Normal>
+			<Selected type="string">;Courier;9.75;0;0;0;0;400;0;FFFFFF;FF0000</Selected>
+			<ProgressBar type="string">;Courier;9.75;0;0;0;0;400;0;000000;66846C</ProgressBar>
+			<SelectedBar type="string">;Courier;9.75;0;0;0;0;400;0;FFFFFF;808080</SelectedBar>
+			<Warning type="string">;Courier;9.75;0;0;0;0;400;0;000000;0000FF</Warning>
+		</UDESTK.ProgressWin>
 	</INI_SECTION>
 	<AddOns type="key">
 		<UDESTK.Script type="key">
 			<MacroGuiEntries type="key">
 				<LastScriptFilePath type="string">C:\Users\Public\Documents\pls\UDESTK 2021</LastScriptFilePath>
-				<Macro_21_05_26_17_16_51_0 type="key">
+				<Macro_27_05_26_15_25_23_0 type="key">
 					<ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription>
 					<ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath>
@@ -1426,7 +1513,7 @@ End Sub</ScriptSource>
 					<ScriptFromStg type="flag">1</ScriptFromStg>
 					<LocalComputerName type="string">WS_CORE_DUO</LocalComputerName>
 					<ExternalScriptPath type="string"></ExternalScriptPath>
-					<NextNodeName type="string">Macro_21_05_26_17_47_20_0</NextNodeName>
+					<NextNodeName type="string">Macro_27_05_26_15_33_39_0</NextNodeName>
 					<UnAss type="key">
 						<GUIEntry type="key">
 							<MenuID type="int">10</MenuID>
@@ -1483,7 +1570,7 @@ End Sub</ScriptSource>
 						<GUIEntryDescription type="string"></GUIEntryDescription>
 					</FillDWord>
 					<NoOfFunctions type="int">5</NoOfFunctions>
-				</Macro_21_05_26_17_16_51_0>
+				</Macro_27_05_26_15_25_23_0>
 			</MacroGuiEntries>
 			<LastSelectedMacro type="string"></LastSelectedMacro>
 		</UDESTK.Script>
@@ -1500,10 +1587,10 @@ End Sub</ScriptSource>
 			</TriCoreCpuWin>
 			<StdUDESymbolExplWin type="key">
 				<OPEN_VIEW type="key">
-					<FrameCreated type="string">21.05.2026 17:16:31:845</FrameCreated>
+					<FrameCreated type="string">27.05.2026 14:47:11:584</FrameCreated>
 					<ViewSrv type="key"></ViewSrv>
-					<NETFrameMode type="int">77824</NETFrameMode>
-					<NETFrameSaveIndex type="int">2</NETFrameSaveIndex>
+					<NETFrameMode type="int">77825</NETFrameMode>
+					<NETFrameSaveIndex type="int">5</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW>
 				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
@@ -1511,7 +1598,7 @@ End Sub</ScriptSource>
 			</StdUDESymbolExplWin>
 			<StdUDEProgWin type="key">
 				<OPEN_VIEW00 type="key">
-					<FrameCreated type="string">21.05.2026 17:16:25:782</FrameCreated>
+					<FrameCreated type="string">27.05.2026 14:47:23:508</FrameCreated>
 					<ViewSrv type="key">
 						<AnimateQueue type="key">
 							<RunningPeriod type="int">0</RunningPeriod>
@@ -1521,11 +1608,11 @@ End Sub</ScriptSource>
 					<SourceFile type="string">IfxCpu_CStart0.c</SourceFile>
 					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">0</NETFrameSaveIndex>
+					<NETFrameSaveIndex type="int">3</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW00>
 				<OPEN_VIEW01 type="key">
-					<FrameCreated type="string">21.05.2026 17:16:35:248</FrameCreated>
+					<FrameCreated type="string">27.05.2026 14:47:32:008</FrameCreated>
 					<ViewSrv type="key">
 						<AnimateQueue type="key">
 							<RunningPeriod type="int">0</RunningPeriod>
@@ -1535,57 +1622,12 @@ End Sub</ScriptSource>
 					<SourceFile type="string">AppSw\Tricore\Main\Cpu0_Main.c</SourceFile>
 					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">1</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW01>
-				<SAVED_VIEW_OBJS type="int">5</SAVED_VIEW_OBJS>
-				<SAVED_VIEW00 type="int">0</SAVED_VIEW00>
-				<SAVED_VIEW01 type="int">1</SAVED_VIEW01>
-				<OPEN_VIEW02 type="key">
-					<FrameCreated type="string">21.05.2026 17:33:09:971</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">..\BootLoader20250714_UDS_tasking622\IfxCpu_CStart0.c</SourceFile>
-					<SourceFileInstFlag type="int">2</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
 					<NETFrameSaveIndex type="int">4</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW02>
-				<OPEN_VIEW03 type="key">
-					<FrameCreated type="string">21.05.2026 17:35:22:023</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">..\BootLoader20250714_UDS_tasking622\AppSw\Tricore\Main\Cpu0_Main.c</SourceFile>
-					<SourceFileInstFlag type="int">2</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">5</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW03>
-				<OPEN_VIEW04 type="key">
-					<FrameCreated type="string">21.05.2026 17:38:01:316</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">code &lt;0x8000001C-0x8000041B&gt;</SourceFile>
-					<SourceFileInstFlag type="int">8</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">6</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW04>
-				<SAVED_VIEW02 type="int">2</SAVED_VIEW02>
-				<SAVED_VIEW03 type="int">3</SAVED_VIEW03>
-				<SAVED_VIEW04 type="int">4</SAVED_VIEW04>
+				</OPEN_VIEW01>
+				<SAVED_VIEW_OBJS type="int">2</SAVED_VIEW_OBJS>
+				<SAVED_VIEW00 type="int">0</SAVED_VIEW00>
+				<SAVED_VIEW01 type="int">1</SAVED_VIEW01>
 			</StdUDEProgWin>
 			<StdUDESFRView type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -1594,23 +1636,7 @@ End Sub</ScriptSource>
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 			</StdUDELocalsWin>
 			<StdUDEWatchWin type="key">
-				<OPEN_VIEW00 type="key">
-					<FrameCreated type="string">21.05.2026 17:16:39:226</FrameCreated>
-					<ViewSrv type="key">
-						<TopIndex type="int">0</TopIndex>
-						<CaretIndex type="int">0</CaretIndex>
-						<NameWidth type="int">144</NameWidth>
-						<AddressWidth type="int">0</AddressWidth>
-						<ValueWidth type="int">96</ValueWidth>
-						<Value2Width type="int">0</Value2Width>
-						<MinMaxWidth type="int">0</MinMaxWidth>
-					</ViewSrv>
-					<NETFrameMode type="int">81920</NETFrameMode>
-					<NETFrameSaveIndex type="int">3</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW00>
-				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
-				<SAVED_VIEW00 type="int">0</SAVED_VIEW00>
+				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 			</StdUDEWatchWin>
 			<StdUDESimIOWin type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -1781,7 +1807,6 @@ End Sub</ScriptSource>
 					<Number type="int">1</Number>
 					<BinaryFile1 type="key">
 						<FullPath type="string">Debug\BootLoader20250714_UDS_tasking62.elf</FullPath>
-						<SourceAliases type="key"></SourceAliases>
 					</BinaryFile1>
 				</BinaryFiles>
 				<ExpressionClipboard type="key">
@@ -1834,24 +1859,8 @@ End Sub</ScriptSource>
 			</CommQueueHndlStg>
 			<TargetStateHndlStg type="key"></TargetStateHndlStg>
 			<breakpointsV3 type="key">
-				<collectionStr type="string">_0,</collectionStr>
-				<collection type="key">
-					<_0 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\IEBSBootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;24;;</label>
-						<enable type="flag">1</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\IEBSBootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;24;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_0>
-				</collection>
+				<collectionStr type="string"></collectionStr>
+				<collection type="key"></collection>
 			</breakpointsV3>
 		</UDESTK.StdDbgSrv>
 	</Core0>
@@ -1860,6 +1869,7 @@ End Sub</ScriptSource>
 		<SaveAndCopyWithoutTimeStamps type="flag">0</SaveAndCopyWithoutTimeStamps>
 	</Logging>
 	<TargetInfoFile type="string">C:\Users\Public\Documents\pls\UDESTK 2021\Targets\TriBoard_TC23xA.cfg</TargetInfoFile>
+	<UseWspCnt type="int">0</UseWspCnt>
 	<TargInfoFlags type="key">
 		<Controller0 type="key">
 			<Core0 type="key">

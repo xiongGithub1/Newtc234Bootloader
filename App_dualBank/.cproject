@@ -650,7 +650,11 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule addStartupFiles="false" moduleId="com.tasking.processor"/>
 			<storageModule moduleId="com.tasking.toolInfo">
+				<toolInfo>TASKING VX-toolset for TriCore: control program v6.2r2 Build 19032145</toolInfo>
 				<toolInfo>TASKING program builder v6.2r2 Build 18041957</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: object link v6.2r2 Build 18041957 SN 53216552</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: C compiler v6.2r2 Build 18041957 SN 53216552</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: assembler v6.2r2 Build 19032145</toolInfo>
 			</storageModule>
 			<storageModule moduleId="com.tasking.flash.settings"/>
 		</cconfiguration>
@@ -722,6 +726,8 @@
 								<option id="com.tasking.ctc.cc.pr36858.1088452513" name="workaround for PR36858" superClass="com.tasking.ctc.cc.pr36858" value="true" valueType="string"/>
 								<option id="com.tasking.ctc.cc.includePaths.350434522" name="Include paths" superClass="com.tasking.ctc.cc.includePaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/Tc234_Modules/ADC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/App_NM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.settings}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.vscode}&quot;"/>
@@ -1349,6 +1355,8 @@
 				<toolInfo>TASKING VX-toolset for TriCore: control program v6.2r2 Build 19032145</toolInfo>
 				<toolInfo>TASKING program builder v6.2r2 Build 18041957</toolInfo>
 				<toolInfo>TASKING VX-toolset for TriCore: object link v6.2r2 Build 18041957 SN 53216552</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: C compiler v6.2r2 Build 18041957 SN 53216552</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: assembler v6.2r2 Build 19032145</toolInfo>
 			</storageModule>
 			<storageModule moduleId="com.tasking.flash.settings"/>
 		</cconfiguration>

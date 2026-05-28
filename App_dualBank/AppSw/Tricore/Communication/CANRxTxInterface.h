@@ -106,7 +106,7 @@ typedef struct
 /******************************************************************************/
 extern const uint16  CanRxFrm9252Num;
 extern const uint16  CanTxFrm9252Num;
-
+extern uint8 CanNmkey;
 extern CanRX_MsgObjInit CanRxFrm_9252_InitTab[];
 extern CanTX_MsgObjInit CanTxFrm_9252_InitTab[];
 

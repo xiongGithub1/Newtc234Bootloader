@@ -47,6 +47,11 @@
 #include "Stm.h"
 #include "App_bootloader.h"
 #include    "Brd_led.h"
+#include "MultiCAN.h"
+#include "Boot_DualBank.h"
+#include "did_dflash.h"
+#include "can_nm.h"
+#include "AppVadcQueue.h"
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
 /******************************************************************************/
